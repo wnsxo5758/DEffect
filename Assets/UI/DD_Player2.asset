@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55fe65b36a22084dab6b620176d65cc, type: 3}
+  m_Name: DD_Player2
+  m_EditorClassIdentifier: 
+  lines:
+  - line: "\uBB50\uC9C0?"
+    waitAfterLine: 1
+  - line: "\uCC98\uC74C \uBCF4\uB294 \uB140\uC11D\uC778\uB370"
+    waitAfterLine: 2
+  - line: "\uC21C\uC0B4\uB85C \uB9CC\uB4E4\uC5B4\uC8FC\uB9C8"
+    waitAfterLine: 2
+  - line: "\uC7A0\uAE50, \uC7A0\uAE50!"
+    waitAfterLine: 2
+  - line: "\uADC0\uC5D0 \uB808\uC774\uB354\uB97C \uB2EC\uC558\uB098"
+    waitAfterLine: 2
+  - line: "\uC870\uC6A9\uD788 \uCC98\uB9AC \uD574\uC57C\uACA0\uC5B4"
+    waitAfterLine: 2
+  - line: "\uD55C \uD050\uC5D0 \uC8FD\uC5EC\uC8FC\uC9C0"
+    waitAfterLine: 2

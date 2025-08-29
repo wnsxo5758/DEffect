@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55fe65b36a22084dab6b620176d65cc, type: 3}
+  m_Name: DD_Player
+  m_EditorClassIdentifier: 
+  lines:
+  - line: '?'
+    waitAfterLine: 1
+  - line: "\uD5D0..."
+    waitAfterLine: 2
+  - line: "\uBB50\uC9C0?"
+    waitAfterLine: 1
+  - line: "\uB204\uAD6C\uC138\uC694?"
+    waitAfterLine: 1.5
+  - line: "\uC608????"
+    waitAfterLine: 0.8
+  - line: "\uC73C\uC544\uC544\uC544!!!!"
+    waitAfterLine: 2
+  - line: "\uD5C9\uD5C9..."
+    waitAfterLine: 1.5
+  - line: "\uB2E4\uC74C \uB300\uC0AC\uB294 \uC0AC\uB791\uD574\uC694\uB77C\uACE0..."
+    waitAfterLine: 2
+  - line: "\uBB50\uC57C? \uC5B4\uB514\uC57C?"
+    waitAfterLine: 2
+  - line: "\uB204\uAD6C\uC138\uC694?"
+    waitAfterLine: 1
+  - line: ?????
+    waitAfterLine: 1
+  - line: "\uAC10\uC0AC\uD569\uB2C8\uB2E4"
+    waitAfterLine: 1
+  - line: "\uADFC\uB370 \uB204\uAD6C\uC2E0\uC9C0...."
+    waitAfterLine: 1
+  - line: ????????
+    waitAfterLine: 1
+  - line: "\uBBF8\uCE5C\uB188... \uBBF8\uCE5C\uB188..."
+    waitAfterLine: 1
+  - line: "\uC77C\uB2E8 \uAC10\uC0AC"
+    waitAfterLine: 1
+  - line: "\uB108\uD76C\uB294 \uB2E4 \uB4A4\uC84C\uB2E4"
+    waitAfterLine: 1
+  - line: "\uBB50\uC57C"
+    waitAfterLine: 1
+  - line: "\uC5EC\uAE34 \uC880 \uB2E4\uB978\uB370?"
+    waitAfterLine: 2
+  - line: "\uC544\uB2C8..."
+    waitAfterLine: 2
+  - line: "\uB098 \uAC07\uD614\uC5B4?"
+    waitAfterLine: 2
+  - line: "\uD070\uC77C\uB0AC\uB2E4"
+    waitAfterLine: 1
+  - line: "\uBCF4\uD1B5 \uC774\uCBE4\uB418\uBA74 \uBB54\uAC00..."
+    waitAfterLine: 1.5
+  - line: "\uC544... \uC81C\uBC1C..."
+    waitAfterLine: 1.5
+  - line: '?'
+    waitAfterLine: 1
+  - line: "\uC65C \uBA48\uCDC4\uC9C0?"
+    waitAfterLine: 1
+  - line: "\uC640, \uC774\uC81C\uB294 \uC2DC\uAC04\uB3C4 \uBA48\uCD94\uB124"
+    waitAfterLine: 2
+  - line: "\uADF8\uB798\uC11C \uC774\uAC8C \uB3C4\uB300\uCCB4 \uBB54\uB370"
+    waitAfterLine: 2
+  - line: "\uC544\uB2C8 \uBA39\uC744 \uC2DC\uAC04\uC740 \uC918\uC57C\uC9C0"
+    waitAfterLine: 1.5
+  - line: "\uC9C4\uC9DC \uBD88\uCE5C\uC808\uD558\uB124"
+    waitAfterLine: 1.5
+  - line: "\uB10C \uAE30\uB7EC\uAE30 \uC544\uBE60\uB294 \uBABB \uB418\uACA0\uB2E4"
+    waitAfterLine: 2
