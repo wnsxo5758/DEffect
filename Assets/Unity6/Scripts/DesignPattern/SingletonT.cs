@@ -28,6 +28,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
     {
         RemoveDuplicates();
     }
+    
     private static void SetUpInstance()
     {
         //인스턴스가 없는 경우 생성
