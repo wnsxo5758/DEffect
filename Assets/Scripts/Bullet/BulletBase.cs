@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BulletBase : MonoBehaviour
 {
-    [Header("ÃÑ¾Ë ¼¼ÆÃ")]
+    [Header("ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField]
-    protected int damage; // ÃÑ¾Ë µ¥¹ÌÁö
+    protected int damage; // ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [SerializeField]
-    protected float speed; // ÃÑ¾Ë ¼Óµµ
+    protected float speed; // ï¿½Ñ¾ï¿½ ï¿½Óµï¿½
     [SerializeField]
     protected AudioClip hitSound;
     [SerializeField]
-    protected LayerMask hitLayer; // ÇÇ°Ý´ë»ó ·¹ÀÌ¾î
+    protected LayerMask hitLayer; // ï¿½Ç°Ý´ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾ï¿½
 
 
     private Vector2 moveDir;
@@ -38,16 +38,16 @@ public class BulletBase : MonoBehaviour
 
         moveDir = direction.normalized;
 
-        // Rigidbody2D ÀÌµ¿ Àû¿ë
+        // Rigidbody2D ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         if (rigid != null)
         {
-            rigid.velocity = moveDir * speed;
+            rigid.linearVelocity = moveDir * speed;
         }
 
-        // È¸Àü Àû¿ë
+        // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         RotateToDirection(moveDir);
 
-        // Collider È°¼ºÈ­ (Ç®¿¡¼­ Àç»ç¿ë ½Ã ÃÊ±âÈ­ ÇÊ¼ö)
+        // Collider È°ï¿½ï¿½È­ (Ç®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ê¼ï¿½)
         if (collider2D != null)
         {
             collider2D.enabled = true;
@@ -77,7 +77,7 @@ public class BulletBase : MonoBehaviour
         //}
     }
 
-    //ÃÑ¾Ë ºñÈ°¼ºÈ­(Destroy ¾Æ´Ô)
+    //ï¿½Ñ¾ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­(Destroy ï¿½Æ´ï¿½)
     protected virtual IEnumerator DestroyBullet()
     {
         GetComponent<Collider2D>().enabled = false;
@@ -88,7 +88,7 @@ public class BulletBase : MonoBehaviour
         yield return null;
     }
 
-    //»ç¿îµÎ
+    //ï¿½ï¿½ï¿½ï¿½
     private void PlaySound(AudioClip _clip)
     {
         audioSource.Stop();
@@ -96,7 +96,7 @@ public class BulletBase : MonoBehaviour
         audioSource.Play();
     }
     
-    // ÃÑ¾Ë È¸Àü½Ã ½½ÇÁ¶óÀÌÆ® È¸Àü
+    // ï¿½Ñ¾ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® È¸ï¿½ï¿½
     protected void RotateToDirection(Vector2 direction)
     {
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;

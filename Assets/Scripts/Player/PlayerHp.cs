@@ -4,37 +4,37 @@ using UnityEngine;
 
 public class PlayerHp : MonoBehaviour
 {
-    [Header("Ã¼·Â ¼³Á¤")]
-    [SerializeField] private int maxHp = 3; // ÃÖ´ë Ã¼·Â
-    [SerializeField] private int currentHp; // ÇöÀç Ã¼·Â
-    [SerializeField] private float healTime = 0; // È¸º¹ ½Ã°£
-    [SerializeField] private float invincibilityTime = 0; // ¹«Àû½Ã°£
+    [Header("Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField] private int maxHp = 3; // ï¿½Ö´ï¿½ Ã¼ï¿½ï¿½
+    [SerializeField] private int currentHp; // ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½
+    [SerializeField] private float healTime = 0; // È¸ï¿½ï¿½ ï¿½Ã°ï¿½
+    [SerializeField] private float invincibilityTime = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½
 
-    [Header("ÇÇ°Ý ¼³Á¤")] 
-    [SerializeField] private float hitStunDuration = 0.5f; // ÀÏ¹Ý °æÁ÷ ½Ã°£
-    [SerializeField] private float specialStunDuration = 0.25f; // Æ¯¼ö »óÅÂ °æÁ÷ ½Ã°£
+    [Header("ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½ï¿½")] 
+    [SerializeField] private float hitStunDuration = 0.5f; // ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+    [SerializeField] private float specialStunDuration = 0.25f; // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
     
     [Header("UI")]
     [SerializeField] private UIPlayerData uiPlayer;
 
-    [Header("ÇÇ È¿°ú")]
+    [Header("ï¿½ï¿½ È¿ï¿½ï¿½")]
     [SerializeField]
     private ParticleSystem bloodParticle;
 
     private PlayerController player;
     private PlayerAnimator playerAnimator;
-    private SpriteRenderer spriteRenderer; // ÇÇ°Ý½Ã »ö»ó º¯°æÀ» À§ÇÑ ½ºÇÁ¶óÀÌÆ® ·»´õ·¯
-    private Color originColor; //ÇÃ·¹ÀÌ¾î ÃÊ±â »ö»ó
+    private SpriteRenderer spriteRenderer; // ï¿½Ç°Ý½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private Color originColor; //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Rigidbody2D rb;
     private MovementRigidbody2D movement;
 
     private PlayerSound playerSound;
 
-    private float currentHitStunDuration; // ÇöÀç Àû¿ëÁßÀÎ °æÁ÷ ½Ã°£
-    private bool isHit; // ÇÇ°Ý ÁßÀÎ°¡
+    private float currentHitStunDuration; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
+    private bool isHit; // ï¿½Ç°ï¿½ ï¿½ï¿½ï¿½Î°ï¿½
     private bool isDead;
-    private bool isHealing; // È¸º¹ ÁßÀÎ°¡
-    private bool isInvincible; // ¹«ÀûÀÎ°¡
+    private bool isHealing; // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½Î°ï¿½
+    private bool isInvincible; // ï¿½ï¿½ï¿½ï¿½ï¿½Î°ï¿½
 
     private DeathCause lastDeathCause = DeathCause.None;
     private DeathData currentDeathData;
@@ -58,7 +58,7 @@ public class PlayerHp : MonoBehaviour
         originColor = spriteRenderer.color;
     }
 
-    // ÀÏ¹ÝÀûÀÎ µ¥¹ÌÁö Ã³¸® (°æÁ÷¸¸ ÀÖÀ½)
+    // ï¿½Ï¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     public void DecreaseHp(int damage, DeathData deathData, bool canDodge = false, bool canFreeze = false)
     {
         if (isDead) return;
@@ -70,14 +70,14 @@ public class PlayerHp : MonoBehaviour
             dodged = player.OnAttackReceived(canFreeze);
         }
 
-        // ¹«Àû or È¸ÇÇ »óÅÂ Ã¼Å©
+        // ï¿½ï¿½ï¿½ï¿½ or È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
         if (isInvincible || dodged) return;
         
         currentHp -= damage;
         ShowBoodEffect();
         if (currentHp <= 0)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î »ç¸Á");
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½");
             currentHp = 0;
             currentDeathData = deathData;
             lastDeathCause = deathData.cause;
@@ -85,15 +85,15 @@ public class PlayerHp : MonoBehaviour
         }
         else
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î¿¡°Ô " + damage + "µ¥¹ÌÁö");
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ " + damage + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
             playerSound.HitSound();
             HandleHit(Vector2.zero);
         }
 
-        uiPlayer.SetHpAll(currentHp); // ¿©±â¼­ ÀüÃ¼ °»½Å
+        uiPlayer.SetHpAll(currentHp); // ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
     }
 
-    // ³Ë¹éÀÌ Æ÷ÇÔµÈ µ¥¹ÌÁö Ã³¸®
+    // ï¿½Ë¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ôµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     public void DecreaseHp(int damage, Vector2 knockBack, DeathData deathData, bool canDodge = false, bool freeze = false)
     {
         if (isDead) return;
@@ -111,7 +111,7 @@ public class PlayerHp : MonoBehaviour
         ShowBoodEffect();
         if (currentHp <= 0)
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î »ç¸Á");
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½");
             
             currentHp = 0;
             currentDeathData = deathData;
@@ -121,7 +121,7 @@ public class PlayerHp : MonoBehaviour
         else
         {
             playerSound.HitSound();
-            Debug.Log("ÇÃ·¹ÀÌ¾î¿¡°Ô " + damage + "µ¥¹ÌÁö");
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ " + damage + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
             
             HandleHit(knockBack);
         }
@@ -135,21 +135,21 @@ public class PlayerHp : MonoBehaviour
         bool isSpecialState = currentState is not PlayerStates.Idle and not PlayerStates.Run 
             and not PlayerStates.Jump and not PlayerStates.Crawl;
         
-        // °æÁ÷ ½Ã°£ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
         currentHitStunDuration = isSpecialState ? specialStunDuration : hitStunDuration;
         isHit = true;
         
-        //³Ë¹é Ã³¸®
+        //ï¿½Ë¹ï¿½ Ã³ï¿½ï¿½
         if (!isSpecialState && knockBack != Vector2.zero)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(knockBack, ForceMode2D.Impulse);
         }
         
-        // ÇÇ°Ý È¿°ú
+        // ï¿½Ç°ï¿½ È¿ï¿½ï¿½
         OnInvincibility(2f);
         
-        // »óÅÂ ÀüÈ¯ ¶Ç´Â °æÁ÷ Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         if (isSpecialState)
         {
             StartCoroutine(SpecialStateStun());
@@ -176,7 +176,7 @@ public class PlayerHp : MonoBehaviour
         uiPlayer.SetDeathUI();
     }
     
-    public void OnInvincibility(float time) // ¹«Àû»óÅÂ
+    public void OnInvincibility(float time) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
         if (isInvincible)
         {
@@ -189,7 +189,7 @@ public class PlayerHp : MonoBehaviour
         }
     }
 
-    private IEnumerator Invincibility() // ¹«Àû»óÅÂ, Ä³¸¯ÅÍ ±ôºýÀÌ´Â È¿°ú
+    private IEnumerator Invincibility() // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ È¿ï¿½ï¿½
     {
         isInvincible = true;
         float blinkSpeed = 10;
@@ -228,19 +228,19 @@ public class PlayerHp : MonoBehaviour
         switch (currentDeathData.cause)
         {
             case DeathCause.Press:
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.angularVelocity = 0f;
                 rb.isKinematic = true;
                 break;
             
             case DeathCause.Drowning:
             case DeathCause.Fall:
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.isKinematic = true;
                 break;
             
             default:
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                 break;
         }
@@ -253,10 +253,10 @@ public class PlayerHp : MonoBehaviour
         lastDeathCause = DeathCause.None;
         currentDeathData = new DeathData();
         
-        // Ã¼·ÂÀ» ÃÖ´ë Ã¼·ÂÀ¸·Î ¼³Á¤
+        // Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         SetHp(GetMaxHp());
         
-        // ¹«Àû »óÅÂ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         uiPlayer.ResetDeathUI();
         uiPlayer.SetHpAll(currentHp);
     }
@@ -292,7 +292,7 @@ public class PlayerHp : MonoBehaviour
         currentHp = newHp;
     }
     
-    public int IncreaseHp(int amount)  // Ã¼·Â È¸º¹
+    public int IncreaseHp(int amount)  // Ã¼ï¿½ï¿½ È¸ï¿½ï¿½
     {
         if (amount <= 0) return 0;
 
@@ -303,7 +303,7 @@ public class PlayerHp : MonoBehaviour
 
         OnHpChanged?.Invoke(currentHp, maxHp);
         
-        Debug.Log($"Ã¼·Â È¸º¹: {actualHealed} (ÇöÀç: {currentHp}/{maxHp})");
+        Debug.Log($"Ã¼ï¿½ï¿½ È¸ï¿½ï¿½: {actualHealed} (ï¿½ï¿½ï¿½ï¿½: {currentHp}/{maxHp})");
         uiPlayer.SetHpAll(currentHp);
         return actualHealed;
     }
@@ -320,7 +320,7 @@ public class PlayerHp : MonoBehaviour
 
     private void ShowBoodEffect()
     {
-        Debug.Log("ÆÄÆ¼Å¬ ½ÇÇà");
+        Debug.Log("ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½");
         bloodParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         bloodParticle.Play();
         bloodParticle.Emit(1);

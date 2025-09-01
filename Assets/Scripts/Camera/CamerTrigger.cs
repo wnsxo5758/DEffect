@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CamerTrigger : MonoBehaviour
 {
-    public CinemachineVirtualCamera targetCamera;   // 트리거에 닿으면 전환할 카메라
+    public CinemachineCamera targetCamera;   // 트리거에 닿으면 전환할 카메라
 
     private void OnTriggerEnter2D(Collider2D other)
     {

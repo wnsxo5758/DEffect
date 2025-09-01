@@ -1,18 +1,18 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Playables;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CutsceneTrigger : MonoBehaviour
 {
     public PlayableDirector timelineDirector;
 
-    public CinemachineVirtualCamera playerVCam;     // »õ·Î ¸¸µç ÇÃ·¹ÀÌ¾î µû¶ó°¡´Â VCam
-    public CinemachineVirtualCamera[] cutsceneVCams;
+    public CinemachineCamera playerVCam;     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ó°¡´ï¿½ VCam
+    public CinemachineCamera[] cutsceneVCams;
 
     private bool hasPlayed = false;
 
-    public GameObject playerObject;                 // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® ÇÒ´ç
+    public GameObject playerObject;                 // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ò´ï¿½
 
     private Vector2 originalVelocity;
     private Rigidbody2D playerRb;
@@ -29,15 +29,15 @@ public class CutsceneTrigger : MonoBehaviour
 
         if (playerRb != null)
         {
-            originalVelocity = playerRb.velocity;
-            playerRb.velocity = Vector2.zero;
+            originalVelocity = playerRb.linearVelocity;
+            playerRb.linearVelocity = Vector2.zero;
             playerRb.simulated = false;
         }
 
         if (playerAnimator != null)
         {
             originalAnimator = playerAnimator.runtimeAnimatorController;
-            playerAnimator.runtimeAnimatorController = null; // ¾Ö´Ï¸ÞÀÌ¼Ç ¿ÏÀü Á¤Áö
+            playerAnimator.runtimeAnimatorController = null; // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
         playerObject.GetComponent<Collider2D>().enabled = false;
@@ -48,12 +48,12 @@ public class CutsceneTrigger : MonoBehaviour
         if (playerRb != null)
         {
             playerRb.simulated = true;
-            playerRb.velocity = originalVelocity;
+            playerRb.linearVelocity = originalVelocity;
         }
 
         if (playerAnimator != null && originalAnimator != null)
         {
-            playerAnimator.runtimeAnimatorController = originalAnimator; // ¾Ö´Ï¸ÞÀÌÅÍ º¹±¸
+            playerAnimator.runtimeAnimatorController = originalAnimator; // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
         playerObject.GetComponent<Collider2D>().enabled = true;
@@ -78,7 +78,7 @@ public class CutsceneTrigger : MonoBehaviour
             hasPlayed = true;
             DisablePlayerControl();
 
-            // ÄÆ¾À Ä«¸Þ¶ó ¿ì¼±¼øÀ§ ³ôÀÓ
+            // ï¿½Æ¾ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             foreach (var cam in cutsceneVCams)
                 cam.Priority = 20;
 
@@ -90,7 +90,7 @@ public class CutsceneTrigger : MonoBehaviour
 
     private void OnCutsceneEnd(PlayableDirector director)
     {
-        // ÄÆ¾À ³¡³ª°í ÇÃ·¹ÀÌ¾î Ä«¸Þ¶ó º¹±Í
+        // ï¿½Æ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½
         playerVCam.Priority = 20;
 
         foreach (var cam in cutsceneVCams)
@@ -113,7 +113,7 @@ public class CutsceneTrigger : MonoBehaviour
         timelineDirector.Play();
     }
 
-    // ======================ÄÆ¾À ¸ØÃß±â======================
+    // ======================ï¿½Æ¾ï¿½ ï¿½ï¿½ï¿½ß±ï¿½======================
     private Coroutine _startFreezeCoroutine;
 
     public void PauseTimelineExactly()

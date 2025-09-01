@@ -874,7 +874,7 @@ public class ManagerRobotBoss : BossBT
             filter.useTriggers = true;
 
             Collider2D[] results = new Collider2D[1];
-            if (headbuttCollider.OverlapCollider(filter, results) > 0 && results[0] != null)
+            if (headbuttCollider.Overlap(filter, results) > 0 && results[0] != null)
             {
                 // 플레이어 발견
                 PlayerHeadbuttCollision(results[0].gameObject);
@@ -933,7 +933,7 @@ public class ManagerRobotBoss : BossBT
         if (rb != null)
         {
             wasGravityEnabled = rb.gravityScale > 0;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             
             movement.DisableGravity();

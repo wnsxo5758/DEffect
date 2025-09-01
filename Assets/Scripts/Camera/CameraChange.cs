@@ -1,25 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CameraChange : MonoBehaviour
 {
-    static List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
+    static List<CinemachineCamera> cameras = new List<CinemachineCamera>();
 
-    public static CinemachineVirtualCamera ActiveCamera = null;
+    public static CinemachineCamera ActiveCamera = null;
 
-    public static bool IsActiveCamera(CinemachineVirtualCamera camera)
+    public static bool IsActiveCamera(CinemachineCamera camera)
     {
         return camera == ActiveCamera;
     }
 
-    public static void SwitchCamera(CinemachineVirtualCamera newCamera)
+    public static void SwitchCamera(CinemachineCamera newCamera)
     {
         newCamera.Priority = 10;
         ActiveCamera = newCamera;
 
-        foreach (CinemachineVirtualCamera cam in cameras)
+        foreach (CinemachineCamera cam in cameras)
         {
             if (cam != newCamera)
             {
@@ -28,12 +28,12 @@ public class CameraChange : MonoBehaviour
         }
     }
 
-    public static void Register(CinemachineVirtualCamera camera)
+    public static void Register(CinemachineCamera camera)
     {
         cameras.Add(camera);
     }
 
-    public static void Unregister(CinemachineVirtualCamera camera)
+    public static void Unregister(CinemachineCamera camera)
     {
         cameras.Remove(camera);
     }

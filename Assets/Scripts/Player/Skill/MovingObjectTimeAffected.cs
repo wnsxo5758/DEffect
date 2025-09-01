@@ -24,11 +24,11 @@ public class MovingObjectTimeAffected : TimeAffectedEntity
         // 물리 객체 상태 저장 및 정지
         if (rb != null)
         {
-            originalVelocity = rb.velocity;
+            originalVelocity = rb.linearVelocity;
             originalAngularVelocity = rb.angularVelocity;
             wasKinematic = rb.isKinematic;
 
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0;
             rb.isKinematic = true;
         }
@@ -51,7 +51,7 @@ public class MovingObjectTimeAffected : TimeAffectedEntity
             rb.isKinematic = wasKinematic;
             if (!wasKinematic)
             {
-                rb.velocity = originalVelocity;
+                rb.linearVelocity = originalVelocity;
                 rb.angularVelocity = originalAngularVelocity;
             }
         }

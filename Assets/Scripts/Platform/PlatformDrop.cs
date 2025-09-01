@@ -90,14 +90,14 @@ public class PlatformDrop : PlatformBase
         transform.position = originPos;
         boxCollider2D.enabled = true;
         rigid.isKinematic = true;
-        rigid.velocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero;
         StartCoroutine(nameof(FadeIn));
 
     }
 
     private IEnumerator FadeOut()
     {
-        float duration = 1f; // »ç¶óÁö´Â ½Ã°£
+        float duration = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
         float elapsed = 0;
         Color startColor = sprite.color;
 
@@ -113,7 +113,7 @@ public class PlatformDrop : PlatformBase
     }
     private IEnumerator FadeIn()
     {
-        float duration = 1f; // ³ªÅ¸³ª´Â ½Ã°£
+        float duration = 1f; // ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
         float elapsed = 0;
         Color startColor = sprite.color;
 
@@ -128,11 +128,11 @@ public class PlatformDrop : PlatformBase
         sprite.color = new Color(startColor.r, startColor.g, startColor.b, 1);
     }
     
-    //  ½Ã°£ Á¤Áö °ü·Ã ¸Þ¼­µå
+    //  ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void PauseDrop()
     {
         isPaused = true;
         
-        // µå·Ó ÄÚ·çÆ¾ ÁßÁö µî ÇÊ¿äÇÑ Ã³¸®
+        // ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     }
 }

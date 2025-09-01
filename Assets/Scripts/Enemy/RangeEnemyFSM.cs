@@ -54,7 +54,7 @@ public class RangeEnemy : EnemyFSM
         if (rigid != null)
         {
             Vector2 direction = (target.position - firePos.position).normalized; // �÷��̾� ���� ���
-            rigid.velocity = direction * bulletSpeed; // �Ѿ� �̵�
+            rigid.linearVelocity = direction * bulletSpeed; // �Ѿ� �̵�
         }
     }
 }

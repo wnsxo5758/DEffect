@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class SwitchCamera : MonoBehaviour
 {
-    public CinemachineVirtualCamera cam1;
-    public CinemachineVirtualCamera cam2;
+    public CinemachineCamera cam1;
+    public CinemachineCamera cam2;
 
     private void Update()
     {

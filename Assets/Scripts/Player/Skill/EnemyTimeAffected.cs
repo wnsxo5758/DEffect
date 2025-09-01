@@ -28,9 +28,9 @@ public class EnemyTimeAffected : TimeAffectedEntity
         // 물리 상태 저장 및 정지
         if (rb != null)
         {
-            originalVelocity = rb.velocity;
+            originalVelocity = rb.linearVelocity;
             originalAngularVelocity = rb.angularVelocity;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             rb.isKinematic = true;
         }
@@ -55,7 +55,7 @@ public class EnemyTimeAffected : TimeAffectedEntity
         if (rb != null)
         {
             rb.isKinematic = false;
-            rb.velocity = originalVelocity;
+            rb.linearVelocity = originalVelocity;
             rb.angularVelocity = originalAngularVelocity;
         }
         

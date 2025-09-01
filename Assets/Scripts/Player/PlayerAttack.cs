@@ -357,7 +357,7 @@ public class PlayerAttack : MonoBehaviour
         filter.useTriggers = true;
 
         List<Collider2D> results = new List<Collider2D>();
-        attackCollider.OverlapCollider(filter, results);
+        attackCollider.Overlap(filter, results);
 
         foreach (Collider2D enemyCollider in results)
         {

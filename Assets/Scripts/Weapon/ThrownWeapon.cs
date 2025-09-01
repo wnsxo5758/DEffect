@@ -75,9 +75,9 @@ public class ThrownWeapon : MonoBehaviour
         if (rb != null)
         {
             rb.isKinematic = false;
-            rb.angularDrag = 0.1f;
+            rb.angularDamping = 0.1f;
             rb.gravityScale = 1f;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(throwForce, ForceMode2D.Impulse);
             rb.AddTorque(direction.x > 0 ? -rotationSpeed : rotationSpeed);
         }
@@ -151,7 +151,7 @@ public class ThrownWeapon : MonoBehaviour
         
         ValidateNormalWithPlayerPosition(impactPoint);
         
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         rb.gravityScale = 0f;
         rb.isKinematic = true;
@@ -325,9 +325,9 @@ public class ThrownWeapon : MonoBehaviour
 
             rb.isKinematic = false;
             rb.gravityScale = 1f;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddTorque(rotationSpeed);
-            rb.velocity = new Vector2(Random.Range(-1f, 1f), 5f);
+            rb.linearVelocity = new Vector2(Random.Range(-1f, 1f), 5f);
             
             isStuck = false;
             stuckTarget = null;
@@ -339,7 +339,7 @@ public class ThrownWeapon : MonoBehaviour
     {
         if (rb != null)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             rb.isKinematic = true;
         }

@@ -4,29 +4,29 @@ using UnityEngine;
 
 public class MovementRigidbody2D : MonoBehaviour
 {
-    [Header("·¹ÀÌ¾î ¸¶½ºÅ©")]
+    [Header("ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½Å©")]
     [SerializeField] private LayerMask groundCheckLayer;
     [SerializeField] private LayerMask belowCollisionLayer;
     
-    [Header("¿òÁ÷ÀÓ")] 
-    [SerializeField] private float runSpeed; // ´Þ¸®±â ¼Óµµ
-    [SerializeField] private float crawlSpeed; // ±â¾î°¡±â ¼Óµµ
-    [SerializeField] private float climbSpeed; // »ç´Ù¸® ¼Óµµ
-    [SerializeField] private float jumpForce; // Á¡ÇÁ·Â
-    [SerializeField] private float lowGravityScale; // ¾àÇÑ Áß·Â (³ôÀº Á¡ÇÁ½Ã)
-    [SerializeField] private float highGravityScale; // °­ÇÑ Áß·Â (ÀÏ¹Ý Á¡ÇÁ½Ã)
-    [SerializeField] private bool movementLocked = false; // ¿òÁ÷ÀÓ Àá±Ý
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] 
+    [SerializeField] private float runSpeed; // ï¿½Þ¸ï¿½ï¿½ï¿½ ï¿½Óµï¿½
+    [SerializeField] private float crawlSpeed; // ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½Óµï¿½
+    [SerializeField] private float climbSpeed; // ï¿½ï¿½Ù¸ï¿½ ï¿½Óµï¿½
+    [SerializeField] private float jumpForce; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float lowGravityScale; // ï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    [SerializeField] private float highGravityScale; // ï¿½ï¿½ï¿½ï¿½ ï¿½ß·ï¿½ (ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    [SerializeField] private bool movementLocked = false; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
-    private float moveSpeed; // ÇöÀç ¿òÁ÷ÀÌ´Â ¼Óµµ
-    private float initialSpeed; // ÃÊ±â ¼Óµµ
+    private float moveSpeed; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Óµï¿½
+    private float initialSpeed; // ï¿½Ê±ï¿½ ï¿½Óµï¿½
     private bool weightlessness = false;
 
     public float MoveSpeed => moveSpeed;
     public float RunSpeed => runSpeed;
 
 
-    private Vector2 collisionSize; // ¹Ù´Ú °Ë»ç size
-    private Vector2 footPos; // ¹ß À§Ä¡
+    private Vector2 collisionSize; // ï¿½Ù´ï¿½ ï¿½Ë»ï¿½ size
+    private Vector2 footPos; // ï¿½ï¿½ ï¿½ï¿½Ä¡
 
     private Rigidbody2D rigid;
     private Collider2D collider;
@@ -40,7 +40,7 @@ public class MovementRigidbody2D : MonoBehaviour
     {
         set => runSpeed = initialSpeed * (1 / value);
     }
-    public Vector2 Velocity => rigid.velocity;
+    public Vector2 Velocity => rigid.linearVelocity;
 
     private void Awake()
     {
@@ -73,28 +73,28 @@ public class MovementRigidbody2D : MonoBehaviour
     {
         moveSpeed = runSpeed;
         if (x != 0) x = Mathf.Sign(x);
-        rigid.velocity = new Vector2(x * moveSpeed, rigid.velocity.y);
+        rigid.linearVelocity = new Vector2(x * moveSpeed, rigid.linearVelocity.y);
     }
 
     public void MoveToFast(float x)
     {
         moveSpeed = runSpeed * 1.2f;
         if (x != 0) x = Mathf.Sign(x);
-        rigid.velocity = new Vector2(x * moveSpeed, rigid.velocity.y);
+        rigid.linearVelocity = new Vector2(x * moveSpeed, rigid.linearVelocity.y);
     }
     
-    public void Jump() //Á¡ÇÁ
+    public void Jump() //ï¿½ï¿½ï¿½ï¿½
     {
         if (IsGrounded)
         {
-            rigid.velocity = new Vector2(rigid.velocity.x, jumpForce);
+            rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, jumpForce);
             IsGrounded = false;
         }
     }
 
-    private void JumpHeight() // Á¡ÇÁ½Ã ³ôÀÌ
+    private void JumpHeight() // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     {
-        if (IsLongJump && rigid.velocity.y > 0)
+        if (IsLongJump && rigid.linearVelocity.y > 0)
         {
             rigid.gravityScale = lowGravityScale;
         }
@@ -107,27 +107,27 @@ public class MovementRigidbody2D : MonoBehaviour
         }
     }
 
-    public void Crawl(float x) // ±â¾î°¡±â
+    public void Crawl(float x) // ï¿½ï¿½î°¡ï¿½ï¿½
     {
         if (x != 0) x = Mathf.Sign(x);
-        rigid.velocity = new Vector2(x * crawlSpeed, rigid.velocity.y);
+        rigid.linearVelocity = new Vector2(x * crawlSpeed, rigid.linearVelocity.y);
     }
 
     public void Roll(float direction, float speed)
     {
-        Vector2 rollVelocity = new Vector2(direction * speed, rigid.velocity.y);
-        rigid.velocity = rollVelocity;
+        Vector2 rollVelocity = new Vector2(direction * speed, rigid.linearVelocity.y);
+        rigid.linearVelocity = rollVelocity;
     }
     
     public void Climb(float y)
     {
-        rigid.velocity = new Vector2(0, y * climbSpeed);
+        rigid.linearVelocity = new Vector2(0, y * climbSpeed);
     }
 
     public void LadderJump(float x)
     {
         if(x != 0) x = Mathf.Sign(x);
-        rigid.velocity = new Vector2(x * runSpeed, jumpForce / 2);
+        rigid.linearVelocity = new Vector2(x * runSpeed, jumpForce / 2);
     }
         
     public void DisableGravity()
@@ -144,7 +144,7 @@ public class MovementRigidbody2D : MonoBehaviour
 
     public void DisableRigidbody()
     {
-        rigid.velocity = Vector2.zero;
+        rigid.linearVelocity = Vector2.zero;
     }
 
     public void EnableRigidbody()
@@ -153,7 +153,7 @@ public class MovementRigidbody2D : MonoBehaviour
         {
             rigid.isKinematic = false;
             rigid.simulated = true;
-            rigid.velocity = Vector2.zero;
+            rigid.linearVelocity = Vector2.zero;
             rigid.angularVelocity = 0f;
             rigid.gravityScale = highGravityScale;
             rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -162,7 +162,7 @@ public class MovementRigidbody2D : MonoBehaviour
 
     public void SetVelocity(Vector2 velocity)
     {
-        rigid.velocity = velocity;
+        rigid.linearVelocity = velocity;
     }
 
     public void AddForce(Vector2 force)

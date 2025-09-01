@@ -1,17 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class CameraRegister : MonoBehaviour
 {
     private void OnEnable()
     {
-        CameraChange.Register(GetComponent<CinemachineVirtualCamera>());   
+        CameraChange.Register(GetComponent<CinemachineCamera>());   
     }
 
     private void OnDisable()
     {
-        CameraChange.Unregister(GetComponent<CinemachineVirtualCamera>());
+        CameraChange.Unregister(GetComponent<CinemachineCamera>());
     }
 }

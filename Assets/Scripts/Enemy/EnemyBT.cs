@@ -359,7 +359,7 @@ public class EnemyBT : MonoBehaviour
             }
             else
             {
-                rb.velocity = new Vector2(0, rb.velocity.y);
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             }
         }
         // 공격 범위 밖에 있으면 추적
@@ -441,7 +441,7 @@ public class EnemyBT : MonoBehaviour
         }
         else if (rb != null)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         }
         
         // 피격 애니메이션 재생
@@ -472,7 +472,7 @@ public class EnemyBT : MonoBehaviour
         }
         else if (rb != null)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         }
 
         if (rb != null)
@@ -568,7 +568,7 @@ public class EnemyBT : MonoBehaviour
         if (target != null && rb != null && !isThrownWeapon)
         {
             Vector2 knockBackDirection = ((Vector2)transform.position - (Vector2)target.position).normalized;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(knockBackDirection * knockBackForce, ForceMode2D.Impulse);
         }
     }
@@ -664,7 +664,7 @@ public class EnemyBT : MonoBehaviour
         // 물리 객체 정지 
         if (rb != null)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
             rb.Sleep();
         }

@@ -116,8 +116,8 @@ namespace OverlayFilters.Demo
 
             if (currentAnimation == land) horizontal = 0;
 
-            Vector2 desiredSpeed = new Vector2(horizontal * speed, rig.velocity.y);
-            rig.velocity = Vector3.Lerp(rig.velocity, desiredSpeed, Time.deltaTime * acceleration);
+            Vector2 desiredSpeed = new Vector2(horizontal * speed, rig.linearVelocity.y);
+            rig.linearVelocity = Vector3.Lerp(rig.linearVelocity, desiredSpeed, Time.deltaTime * acceleration);
 
             if (horizontal > 0)
             {
@@ -133,7 +133,7 @@ namespace OverlayFilters.Demo
                 if(Time.time > lastJumpTime + 0.2f && Time.time > lastAirTime + 0.1f)
                 {
                     lastJumpTime = Time.time;
-                    rig.velocity = new Vector2(rig.velocity.x, jumpStrength);
+                    rig.linearVelocity = new Vector2(rig.linearVelocity.x, jumpStrength);
 
                     //Jump:
                     currentAnimation = jump;

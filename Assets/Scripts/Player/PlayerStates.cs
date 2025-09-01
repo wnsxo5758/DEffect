@@ -552,7 +552,7 @@ namespace PlayerStates
             airTimer += Time.deltaTime;
             
             // 착지 체크 (최소 공중 시간 경과 후)
-            if (airTimer >= minimumAirTime && player.IsGrounded() && !hasLanded && rb.velocity.y <= 0.1f)
+            if (airTimer >= minimumAirTime && player.IsGrounded() && !hasLanded && rb.linearVelocity.y <= 0.1f)
             {
                 hasLanded = true;
                 
@@ -580,7 +580,7 @@ namespace PlayerStates
             
             if (rb != null)
             {
-                rb.velocity = Vector2.zero; // 기존 속도 초기화
+                rb.linearVelocity = Vector2.zero; // 기존 속도 초기화
                 rb.AddForce(new Vector2(knockBackDirection.x * knockBackForce.x, knockBackForce.y), ForceMode2D.Impulse);
             }
         }

@@ -176,7 +176,7 @@ public class FlyRangeEnemy : EnemyBT
         attackTimer = 0f;
         blackboard.SetValue("CanAttack", false);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
 
         //
         Transform target = blackboard.GetValue<Transform>("Target");
@@ -261,7 +261,7 @@ public class FlyRangeEnemy : EnemyBT
             SetDirection(direction);
         }
 
-        rb.velocity = new Vector2(direction * moveSpeed, 0f);
+        rb.linearVelocity = new Vector2(direction * moveSpeed, 0f);
         return NodeState.Running;
     }
 
@@ -302,7 +302,7 @@ public class FlyRangeEnemy : EnemyBT
         Vector2 retreatDir = ((Vector2)transform.position - (Vector2)target.position).normalized;
         float retreatSpeed = moveSpeed * retreatSpeedMultiplier;
 
-        rb.velocity = retreatDir * retreatSpeed;
+        rb.linearVelocity = retreatDir * retreatSpeed;
         return NodeState.Running;
     }
 
@@ -333,12 +333,12 @@ public class FlyRangeEnemy : EnemyBT
 
         if (distance <= attackRange)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return NodeState.Success;
         }
 
         Vector2 dir = ((Vector2)target.position - (Vector2)transform.position).normalized;
-        rb.velocity = dir * moveSpeed;
+        rb.linearVelocity = dir * moveSpeed;
 
         if (dir.x != 0)
             SetDirection(Mathf.Sign(dir.x));
@@ -403,7 +403,7 @@ public class FlyRangeEnemy : EnemyBT
             dirX = dirX == 0 ? 1f : Mathf.Sign(dirX);
             Vector2 knockBack = new Vector2(dirX, 0f).normalized * knockBackForce;
 
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             rb.AddForce(knockBack, ForceMode2D.Impulse);
         }
     }
@@ -435,7 +435,7 @@ public class FlyRangeEnemy : EnemyBT
             rb.gravityScale = 1f;
             rb.freezeRotation = false;
             rb.constraints = RigidbodyConstraints2D.None;
-            rb.angularDrag = 1f;
+            rb.angularDamping = 1f;
 
             // 방향 확인
             float dirX = transform.localScale.x;
