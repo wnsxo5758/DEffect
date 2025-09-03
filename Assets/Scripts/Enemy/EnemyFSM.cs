@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EnemyState { None = -1, Idle = 0, Wander, Pursuit, Attack, Dead , Hit}
 public abstract class EnemyFSM : MonoBehaviour
 {
     [Header("기본 설정")]
@@ -43,7 +42,7 @@ public abstract class EnemyFSM : MonoBehaviour
     private bool isStunned = false; // 스턴 상태 플래그
     private bool isDead = false; // 사망 상태 플래그
 
-    protected EnemyState enemyState = EnemyState.None;
+    protected EnemyState enemyState = EnemyState.Idle;
     [SerializeField]
     private float waitTime; // Idle시 대기 시간
     [SerializeField]
@@ -131,7 +130,7 @@ public abstract class EnemyFSM : MonoBehaviour
     private void OnDisable() // 비활성화될 경우
     {
         StopCoroutine(enemyState.ToString());
-        enemyState = EnemyState.None;
+        enemyState = EnemyState.Idle;
     }
     
     protected virtual void ChangeState(EnemyState state) // State 변경시 사용
@@ -260,20 +259,20 @@ public abstract class EnemyFSM : MonoBehaviour
         else if (distance <= distanceToDetect) // 감지 범위에 들어온 경우
         {
             // Debug.Log($"{gameObject.name}은 플레이어 감지했다! : {enemyState}");
-            ChangeState(EnemyState.Pursuit);
+            ChangeState(EnemyState.Chase);
         }
-        else if (enemyState != EnemyState.Pursuit) // 추적 상태가 아닌 경우
+        else if (enemyState != EnemyState.Chase) // 추적 상태가 아닌 경우
         {
             if (distance > distanceToDetect) // 감지 범위 외부에 있는 경우
             {
-                ChangeState(EnemyState.Wander);
+                ChangeState(EnemyState.Patrol);
             }
         }
-        else if (enemyState == EnemyState.Pursuit) // 추적 상태인 경우
+        else if (enemyState == EnemyState.Chase) // 추적 상태인 경우
         {
             if (distance >= pursuitLimitRange) // 인식 범위 외부에 있는 경우
             {
-                ChangeState(EnemyState.Wander);
+                ChangeState(EnemyState.Patrol);
             }
         }
     }
@@ -284,7 +283,7 @@ public abstract class EnemyFSM : MonoBehaviour
 
         yield return new WaitForSeconds(changeTime);
 
-        ChangeState(EnemyState.Wander);
+        ChangeState(EnemyState.Patrol);
     }
     
     protected virtual IEnumerator Pursuit() // 추적
@@ -366,12 +365,12 @@ public abstract class EnemyFSM : MonoBehaviour
         {
             currentHp = 0;
             isDead = true;
-            ChangeState(EnemyState.Dead);
+            ChangeState(EnemyState.Death);
             return;
         }
         
         isStunned = fromThrowable;
-        ChangeState(EnemyState.Hit);
+        ChangeState(EnemyState.Stun);
     }
     
     public void IncreaseHp(int amount)
