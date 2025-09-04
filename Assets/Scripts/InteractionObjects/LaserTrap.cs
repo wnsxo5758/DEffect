@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum LaserDirection { Down =0, Up , Right, Left}
+
 public class LaserTrap : InteractableObject
 {
     [Header("레이저 기본설정")]
