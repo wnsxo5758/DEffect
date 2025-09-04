@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Button : MonoBehaviour, IInteractable
 {
+    [SerializeField]
     public ISwitchable client; // ´ë»ó
     public void Interact()
     {
