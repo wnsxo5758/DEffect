@@ -9,7 +9,7 @@ public class Elevator : MonoBehaviour,ISwitchable
     private Vector2 movePos;// 움직일 위치
     [SerializeField]
     private float moveDuration = 2f; // 이동하는데 걸리는 시간(기본값 : 2초)
-    private bool isActive; // 작동했는가?
+    private bool isActive = false; // 작동했는가?
     public bool IsActive => isActive;
 
 
@@ -50,7 +50,9 @@ public class Elevator : MonoBehaviour,ISwitchable
         float elapsedTime = 0f;
         while(elapsedTime < moveDuration)
         {
+            elapsedTime += Time.deltaTime;
             float t = elapsedTime / moveDuration;
+            Debug.Log($"t 의 값 : {t}");
             transform.position = Vector2.Lerp(start, end, t);
             yield return null; // 다음 프레임까지 대기
         }
