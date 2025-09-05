@@ -1,18 +1,12 @@
 using UnityEngine;
 
-
 public enum LaserDirection { Down = 0, Up, Right, Left } // 레이저 방향
-
-
 
 public class LaserController : MonoBehaviour,ISwitchable
 {
     [Header("레이저 설정")]
     [SerializeField]
-    private LayerMask obstacleLayer;// 장애물 레이어
-
-    [SerializeField]
-    private Transform laserPos;
+    private Transform laserPos; //레이저가 발사되는 위치
     [SerializeField]
     private LaserDirection dir; // 레이저 방향
 

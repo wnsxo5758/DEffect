@@ -50,13 +50,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnDelay: 1
-  respawnInvulnerabilityTime: 2
-  titleSceneName: Title
-  endSceneName: EndScene
-  destroyOnTitleScene: 1
-  destroyOnEndScene: 1
+  invulnerabilityTime: 2
   toBeCon: {fileID: 0}
-  debugMode: 0
 --- !u!114 &2029315015898106650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +70,7 @@ MonoBehaviour:
   timeFreezeCooldown: 15
   timeAffectedLayers:
     serializedVersion: 2
-    m_Bits: 131328
+    m_Bits: 0
   effectExpandDuration: 2
   effectShrinkDuration: 2
   maxEffectScale: 10
@@ -174,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allSkills: []
+  debug: 0
   skillAcquiredUI: {fileID: 0}
   uiDisplayDuration: 3
 --- !u!114 &2180117996559791260
