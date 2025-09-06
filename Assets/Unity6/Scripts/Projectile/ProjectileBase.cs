@@ -9,19 +9,19 @@ public class ProjectileBase : PoolItem<ProjectileBase>
     [SerializeField] protected float speed; // 총알 속도
     [SerializeField] protected int damage;  // 총알 데미지
 
-    private ProjectileMovement bulletMovement;
+    private ProjectileMovement projectileMovement;
 
     private void Awake()
     {
-        bulletMovement = GetComponent<ProjectileMovement>();
+        projectileMovement = GetComponent<ProjectileMovement>();
     }
 
     public void Fire(Vector2 dir)
     {
-        bulletMovement.Fire(dir, speed);
+        projectileMovement.Fire(dir, speed);
     }
 
-    public void SetDamage(int dmg) // 
+    public void SetDamage(int dmg) // 외부에서 총알을 설정하는 경우 사용
     {
         damage = dmg;
     }
