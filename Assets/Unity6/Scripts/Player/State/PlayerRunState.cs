@@ -1,25 +1,50 @@
-public class PlayerRunState : PlayerBaseState
+public class PlayerRunState : PlayerGroundStateBase
 {
-    public PlayerRunState(PlayerStateMachine stateMachine) : base(stateMachine) { }
-
-    public override void OnEnter()
+    public PlayerRunState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        
     }
 
-    public override void OnUpdate()
+    protected override void SetupTransitions()
     {
-        if (stateMachine.Movement.MoveInput.sqrMagnitude < 0.1f)
-        {
-            stateMachine.ChangeState(new PlayerIdleState(stateMachine));
-        }
+        // 부모의 공통 전환 조건 먼저 설정 (점프, 낙하)
+        base.SetupTransitions();
+
+        // Run 상태만의 고유 전환 조건
+
+        // 1. 이동 입력이 없으면 Idle 상태로 전환
+        AddTransition<PlayerIdleState>(
+            () => stateMachine.Movement.MoveInput.sqrMagnitude < 0.1f,
+            priority: 10
+        );
+
+        // 2. 웅크리기 입력 시 Crouch 상태로 전환
+        AddTransition<PlayerCrouchState>(
+            () => stateMachine.Movement.IsCrouchPressed,
+            priority: 10
+        );
     }
 
-    public override void OnFixedUpdate()
+    public override void Enter()
     {
-        // 움직임 로직 호출
+        base.Enter();
+        // Run 애니메이션 재생 등
+    }
+
+    protected override void UpdateState()
+    {
+        // Run 상태의 고유 로직
+        // 예: 속도에 따른 애니메이션 속도 조절 등
+    }
+
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        // 실제 이동 처리
         stateMachine.Movement.Move();
     }
 
-    public override void OnExit() { }
+    public override void Exit()
+    {
+        // Run 상태 종료 시 정리 작업
+    }
 }

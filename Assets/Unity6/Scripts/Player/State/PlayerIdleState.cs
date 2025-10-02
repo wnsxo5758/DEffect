@@ -1,21 +1,50 @@
-public class PlayerIdleState : PlayerBaseState
+public class PlayerIdleState : PlayerGroundStateBase
 {
-    // 생성자
-    public PlayerIdleState(PlayerStateMachine stateMachine) : base(stateMachine) { }
-
-    public override void OnEnter()
+    public PlayerIdleState(PlayerStateMachine stateMachine) : base(stateMachine)
     {
-        
     }
 
-    public override void OnUpdate()
+    protected override void SetupTransitions()
     {
-        if (stateMachine.Movement.MoveInput.sqrMagnitude > 0.1f)
-        {
-            stateMachine.ChangeState(new PlayerRunState(stateMachine));
-        }
+        // 부모의 공통 전환 조건 먼저 설정 (점프, 낙하)
+        base.SetupTransitions();
+
+        // Idle 상태만의 고유 전환 조건
+
+        // 1. 이동 입력 시 Run 상태로 전환
+        AddTransition<PlayerRunState>(
+            () => stateMachine.Movement.MoveInput.sqrMagnitude > 0.1f,
+            priority: 10
+        );
+
+        // 2. 웅크리기 입력 시 Crouch 상태로 전환
+        AddTransition<PlayerCrouchState>(
+            () => stateMachine.Movement.IsCrouchPressed,
+            priority: 10
+        );
     }
-    
-    public override void OnFixedUpdate() {}
-    public override void OnExit() {}
+
+    public override void Enter()
+    {
+        base.Enter();
+        // Idle 애니메이션 재생 등
+    }
+
+    protected override void UpdateState()
+    {
+        // Idle 상태의 고유 로직
+        // 예: 대기 시간에 따른 특별 애니메이션 등
+    }
+
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        // Idle 상태에서는 움직이지 않으므로 속도를 0으로
+        // stateMachine.Movement.Stop(); // 필요시 구현
+    }
+
+    public override void Exit()
+    {
+        // Idle 상태 종료 시 정리 작업
+    }
 }
