@@ -49246,6 +49246,9 @@ GameObject:
   - component: {fileID: 1960312434}
   - component: {fileID: 1960312436}
   - component: {fileID: 1960312435}
+  - component: {fileID: 1960312438}
+  - component: {fileID: 1960312437}
+  - component: {fileID: 1960312439}
   m_Layer: 0
   m_Name: EnemyTest
   m_TagString: Untagged
@@ -49344,6 +49347,80 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.7636185, y: 1.8334639}
   m_EdgeRadius: 0
+--- !u!114 &1960312437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960312433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200798c494dcfb54aa8158423231af8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1960312438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960312433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Graph: {fileID: 7542233015390857077, guid: 4ee26ec5069be444482bc6d5a79c3455, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 771227304709849291
+  - rid: 771227483583021547
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 771227304709849291
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 1960312433}
+    - rid: 771227483583021547
+      type: {class: 'BlackboardVariable`1[[MovementRigidbody2D, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 18015917062074627321
+          m_Value1: 6974207502076533692
+        Name: movement2D
+        m_Value: {fileID: 1960312439}
+--- !u!114 &1960312439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960312433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fc209b9b7c82e4c9c807474d1b7f38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheckLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  belowCollisionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  runSpeed: 0
+  crawlSpeed: 0
+  climbSpeed: 0
+  jumpForce: 0
+  lowGravityScale: 0
+  highGravityScale: 0
+  movementLocked: 0
 --- !u!1 &2032050281
 GameObject:
   m_ObjectHideFlags: 0

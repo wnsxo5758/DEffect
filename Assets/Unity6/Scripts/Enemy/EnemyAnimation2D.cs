@@ -4,9 +4,6 @@ using UnityEngine;
 [RequireComponent (typeof(Animator))]
 public class EnemyAnimation2D : MonoBehaviour
 {
-
-
-
     Animator enemyAnimator;
 
     private void Awake()
@@ -15,6 +12,31 @@ public class EnemyAnimation2D : MonoBehaviour
     }
 
     public void UpdateAnimation(float x)
+    {
+
+    }
+
+    private void FlipX(float x) // ÁÂ¿ì ¹ÝÀü
+    {
+
+    }
+
+    public void OnAttackAnimation()
+    {
+
+    
+    }
+
+    public void OnHitAnimation()
+    {
+
+    }
+
+    public void OnDeathAnimation()
+    {
+
+    }
+    public void OnSkillAnimation()
     {
 
     }
