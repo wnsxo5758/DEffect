@@ -11,6 +11,21 @@ public class EnemyAnimation2D : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
     }
 
+
+    public void SetChase()
+    {
+        enemyAnimator.SetTrigger("isChasing");
+    }
+
+    public void Attack()
+    {
+        enemyAnimator.SetTrigger("isAttack");
+    }
+    public void Death()
+    {
+
+    }
+
     public void UpdateAnimation(float x)
     {
 

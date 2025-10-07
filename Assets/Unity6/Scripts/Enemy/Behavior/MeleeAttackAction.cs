@@ -17,6 +17,7 @@ public partial class MeleeAttackAction : Action
 
     protected override Status OnStart()
     {
+        animator.Value.Attack();
         return Status.Running;
     }
 
@@ -27,6 +28,7 @@ public partial class MeleeAttackAction : Action
 
     protected override void OnEnd()
     {
+
     }
 }
 

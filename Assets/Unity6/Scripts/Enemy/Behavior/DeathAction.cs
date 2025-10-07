@@ -9,8 +9,12 @@ using Unity.Properties;
 public partial class DeathAction : Action
 {
 
+    EnemyAnimation2D animator;
+
     protected override Status OnStart()
     {
+        if (animator == null) return Status.Failure;
+        animator.Death();
         return Status.Running;
     }
 

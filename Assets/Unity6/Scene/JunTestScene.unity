@@ -285,6 +285,67 @@ Transform:
   - {fileID: 599575854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &396589202
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3685542010041859694, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: groundCheckLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.344739
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.3125193
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.022862222
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5592127285762298269, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759166575710960654, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6313fbf68f9067b47ac03a74faf7acd4, type: 3}
 --- !u!1 &421226249
 GameObject:
   m_ObjectHideFlags: 0
@@ -48943,7 +49004,7 @@ Animator:
   m_GameObject: {fileID: 1540675521}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d69803310c9833049925a4a655113e42, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -49375,6 +49436,10 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 771227304709849291
   - rid: 771227483583021547
+  - rid: 4806665840807903305
+  - rid: 4806665840807903306
+  - rid: 4806665840807903307
+  - rid: 4806665840807903308
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -49396,6 +49461,38 @@ MonoBehaviour:
           m_Value1: 6974207502076533692
         Name: movement2D
         m_Value: {fileID: 1960312439}
+    - rid: 4806665840807903305
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 4613798161166174757
+          m_Value1: 14547948563754090456
+        Name: stunTime
+        m_Value: 3
+    - rid: 4806665840807903306
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17470887487572855293
+          m_Value1: 8845705103205634506
+        Name: currentDistance
+        m_Value: 10
+    - rid: 4806665840807903307
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7036919105039914317
+          m_Value1: 10667203646729131214
+        Name: fallOutDistance
+        m_Value: 10
+    - rid: 4806665840807903308
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 3889362995676247738
+          m_Value1: 17713140645756561439
+        Name: attackDistance
+        m_Value: 10
 --- !u!114 &1960312439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49410,10 +49507,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheckLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   belowCollisionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   runSpeed: 0
   crawlSpeed: 0
   climbSpeed: 0
@@ -49703,3 +49800,4 @@ SceneRoots:
   - {fileID: 1632369716}
   - {fileID: 1960312434}
   - {fileID: 381011821}
+  - {fileID: 396589202}
