@@ -41,6 +41,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 576614615367565326}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -64,7 +65,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 1
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -75,7 +77,6 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 0.6, y: 0.05}
   m_EdgeRadius: 0
 --- !u!251 &2749336885396995994
@@ -111,11 +112,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: b8a3b90ede8804744ac6487c8c98fa26, type: 3}
       propertyPath: m_SortingLayer
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: b8a3b90ede8804744ac6487c8c98fa26, type: 3}
       propertyPath: m_SortingLayerID
-      value: 507350669
+      value: -731209661
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: b8a3b90ede8804744ac6487c8c98fa26, type: 3}
       propertyPath: m_LocalScale.x
@@ -188,6 +189,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5768524595701668784}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -211,7 +213,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: -0.25, y: 0.9}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,7 +225,6 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 0.4, y: 1.8}
   m_EdgeRadius: 0
 --- !u!114 &9154413379466986023
@@ -243,7 +245,7 @@ MonoBehaviour:
   ladderLength: 2
   playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   detectionRadius: 0.3
 --- !u!4 &6764424237238285269 stripped
 Transform:

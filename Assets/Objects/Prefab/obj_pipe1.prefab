@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: obj_pipe1
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 0e3e1030dea9e7949b2738cc49b3a8b6, type: 3}
+      propertyPath: m_SortingLayer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 0e3e1030dea9e7949b2738cc49b3a8b6, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 944389251
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 0e3e1030dea9e7949b2738cc49b3a8b6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 51.63
@@ -73,6 +81,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5549825381349294269}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -96,7 +105,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0.010638118, y: 2.16}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -107,6 +117,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 2.4987237, y: 4.32}
   m_EdgeRadius: 0

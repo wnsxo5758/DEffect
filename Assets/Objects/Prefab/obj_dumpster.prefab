@@ -20,6 +20,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Objects
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: be5ff49ac49748842b392e29392e998f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: be5ff49ac49748842b392e29392e998f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1564731959
+      objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: be5ff49ac49748842b392e29392e998f, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5
@@ -104,6 +112,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6326456131935108557}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -127,7 +136,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: -0.0072568357, y: 0.09900689}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,12 +148,11 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 1.154017, y: 1.0256164}
   m_EdgeRadius: 0
 --- !u!50 &8212538770150572543
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -154,8 +163,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 3
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -182,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 0
 --- !u!82 &6138653751904531377
 AudioSource:
   m_ObjectHideFlags: 0
@@ -194,6 +203,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -293,7 +303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   rayDistance: 1
   checkInterval: 0.1
 --- !u!114 &6443059377585145402
@@ -308,5 +318,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa625c113ea8834e8966047daeaede4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
   impactPrefab:
   - {fileID: 7075850266487279244, guid: 48ae48c14134bea41b7106302d6294f2, type: 3}

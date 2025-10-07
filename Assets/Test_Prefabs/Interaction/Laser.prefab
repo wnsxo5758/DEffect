@@ -82,6 +82,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -103,8 +106,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -731209661
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f6651d98825d65740b57a93cce87b134, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -132,7 +135,11 @@ MonoBehaviour:
   isActive: 0
   groundLayer:
     serializedVersion: 2
-    m_Bits: 9224
+    m_Bits: 0
   laserPrefab: {fileID: 5046939933513947620, guid: e372ec20a9931c14b80972a5e21a1806, type: 3}
-  maxLaserLength: 10
   laserPos: {fileID: 7001911225535472791}
+  laserDirection: 0
+  canMove: 0
+  movePos: {fileID: 0}
+  moveDuration: 0
+  waitDuration: 0
