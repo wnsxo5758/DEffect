@@ -13,13 +13,13 @@ public class PlayerRunState : PlayerGroundStateBase
 
         // 1. 이동 입력이 없으면 Idle 상태로 전환
         AddTransition<PlayerIdleState>(
-            () => stateMachine.Movement.MoveInput.sqrMagnitude < 0.1f,
+            () => stateMachine.InputHandler.MoveInput.sqrMagnitude < 0.1f,
             priority: 10
         );
 
         // 2. 웅크리기 입력 시 Crouch 상태로 전환
         AddTransition<PlayerCrouchState>(
-            () => stateMachine.Movement.IsCrouchPressed,
+            () => stateMachine.InputHandler.IsCrouchHeld,
             priority: 10
         );
     }

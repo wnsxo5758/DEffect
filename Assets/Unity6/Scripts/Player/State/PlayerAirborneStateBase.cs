@@ -15,6 +15,15 @@ public abstract class PlayerAirborneStateBase : PlayerStateBase
         );
     }
 
+    public override void Exit()
+    {
+        // 착지 시 점프 상태 리셋
+        if (stateMachine.Movement.IsGrounded())
+        {
+            stateMachine.Movement.ResetJumpState();
+        }
+    }
+
     public override void FixedUpdate()
     {
         // 공중에서의 공통 물리 처리: 좌우 이동 가능

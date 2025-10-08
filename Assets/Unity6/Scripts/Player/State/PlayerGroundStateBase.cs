@@ -8,17 +8,38 @@ public abstract class PlayerGroundStateBase : PlayerStateBase
     {
         // 지상 상태 공통 전환 조건들
 
-        // 1. 점프 입력 시 Jump 상태로 전환 (최고 우선순위)
-        AddTransition<PlayerJumpState>(
-            () => stateMachine.Movement.IsJumpPressed,
-            priority: 100
-        );
+        // Note: 점프는 이벤트 기반으로 처리하므로 전환 조건에서 제거
+        // (InputHandler의 OnJumpPressed 이벤트를 구독)
 
-        // 2. 땅에서 떨어진 경우 Fall 상태로 전환
+        // 1. 땅에서 떨어진 경우 Fall 상태로 전환
         AddTransition<PlayerFallState>(
             () => !stateMachine.Movement.IsGrounded(),
             priority: 90
         );
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        // 점프 이벤트 구독
+        stateMachine.InputHandler.OnJumpPressed += HandleJumpInput;
+    }
+
+    public override void Exit()
+    {
+        // 점프 이벤트 구독 해제 (메모리 누수 방지)
+        stateMachine.InputHandler.OnJumpPressed -= HandleJumpInput;
+    }
+
+    private void HandleJumpInput()
+    {
+        // 지면에 있을 때만 점프 가능
+        if (stateMachine.Movement.IsGrounded())
+        {
+            stateMachine.Movement.PerformJump();
+            stateMachine.ChangeState<PlayerJumpState>();
+        }
     }
 
     public override void FixedUpdate()

@@ -21,25 +21,47 @@ public class PlayerJumpState : PlayerAirborneStateBase
     public override void Enter()
     {
         base.Enter();
-        // 점프 실행
-        stateMachine.Movement.Jump();
-        // Jump 애니메이션 재생 등
+
+        // 점프 버튼 홀드 이벤트 구독 (가변 점프)
+        stateMachine.InputHandler.OnJumpHeld += HandleJumpHold;
+        stateMachine.InputHandler.OnJumpReleased += HandleJumpRelease;
     }
 
     protected override void UpdateState()
     {
         // Jump 상태의 고유 로직
-        // 예: 점프 높이에 따른 효과 등
+        // 가변 점프는 FixedUpdate에서 처리
     }
 
     public override void FixedUpdate()
     {
         // 부모의 공중 이동 로직 사용
         base.FixedUpdate();
+
+        // 가변 점프: 버튼이 눌려있으면 추가 상승력 적용
+        if (stateMachine.InputHandler.IsJumpHeld)
+        {
+            float holdTime = stateMachine.InputHandler.GetJumpHoldTime();
+            stateMachine.Movement.ApplyJumpHoldForce(holdTime);
+        }
     }
 
     public override void Exit()
     {
-        // Jump 상태 종료 시 정리 작업
+        // 점프 이벤트 구독 해제
+        stateMachine.InputHandler.OnJumpHeld -= HandleJumpHold;
+        stateMachine.InputHandler.OnJumpReleased -= HandleJumpRelease;
+    }
+
+    private void HandleJumpHold(float holdTime)
+    {
+        // OnJumpHeld 이벤트는 정보 제공용
+        // 실제 로직은 FixedUpdate에서 처리
+    }
+
+    private void HandleJumpRelease()
+    {
+        // 점프 버튼을 뗐을 때 상승 중단
+        stateMachine.Movement.CutJump();
     }
 }

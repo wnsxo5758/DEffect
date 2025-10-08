@@ -15,16 +15,16 @@ public class PlayerCrouchState : PlayerGroundStateBase
         //    - 머리 위에 장애물이 없으면 Idle 상태로
         //    - 이동 입력이 있으면 Run 상태로
         AddTransition<PlayerIdleState>(
-            () => !stateMachine.Movement.IsCrouchPressed
+            () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
-                  && stateMachine.Movement.MoveInput.sqrMagnitude < 0.1f,
+                  && stateMachine.InputHandler.MoveInput.sqrMagnitude < 0.1f,
             priority: 10
         );
 
         AddTransition<PlayerRunState>(
-            () => !stateMachine.Movement.IsCrouchPressed
+            () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
-                  && stateMachine.Movement.MoveInput.sqrMagnitude > 0.1f,
+                  && stateMachine.InputHandler.MoveInput.sqrMagnitude > 0.1f,
             priority: 10
         );
     }
