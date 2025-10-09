@@ -11,25 +11,19 @@ public partial class UpdateDistanceAction : Action
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<GameObject> Target;
     [SerializeReference] public BlackboardVariable<float> currentDistance;
-    protected override Status OnStart()
-    {
-
-
-
-        return Status.Running;
-
-
-    }
 
     protected override Status OnUpdate()
     {
+        if (Target == null || Target.Value == null)
+        {
+            Debug.LogWarning("UpdateDistanceAction: Target is null!");
+            return Status.Failure;
+        }
+
+        currentDistance.Value = Vector2.Distance(Self.Value.transform.position, Target.Value.transform.position);
+        //Debug.Log($"distance{CurrentDistance.Value}");
         return Status.Success;
     }
 
-    protected override void OnEnd()
-    {
-
-
-    }
 }
 

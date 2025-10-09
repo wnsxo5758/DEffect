@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 101884625652215795}
   - component: {fileID: 4704805162367914870}
   - component: {fileID: 5857022358211321977}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: HammerBot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -62,17 +62,17 @@ MonoBehaviour:
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 8
   patrolDirection: 1
   wallCheckDistance: 0.5
   wallCheckOffset: {x: 0.5, y: 0}
   groundCheckOffset: {x: 0.5, y: -0.5}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 128
   groundLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 128
   hitClip: {fileID: 8300000, guid: 75f734f6ec584e243bb6aa52a34e0dcb, type: 3}
   attackClip: {fileID: 0}
   deadClip: {fileID: 8300000, guid: 2ea4fb9f67181cf499cad61b7d7791f3, type: 3}
@@ -84,7 +84,7 @@ MonoBehaviour:
   jumpForwardOffset: 0.3
   canJumpLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   attackRange: 2
   attackCooldown: 2
   attackDamage: 2

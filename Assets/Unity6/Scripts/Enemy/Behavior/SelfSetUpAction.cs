@@ -16,10 +16,6 @@ public partial class SelfSetUpAction : Action
     [SerializeReference] 
     public BlackboardVariable<EnemyAnimator> animator;
     [SerializeReference] 
-    public BlackboardVariable<Rigidbody2D> rigidbody;
-    [SerializeReference] 
-    public BlackboardVariable<SpriteRenderer> spriteRender;
-    [SerializeReference] 
     public BlackboardVariable<EnemyHp> hp;
     protected override Status OnStart()
     {
@@ -28,12 +24,6 @@ public partial class SelfSetUpAction : Action
 
         if (animator.Value == null)
             animator.Value = Self.Value.GetComponentInChildren<EnemyAnimator>();
-
-        if (rigidbody.Value == null)
-            rigidbody.Value = Self.Value.GetComponent<Rigidbody2D>();
-
-        if (spriteRender.Value == null)
-            spriteRender.Value = Self.Value.GetComponentInChildren<SpriteRenderer>();
 
         if (hp.Value == null)
             hp.Value = Self.Value.GetComponent<EnemyHp>();

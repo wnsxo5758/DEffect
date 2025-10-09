@@ -11,7 +11,13 @@ public partial class CompareDistanceCondition : Condition
 
     public override bool IsTrue()
     {
-        return true;
+        if (CurrentDistance.Value <= ChaseDistance.Value)
+        {
+            Debug.Log($"Distance: {CurrentDistance}");
+            return true;
+        }
+
+        return false;
     }
 
     public override void OnStart()

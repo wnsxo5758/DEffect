@@ -74,6 +74,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -211,6 +212,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -248,7 +252,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &682549223898636283
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -262,6 +266,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -337,7 +342,7 @@ GameObject:
   - component: {fileID: 792792595822403050}
   - component: {fileID: 522185211971339721}
   - component: {fileID: 263875411847288293}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: WrenchBot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -392,10 +397,10 @@ MonoBehaviour:
   groundCheckOffset: {x: 0.5, y: -0.5}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 4680
+    m_Bits: 128
   groundLayer:
     serializedVersion: 2
-    m_Bits: 4680
+    m_Bits: 128
   hitClip: {fileID: 8300000, guid: 75f734f6ec584e243bb6aa52a34e0dcb, type: 3}
   attackClip: {fileID: 8300000, guid: 31b6f7f79ddf96d4b9344c753dd11fea, type: 3}
   deadClip: {fileID: 8300000, guid: 2ea4fb9f67181cf499cad61b7d7791f3, type: 3}
@@ -407,14 +412,14 @@ MonoBehaviour:
   jumpForwardOffset: 0.3
   canJumpLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   attackCooldown: 2
   wrenchPrefab: {fileID: 2788398159146907001, guid: 848ceb4f3196eba4594eddf1a194b002, type: 3}
   firePos: {fileID: 5448218630321133868}
   bulletSpeed: 5
   playerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 8
   attackRange: 6
   skillBulletCount: 5
   skillAngle: 90
@@ -426,6 +431,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8700790810545068082}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -449,7 +455,8 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: -0.2182346}
   m_Size: {x: 0.5, y: 1.6498541}
   m_Direction: 0
@@ -467,7 +474,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheckLayer:
     serializedVersion: 2
-    m_Bits: 4680
+    m_Bits: 128
   belowCollisionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -480,7 +487,7 @@ MonoBehaviour:
   movementLocked: 0
 --- !u!50 &792792595822403050
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -491,8 +498,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
