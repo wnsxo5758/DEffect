@@ -29,7 +29,7 @@ public class PlayerAttack : MonoBehaviour
     
     private WeaponBase currentWeapon;
     private PlayerController controller;
-    private PlayerAnimator playerAnimator;
+    private PlayerAnim playerAnimator;
     private MovementRigidbody2D movement;
     private ThrownWeapon lastThrownWeapon;
     private GameObject attackColliderObject;
@@ -57,7 +57,7 @@ public class PlayerAttack : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<PlayerController>();
-        playerAnimator = GetComponentInChildren<PlayerAnimator>();
+        playerAnimator = GetComponentInChildren<PlayerAnim>();
         movement = GetComponent<MovementRigidbody2D>();
         playerSound = GetComponentInChildren<PlayerSound>();
         // 공격 범위 초기화

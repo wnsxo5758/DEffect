@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     // 입력 이벤트 - 다른 컴포넌트들이 구독 가능
-    public event Action<Vector2> OnMoveInput;
+    public event Action<float> OnMoveInput;
     public event Action OnJumpPressed;
     public event Action OnJumpReleased;
     public event Action<float> OnJumpHeld; // 점프 버튼이 눌린 시간 (가변 점프용)
@@ -24,7 +24,7 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerInputActions inputActions;
 
     // 현재 입력 상태 (읽기 전용 프로퍼티)
-    public Vector2 MoveInput { get; private set; }
+    public float MoveInput { get; private set; }
     public bool IsCrouchHeld { get; private set; }
     public bool IsInteractHeld { get; private set; }
     public bool IsJumpHeld { get; private set; }
@@ -101,7 +101,16 @@ public class PlayerInputHandler : MonoBehaviour
     // 입력 콜백 메서드들
     private void OnMove(InputAction.CallbackContext context)
     {
-        MoveInput = context.ReadValue<Vector2>();
+        // canceled 이벤트일 때는 0으로 설정
+        if (context.canceled)
+        {
+            MoveInput = 0f;
+        }
+        else
+        {
+            MoveInput = context.ReadValue<float>();
+        }
+
         OnMoveInput?.Invoke(MoveInput);
     }
 
@@ -179,7 +188,7 @@ public class PlayerInputHandler : MonoBehaviour
         inputActions.Player.Disable();
 
         // 입력 상태 초기화
-        MoveInput = Vector2.zero;
+        MoveInput = 0f;
         IsCrouchHeld = false;
         IsInteractHeld = false;
         IsJumpHeld = false;

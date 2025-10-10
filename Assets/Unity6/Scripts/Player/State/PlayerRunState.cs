@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public class PlayerRunState : PlayerGroundStateBase
 {
-    public PlayerRunState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerRunState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
@@ -13,7 +15,7 @@ public class PlayerRunState : PlayerGroundStateBase
 
         // 1. 이동 입력이 없으면 Idle 상태로 전환
         AddTransition<PlayerIdleState>(
-            () => stateMachine.InputHandler.MoveInput.sqrMagnitude < 0.1f,
+            () => Mathf.Abs(stateMachine.InputHandler.MoveInput) < 0.1f,
             priority: 10
         );
 

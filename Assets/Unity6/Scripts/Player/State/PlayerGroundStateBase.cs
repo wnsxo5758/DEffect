@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public abstract class PlayerGroundStateBase : PlayerStateBase
 {
-    public PlayerGroundStateBase(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerGroundStateBase(StateMachine stateMachine) : base(stateMachine)
     {
     }
 

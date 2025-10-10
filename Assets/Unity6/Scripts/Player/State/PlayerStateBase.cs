@@ -4,10 +4,10 @@ using System.Linq;
 
 public abstract class PlayerStateBase : IPlayerState
 {
-    protected PlayerStateMachine stateMachine;
+    protected StateMachine stateMachine;
     protected List<StateTransition> transitions;
 
-    public PlayerStateBase(PlayerStateMachine stateMachine)
+    public PlayerStateBase(StateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
         transitions = new List<StateTransition>();

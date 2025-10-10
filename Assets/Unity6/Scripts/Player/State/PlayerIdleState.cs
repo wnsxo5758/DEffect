@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public class PlayerIdleState : PlayerGroundStateBase
 {
-    public PlayerIdleState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerIdleState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
@@ -13,7 +15,7 @@ public class PlayerIdleState : PlayerGroundStateBase
 
         // 1. 이동 입력 시 Run 상태로 전환
         AddTransition<PlayerRunState>(
-            () => stateMachine.InputHandler.MoveInput.sqrMagnitude > 0.1f,
+            () => Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f,
             priority: 10
         );
 
@@ -40,7 +42,8 @@ public class PlayerIdleState : PlayerGroundStateBase
     {
         base.FixedUpdate();
         // Idle 상태에서는 움직이지 않으므로 속도를 0으로
-        // stateMachine.Movement.Stop(); // 필요시 구현
+        // MoveInput이 0이므로 Move() 호출하면 자동으로 속도 0
+        stateMachine.Movement.Move();
     }
 
     public override void Exit()

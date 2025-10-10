@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public abstract class PlayerAirborneStateBase : PlayerStateBase
 {
-    public PlayerAirborneStateBase(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerAirborneStateBase(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
@@ -8,10 +10,18 @@ public abstract class PlayerAirborneStateBase : PlayerStateBase
     {
         // 공중 상태 공통 전환 조건들
 
-        // 1. 착지 시 Idle 상태로 전환 (최고 우선순위)
-        AddTransition<PlayerIdleState>(
-            () => stateMachine.Movement.IsGrounded(),
+        // 1. 착지 시 이동 입력이 있으면 Run 상태로 전환
+        AddTransition<PlayerRunState>(
+            () => stateMachine.Movement.IsGrounded()
+                  && Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f,
             priority: 100
+        );
+
+        // 2. 착지 시 이동 입력이 없으면 Idle 상태로 전환
+        AddTransition<PlayerIdleState>(
+            () => stateMachine.Movement.IsGrounded()
+                  && Mathf.Abs(stateMachine.InputHandler.MoveInput) <= 0.1f,
+            priority: 99
         );
     }
 

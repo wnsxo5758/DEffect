@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimator : MonoBehaviour
+public class PlayerAnim : MonoBehaviour
 {
-    // ÆÄ¶ó¹ÌÅÍ »ó¼ö
+    // ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
     private readonly int velocityX = Animator.StringToHash("VelocityX");
     private readonly int velocityY = Animator.StringToHash("VelocityY");
     private readonly int jump = Animator.StringToHash("Jump");
@@ -25,16 +25,16 @@ public class PlayerAnimator : MonoBehaviour
     private readonly int hit = Animator.StringToHash("Hit");
     private readonly int skillAcquisition = Animator.StringToHash("SkillAcquisition");
     
-    // ¹«±â »Ì±â ¾Ö´Ï¸ÞÀÌ¼Ç
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
     private readonly int pullGround = Animator.StringToHash("PullGround");
     private readonly int pullAir = Animator.StringToHash("PullAir");
     private readonly int afterPull = Animator.StringToHash("AfterPull");
     
-    // ÅÚ·¹Æ÷Æ® ¾Ö´Ï¸ÞÀÌ¼Ç
+    // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
     private readonly int teleportPre = Animator.StringToHash("TeleportPre");
     private readonly int teleportPost = Animator.StringToHash("TeleportPost");
     
-    // »ç¸Á °ü·Ã
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private readonly int revive = Animator.StringToHash("Revive");
     private readonly int death = Animator.StringToHash("Death");
     private readonly int deathMelee = Animator.StringToHash("DeathMelee");
@@ -45,16 +45,16 @@ public class PlayerAnimator : MonoBehaviour
     private readonly int deathHammer = Animator.StringToHash("DeathHammer");
     private readonly int deathHammerSkill = Animator.StringToHash("DeathHammerSkill");
 
-    private Animator animator; // ¾Ö´Ï¸ÞÀÌ¼Ç 
+    private Animator animator; // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ 
     private PlayerController controller;
-    private MovementRigidbody2D movement; // ¿òÁ÷ÀÓ
-    private PlayerAttack playerAttack; // ÇÃ·¹ÀÌ¾î °ø°Ý
-    private PlayerInteraction playerInteraction; // »óÈ£ÀÛ¿ë
+    private MovementRigidbody2D movement; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    private PlayerAttack playerAttack; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
+    private PlayerInteraction playerInteraction; // ï¿½ï¿½È£ï¿½Û¿ï¿½
     private PlayerHp playerHp; // HP
 
     private float pnpDirection;
     
-    // »óÅÂ ÃßÀû
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool isPlayingClimbingAnimation = false;
     private bool isPlayingTeleportAnimation = false;
 
@@ -74,22 +74,22 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (movement != null)
         {
-            // ¼öÁ÷ ¼Óµµ ¹× Áö¸é »óÅÂ ¾÷µ¥ÀÌÆ®
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
             float verticalVelocity = movement.Velocity.y;
             bool currentlyGrounded = movement.IsGrounded;
             
-            // »ç´Ù¸® »óÅÂ°¡ ¾Æ´Ò ¶§¸¸ ¾÷µ¥ÀÌÆ®
+            // ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
             if (!isPlayingClimbingAnimation)
             {
                 animator.SetFloat(velocityY, verticalVelocity);
                 
-                // Áö¸é »óÅÂ ¼³Á¤
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 animator.SetBool(isGrounded, currentlyGrounded);
             }
         }
     }
     
-    // ÀÌµ¿ ¾Ö´Ï¸ÞÀÌ¼Ç ¼³Á¤
+    // ï¿½Ìµï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void MovementAnim(float x)
     {
         animator.SetFloat(velocityX, Mathf.Abs(x));
@@ -112,7 +112,7 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool(isClimbing, isOnLadder);
         isPlayingClimbingAnimation = isOnLadder;
         
-        // »ç´Ù¸®¸¦ Å¸°í ÀÖÀ» ¶§´Â ÆÄ¶ó¹ÌÅÍ ÃÊ±âÈ­
+        // ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         if (isOnLadder)
         {
             animator.SetBool(isGrounded, false);
@@ -196,7 +196,7 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetTrigger(throwWeapon);
     }
     
-    // Áö¸é¿¡¼­ ¹«±â »Ì±â ¾Ö´Ï¸ÞÀÌ¼Ç ½ÃÀÛ
+    // ï¿½ï¿½ï¿½é¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void StartPullGroundAnim(WeaponPullContext context)
     {
         currentPullContext = context;
@@ -207,7 +207,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
     
-    // °øÁß¿¡¼­ ¹«±â »Ì±â ¾Ö´Ï¸ÞÀÌ¼Ç ½ÃÀÛ
+    // ï¿½ï¿½ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì±ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void StartPullAirAnim(WeaponPullContext context)
     {
         currentPullContext = context;
@@ -222,7 +222,7 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (animator != null)
         {
-            // ·çÇÁ ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ¹Ç·Î Bool ÆÄ¶ó¹ÌÅÍ »ç¿ë
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½Ì¹Ç·ï¿½ Bool ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             animator.SetBool(afterPull, true);
         }
     }
@@ -231,14 +231,14 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (animator != null)
         {
-            // ·çÇÁ ¾Ö´Ï¸ÞÀÌ¼Ç Á¤Áö
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
             animator.SetBool(afterPull, false);
         }
         
         ResetPullAnimationTriggers();
     }
 
-    // »Ì±â µ¥¹ÌÁö ÀÌº¥Æ®
+    // ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     private void OnPullDamage()
     {
         if (playerAttack != null)
@@ -247,7 +247,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
     
-    // ¾Ö´Ï¸ÞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£ÃâµÇ´Â ¸Þ¼­µåµé
+    // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½
     public void OnPullGroundAnimationFinished()
     {
         if (playerAttack != null)
@@ -289,10 +289,10 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (isPlayingTeleportAnimation)
         {
-            // ÅÚ·¹Æ÷Æ® ¾Ö´Ï¸ÞÀÌ¼Ç »óÅÂ Á¤¸®
+            // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             isPlayingTeleportAnimation = false;
         
-            // ÅÚ·¹Æ÷Æ® °ü·Ã Æ®¸®°Å ÃÊ±âÈ­
+            // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
             ResetTeleportAnimationTriggers();
             ResetPullAnimationTriggers();
         }
@@ -305,13 +305,13 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetTrigger(teleportPost);
     }
 
-    // ÅÚ·¹Æ÷Æ® ½ÃÀÛ ¾Ö´Ï¸ÞÀÌ¼Ç ¿Ï·á
+    // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ï·ï¿½
     private void OnTeleportStartAnim()
     {
         playerAttack?.OnTeleportStartAnim();
     }
 
-    // ÅÚ·¹Æ÷Æ® Á¾·á ¾Ö´Ï¸ÞÀÌ¼Ç ¿Ï·á
+    // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ï·ï¿½
     private void OnTeleportEndAnim()
     {
         isPlayingTeleportAnimation = false;
@@ -394,7 +394,7 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
-    // °ø°Ý Å¸ÀÌ¹Ö ÀÌº¥Æ®
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¹ï¿½ ï¿½Ìºï¿½Æ®
     private void HandleAttackEvent()
     {
         playerAttack.HandleAttackCollision();

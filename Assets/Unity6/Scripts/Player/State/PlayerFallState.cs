@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public class PlayerFallState : PlayerAirborneStateBase
 {
-    public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerFallState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 

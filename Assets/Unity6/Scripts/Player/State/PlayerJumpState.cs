@@ -1,20 +1,20 @@
+using UnityEngine;
+
 public class PlayerJumpState : PlayerAirborneStateBase
 {
-    public PlayerJumpState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerJumpState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
     protected override void SetupTransitions()
     {
-        // 부모의 공통 전환 조건 먼저 설정 (착지)
-        base.SetupTransitions();
-
-        // Jump 상태만의 고유 전환 조건
+        // Jump 상태는 착지를 체크하지 않음
+        // 반드시 Fall 상태를 거쳐야 착지함
 
         // 1. 속도가 음수가 되면(떨어지기 시작) Fall 상태로 전환
         AddTransition<PlayerFallState>(
-            () => stateMachine.Movement.Velocity.y < 0,
-            priority: 50
+            () => stateMachine.Movement.Velocity.y <= 0,
+            priority: 100
         );
     }
 

@@ -83,6 +83,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -105,7 +108,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1056460031
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0ccd2b99e9b547b498330df9c7104170, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -120,7 +123,7 @@ SpriteRenderer:
   m_SpriteSortPoint: 0
 --- !u!95 &5980671568619909589
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -134,6 +137,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -4926,6 +4930,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9828,6 +9835,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9983,6 +9993,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -10117,6 +10128,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -15008,6 +15022,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -15113,7 +15130,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6439055279093694464
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -15124,8 +15141,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -15146,6 +15163,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8759166575710960654}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: b61c49532a517dd47801b8401e318ca1, type: 2}
   m_IncludeLayers:
@@ -15169,7 +15187,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: -0.015, y: 0.62}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -15180,7 +15199,6 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 0.4, y: 1.25}
   m_EdgeRadius: 0
 --- !u!114 &3685542010041859694
@@ -15197,7 +15215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheckLayer:
     serializedVersion: 2
-    m_Bits: 2632
+    m_Bits: 0
   belowCollisionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -15225,7 +15243,7 @@ MonoBehaviour:
   crouchCheckDistance: 1
   aboveLayer:
     serializedVersion: 2
-    m_Bits: 584
+    m_Bits: 0
   rollCooldown: 2
   respawnDelay: 2
 --- !u!114 &658921088476211807
@@ -15244,7 +15262,7 @@ MonoBehaviour:
   attackCollider: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   attackPolygonPoints:
   - {x: 0, y: 0}
   - {x: 0, y: 1.3}
@@ -15275,6 +15293,7 @@ MonoBehaviour:
   hitStunDuration: 0.5
   specialStunDuration: 0.25
   uiPlayer: {fileID: 0}
+  bloodParticle: {fileID: 0}
 --- !u!114 &869267657480675355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15291,12 +15310,12 @@ MonoBehaviour:
   interactionPoint: {fileID: 953488845849280580}
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 98816
+    m_Bits: 0
   interactionPrompt: {fileID: 0}
   holdDistance: 0.4
   holdableLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   autoReleaseDelay: 0.1
   raycastOffset: {x: 0, y: 0}
 --- !u!114 &1349480774018210720
@@ -15351,7 +15370,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 7ed3d595-5492-4101-bac0-bec109b98af9
-    m_ActionName: Player/Move[/Keyboard/leftArrow,/Keyboard/rightArrow]
+    m_ActionName: 'Player/Move[/Keyboard/leftArrow,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15367,7 +15386,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 2a9bc1c4-7f9a-4636-b52c-bcc89747d10e
-    m_ActionName: Player/Jump[/Keyboard/space]
+    m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15383,7 +15402,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 5b87336a-73db-41c4-8a15-5b71480088e8
-    m_ActionName: Player/Attack[/Keyboard/z]
+    m_ActionName: 'Player/Attack[/Keyboard/z]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15399,7 +15418,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: a843cf78-26d3-435f-b278-20653c4dc419
-    m_ActionName: Player/Crouch[/Keyboard/downArrow]
+    m_ActionName: 'Player/Crouch[/Keyboard/downArrow]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15415,7 +15434,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 688e002e-f922-41b0-9f36-aad9afe7c2fa
-    m_ActionName: Player/Roll[/Keyboard/leftShift]
+    m_ActionName: 'Player/Roll[/Keyboard/leftShift]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15431,7 +15450,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 4701fd65-94fc-4227-861e-8f0593717ac5
-    m_ActionName: Player/Interact[/Keyboard/f]
+    m_ActionName: 'Player/Interact[/Keyboard/f]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15447,7 +15466,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 3e3da664-65c0-4f24-9f06-48ba06a74e67
-    m_ActionName: Player/Throw[/Keyboard/x]
+    m_ActionName: 'Player/Throw[/Keyboard/x]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5783198869496049011}
@@ -15479,7 +15498,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: d638bf1a-1e10-4321-9595-26fe0679d470
-    m_ActionName: Player/DebugDeath[/Keyboard/p]
+    m_ActionName: 'Player/DebugDeath[/Keyboard/p]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: PC
   m_DefaultActionMap: Player
@@ -15487,7 +15506,7 @@ MonoBehaviour:
   m_Camera: {fileID: 0}
 --- !u!95 &8907108913629194508
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -15501,6 +15520,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -20701,6 +20721,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

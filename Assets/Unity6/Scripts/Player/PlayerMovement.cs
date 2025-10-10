@@ -5,6 +5,7 @@ using UnityEngine;
 /// 단일 책임 원칙(SRP): 이동/점프/물리 로직만 담당 (입력 처리는 PlayerInputHandler에서)
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CapsuleCollider2D))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -17,8 +18,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpCutMultiplier = 0.5f; // 버튼 떼면 속도 감소 비율
 
     [Header("Collider Settings")]
-    [SerializeField] private BoxCollider2D standingCollider;
-    [SerializeField] private BoxCollider2D crouchingCollider;
+    [SerializeField] private CapsuleCollider2D capsuleCollider;
+    [SerializeField] private Vector2 standingColliderSize = new(0.5f, 1.0f);
+    [SerializeField] private Vector2 standingColliderOffset = new(0f, 0.5f);
+    [SerializeField] private Vector2 crouchingColliderSize = new(0.5f, 0.6f);
+    [SerializeField] private Vector2 crouchingColliderOffset = new(0f, 0.3f);
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -35,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 Velocity => rb.linearVelocity;
 
     // 현재 이동 입력값 (외부에서 설정 가능)
-    public Vector2 CurrentMoveInput { get; private set; }
+    public float CurrentMoveInput { get; private set; }
 
     // 가변 점프 상태
     private bool isJumping = false;
@@ -44,12 +48,16 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // CapsuleCollider가 할당되지 않았으면 자동 검색
+        if (capsuleCollider == null)
+            capsuleCollider = GetComponent<CapsuleCollider2D>();
     }
 
     /// <summary>
     /// 이동 입력값 설정 (InputHandler에서 호출)
     /// </summary>
-    public void SetMoveInput(Vector2 input)
+    public void SetMoveInput(float input)
     {
         CurrentMoveInput = input;
     }
@@ -59,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public void Move()
     {
-        rb.linearVelocity = new Vector2(CurrentMoveInput.x * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(CurrentMoveInput * moveSpeed, rb.linearVelocity.y);
     }
 
     /// <summary>
@@ -129,8 +137,20 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     public void SetCrouchingCollider(bool isCrouching)
     {
-        standingCollider.enabled = !isCrouching;
-        crouchingCollider.enabled = isCrouching;
+        if (capsuleCollider == null) return;
+
+        if (isCrouching)
+        {
+            // 웅크린 상태: 작은 콜라이더
+            capsuleCollider.size = crouchingColliderSize;
+            capsuleCollider.offset = crouchingColliderOffset;
+        }
+        else
+        {
+            // 서있는 상태: 큰 콜라이더
+            capsuleCollider.size = standingColliderSize;
+            capsuleCollider.offset = standingColliderOffset;
+        }
     }
 
     /// <summary>

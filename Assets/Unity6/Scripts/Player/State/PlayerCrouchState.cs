@@ -1,6 +1,8 @@
+using UnityEngine;
+
 public class PlayerCrouchState : PlayerGroundStateBase
 {
-    public PlayerCrouchState(PlayerStateMachine stateMachine) : base(stateMachine)
+    public PlayerCrouchState(StateMachine stateMachine) : base(stateMachine)
     {
     }
 
@@ -17,14 +19,14 @@ public class PlayerCrouchState : PlayerGroundStateBase
         AddTransition<PlayerIdleState>(
             () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
-                  && stateMachine.InputHandler.MoveInput.sqrMagnitude < 0.1f,
+                  && Mathf.Abs(stateMachine.InputHandler.MoveInput) < 0.1f,
             priority: 10
         );
 
         AddTransition<PlayerRunState>(
             () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
-                  && stateMachine.InputHandler.MoveInput.sqrMagnitude > 0.1f,
+                  && Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f,
             priority: 10
         );
     }
@@ -46,8 +48,9 @@ public class PlayerCrouchState : PlayerGroundStateBase
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        // 웅크린 상태에서도 좌우 이동 가능 (느린 속도)
-        // stateMachine.Movement.CrouchMove(); // 필요시 구현
+        // 웅크린 상태에서도 좌우 이동 가능
+        // 나중에 느린 속도 구현 시 CrouchMove() 사용
+        stateMachine.Movement.Move();
     }
 
     public override void Exit()

@@ -1,11 +1,12 @@
+using UnityEngine;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerInputHandler))]
 [RequireComponent(typeof(PlayerHealth))]
-public class PlayerStateMachine : MonoBehaviour
+[RequireComponent(typeof(PlayerAnimator))]
+public class StateMachine : MonoBehaviour
 {
     // 현재 활성화된 상태 (읽기 전용)
     public IPlayerState CurrentState { get; private set; }
@@ -14,8 +15,8 @@ public class PlayerStateMachine : MonoBehaviour
     public PlayerMovement Movement { get; private set; }
     public PlayerInputHandler InputHandler { get; private set; }
     public PlayerHealth Health { get; private set; }
+    public PlayerAnimator Animator { get; private set; }
     // TODO: 추가 컴포넌트 참조
-    // public PlayerAnimator Animator { get; private set; }
     // public PlayerCombatSystem Combat { get; private set; }
 
     // 상태 인스턴스 캐싱 (메모리 최적화)
@@ -27,6 +28,7 @@ public class PlayerStateMachine : MonoBehaviour
         Movement = GetComponent<PlayerMovement>();
         InputHandler = GetComponent<PlayerInputHandler>();
         Health = GetComponent<PlayerHealth>();
+        Animator = GetComponent<PlayerAnimator>();
 
         stateInstances = new Dictionary<Type, IPlayerState>();
 
@@ -105,9 +107,9 @@ public class PlayerStateMachine : MonoBehaviour
         CurrentState.Enter();
 
         // 디버그 로그 (개발 중에만 활성화)
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         Debug.Log($"[StateMachine] State changed to: {stateType.Name}");
-        #endif
+#endif
     }
 
     public void ChangeState<TState>() where TState : IPlayerState
@@ -117,16 +119,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private IPlayerState CreateState(Type stateType)
     {
-        try
-        {
-            // 생성자에 this(PlayerStateMachine)를 전달하여 인스턴스 생성
-            return (IPlayerState)Activator.CreateInstance(stateType, this);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"[StateMachine] Failed to create state: {stateType.Name}\n{e.Message}");
-            return null;
-        }
+        return (IPlayerState)Activator.CreateInstance(stateType, new object[] { this });
     }
 
     public bool IsCurrentState<TState>() where TState : IPlayerState
