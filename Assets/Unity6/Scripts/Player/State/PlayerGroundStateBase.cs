@@ -22,14 +22,32 @@ public abstract class PlayerGroundStateBase : PlayerStateBase
     {
         base.Enter();
 
-        // 점프 이벤트 구독
+        // 점프 이벤트 구독 (재사용 가능하도록 매번 구독)
+        SubscribeToJumpEvent();
+
+        // Roll 이벤트 구독
+        SubscribeToRollEvent();
+    }
+
+    // 자식 클래스에서 오버라이드하여 점프 핸들러를 커스터마이즈 가능
+    protected virtual void SubscribeToJumpEvent()
+    {
         stateMachine.InputHandler.OnJumpPressed += HandleJumpInput;
+    }
+
+    // 자식 클래스에서 오버라이드하여 Roll 핸들러를 커스터마이즈 가능
+    protected virtual void SubscribeToRollEvent()
+    {
+        stateMachine.InputHandler.OnRollPressed += HandleRollInput;
     }
 
     public override void Exit()
     {
         // 점프 이벤트 구독 해제 (메모리 누수 방지)
         stateMachine.InputHandler.OnJumpPressed -= HandleJumpInput;
+
+        // Roll 이벤트 구독 해제
+        stateMachine.InputHandler.OnRollPressed -= HandleRollInput;
     }
 
     private void HandleJumpInput()
@@ -44,6 +62,15 @@ public abstract class PlayerGroundStateBase : PlayerStateBase
                 stateMachine.Animator.TriggerJump();
 
             stateMachine.ChangeState<PlayerJumpState>();
+        }
+    }
+
+    private void HandleRollInput()
+    {
+        // 지면에 있을 때만 Roll 가능
+        if (stateMachine.Movement.IsGrounded())
+        {
+            stateMachine.ChangeState<PlayerRollState>();
         }
     }
 

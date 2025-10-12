@@ -329,9 +329,7 @@ MonoBehaviour:
   jumpCutMultiplier: 0.5
   capsuleCollider: {fileID: 9029171141294404072}
   standingColliderSize: {x: 0.5, y: 1.25}
-  standingColliderOffset: {x: 0, y: 0.625}
-  crouchingColliderSize: {x: 0.5, y: 0.6}
-  crouchingColliderOffset: {x: 0, y: 0.5}
+  crouchingColliderSize: {x: 0.5, y: 0.75}
   groundCheck: {fileID: 7821198656505276285}
   groundCheckSize: {x: 0.3, y: 0.1}
   groundLayer:

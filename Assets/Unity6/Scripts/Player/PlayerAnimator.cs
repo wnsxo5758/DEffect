@@ -98,6 +98,12 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (spriteRenderer == null) return;
 
+        // 구르기 중에는 스프라이트 방향 변경 금지
+        if (stateMachine.IsCurrentState<PlayerRollState>())
+        {
+            return;
+        }
+
         float moveInput = movement.CurrentMoveInput;
 
         // 입력이 있을 때만 방향 전환

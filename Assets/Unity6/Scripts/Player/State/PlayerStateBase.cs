@@ -7,16 +7,23 @@ public abstract class PlayerStateBase : IPlayerState
     protected StateMachine stateMachine;
     protected List<StateTransition> transitions;
 
+    private bool transitionsInitialized = false;
+
     public PlayerStateBase(StateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
         transitions = new List<StateTransition>();
     }
-    
+
     // 템플릿 메서드 패턴
     public virtual void Enter()
     {
-        SetupTransitions(); // 전환 조건 등록
+        // 전환 조건은 한 번만 등록 (상태 인스턴스가 재사용되므로)
+        if (!transitionsInitialized)
+        {
+            SetupTransitions();
+            transitionsInitialized = true;
+        }
     }
 
     public virtual void Exit() { }

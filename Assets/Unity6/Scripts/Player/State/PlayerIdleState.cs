@@ -48,6 +48,7 @@ public class PlayerIdleState : PlayerGroundStateBase
 
     public override void Exit()
     {
+        base.Exit(); // 부모의 Exit() 호출하여 점프 이벤트 구독 해제
         // Idle 상태 종료 시 정리 작업
     }
 }

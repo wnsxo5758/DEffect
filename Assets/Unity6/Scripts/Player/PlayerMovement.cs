@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float crouchSpeedMultiplier = 0.5f; // 웅크리기 시 속도 배수
 
     [Header("Jump Settings")]
     [SerializeField] private float minJumpForce = 8f; // 최소 점프 힘 (짧게 누를 때)
@@ -52,6 +53,10 @@ public class PlayerMovement : MonoBehaviour
 
     // 공중 시간 읽기 전용 프로퍼티
     public float AirTime => airTime;
+
+    // 캐릭터가 바라보는 방향 (1 = 오른쪽, -1 = 왼쪽)
+    private float facingDirection = 1f;
+    public float FacingDirection => facingDirection;
 
     private void Awake()
     {
@@ -99,6 +104,12 @@ public class PlayerMovement : MonoBehaviour
     public void SetMoveInput(float input)
     {
         CurrentMoveInput = input;
+
+        // 입력이 있으면 바라보는 방향 업데이트
+        if (Mathf.Abs(input) > 0.01f)
+        {
+            facingDirection = Mathf.Sign(input);
+        }
     }
 
     /// <summary>
@@ -115,6 +126,14 @@ public class PlayerMovement : MonoBehaviour
     public void MoveToDirection(float horizontalInput)
     {
         rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+    /// <summary>
+    /// 웅크리기 상태에서 느린 속도로 이동
+    /// </summary>
+    public void CrouchMove()
+    {
+        rb.linearVelocity = new Vector2(CurrentMoveInput * moveSpeed * crouchSpeedMultiplier, rb.linearVelocity.y);
     }
 
     /// <summary>
