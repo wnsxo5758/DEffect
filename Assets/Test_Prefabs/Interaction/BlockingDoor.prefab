@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7550842945944906025}
   - component: {fileID: 3904754959215155260}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: BlockingDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1564731959
-  m_SortingLayer: 8
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -1542496744, guid: bb9898937690e2240b3230b21b5e7962, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -168,7 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 691117841157296209}
   - component: {fileID: 395515146561326651}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Collider_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4907516198944689}
   - component: {fileID: 762674765838984822}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Collider_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

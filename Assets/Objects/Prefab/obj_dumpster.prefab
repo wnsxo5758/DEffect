@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: be5ff49ac49748842b392e29392e998f, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: be5ff49ac49748842b392e29392e998f, type: 3}
       propertyPath: m_TagString
@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: be5ff49ac49748842b392e29392e998f, type: 3}
       propertyPath: m_SortingLayerID
-      value: 1564731959
+      value: -649035191
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: be5ff49ac49748842b392e29392e998f, type: 3}
       propertyPath: m_LocalScale.x

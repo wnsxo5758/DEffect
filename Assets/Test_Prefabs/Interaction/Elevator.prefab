@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -731209661
+  m_SortingLayerID: -1415958887
   m_SortingLayer: 5
   m_SortingOrder: 3
   m_Sprite: {fileID: -2004794260, guid: 14e20a994958ee440a779ed8c66753d3, type: 3}
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 6385253675219941252}
   - component: {fileID: 2732179125126010316}
   - component: {fileID: 8660194166956456416}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Button
   m_TagString: Button
   m_Icon: {fileID: 0}
@@ -592,7 +592,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -731209661
+  m_SortingLayerID: -1415958887
   m_SortingLayer: 5
   m_SortingOrder: 4
   m_Sprite: {fileID: 0}

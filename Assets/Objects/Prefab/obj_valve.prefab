@@ -14,11 +14,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_TagString
       value: Valve
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1415958887
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_LocalScale.x
@@ -103,6 +111,7 @@ CircleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7472304510834808403}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -126,9 +135,9 @@ CircleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
   m_Radius: 0.2
 --- !u!114 &8180118777850371946
 MonoBehaviour:
@@ -166,7 +175,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 053be432bdc60c047862da81d7062cac, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 053be432bdc60c047862da81d7062cac, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
