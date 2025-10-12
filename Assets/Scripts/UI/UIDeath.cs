@@ -43,7 +43,7 @@ public class UIDeath : MonoBehaviour
     {
         if (respawnButton != null)
         {
-            //respawnButton.onClick.AddListener(OnRespawnButtonClicked);
+            // respawnButton.onClick.AddListener(OnRespawnButtonClicked);
             respawnButton.gameObject.SetActive(false);
         }
     }
@@ -113,7 +113,7 @@ public class UIDeath : MonoBehaviour
         if (button == null) yield break;
         
         yield return new WaitForSeconds(delay);
-       // respawnButton.interactable = true;
+        // respawnButton.interactable = true;
         CanvasGroup canvasGroup = button.GetComponent<CanvasGroup>();
         if (canvasGroup == null)
         {
@@ -197,7 +197,7 @@ public class UIDeath : MonoBehaviour
         
         // 버튼 비활성화 (중복 클릭 방지)
         if (respawnButton != null)
-         //   respawnButton.interactable = false;
+            // respawnButton.interactable = false;
         
         // 사망 UI 숨기기
         HideDeathUI();
@@ -215,7 +215,7 @@ public class UIDeath : MonoBehaviour
 
     private void OnDestroy()
     {
-       // if (respawnButton != null)
-         //   respawnButton.onClick.RemoveListener(OnRespawnButtonClicked);
+        // if (respawnButton != null)
+        //     respawnButton.onClick.RemoveListener(OnRespawnButtonClicked);
     }
 }

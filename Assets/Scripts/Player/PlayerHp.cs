@@ -22,7 +22,7 @@ public class PlayerHp : MonoBehaviour
     private ParticleSystem bloodParticle;
 
     private PlayerController player;
-    private PlayerAnimator playerAnimator;
+    private PlayerAnim playerAnimator;
     private SpriteRenderer spriteRenderer; // �ǰݽ� ���� ������ ���� ��������Ʈ ������
     private Color originColor; //�÷��̾� �ʱ� ����
     private Rigidbody2D rb;
@@ -51,7 +51,7 @@ public class PlayerHp : MonoBehaviour
         currentHp = maxHp;
         playerSound = GetComponentInChildren<PlayerSound>();
         player = GetComponent<PlayerController>();
-        playerAnimator = GetComponentInChildren<PlayerAnimator>();
+        playerAnimator = GetComponentInChildren<PlayerAnim>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         movement = GetComponent<MovementRigidbody2D>();
         rb = GetComponent<Rigidbody2D>();

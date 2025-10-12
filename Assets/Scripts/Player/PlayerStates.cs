@@ -6,11 +6,11 @@ namespace PlayerStates
 {
     public class Idle : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             
             animator?.MovementAnim(0f);
             
@@ -41,11 +41,11 @@ namespace PlayerStates
 
     public class Run : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
         }
 
         public override void Execute(PlayerController player)
@@ -126,7 +126,7 @@ namespace PlayerStates
     
     public class Crawl : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private BoxCollider2D boxCollider;
         private Vector2 originalColliderSize;
         private Vector2 originalColliderOffset;
@@ -135,7 +135,7 @@ namespace PlayerStates
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             boxCollider = player.GetComponent<BoxCollider2D>();
             
             originalColliderSize = boxCollider.size;
@@ -185,7 +185,7 @@ namespace PlayerStates
     public class Roll : State<PlayerController>
     {
         private MovementRigidbody2D movement;
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private float rollSpeed = 10f;
         private float rollDuration = 0.5f;
         private float rollTimer;
@@ -204,7 +204,7 @@ namespace PlayerStates
         public override void Enter(PlayerController player)
         {
             movement = player.GetComponent<MovementRigidbody2D>();
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             
             // 구르기 방향 설정 (현재 바라보는 방향)
             rollDirection = player.transform.localScale.x > 0 ? 1 : -1;
@@ -301,14 +301,14 @@ namespace PlayerStates
     
     public class Hold : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private PlayerHp playerHp;
         private PlayerInteraction interaction;
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
             playerHp = player.GetComponent<PlayerHp>();
             interaction = player.GetComponent<PlayerInteraction>();
@@ -347,13 +347,13 @@ namespace PlayerStates
     public class Climb : State<PlayerController>
     {
         private MovementRigidbody2D movement;
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private PlayerHp playerHp;
         
         public override void Enter(PlayerController player)
         {
             movement = player.GetComponent<MovementRigidbody2D>();
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             playerHp = player.GetComponent<PlayerHp>();
             
             // 사다리 모드 설정
@@ -433,14 +433,14 @@ namespace PlayerStates
 
     public class PullWeaponGround : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private WeaponPullContext pullContext;
         private bool animationFinished = false;
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
 
             // 지면에서는 이동 완전 정지
@@ -471,14 +471,14 @@ namespace PlayerStates
 
     public class PullWeaponAir : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private WeaponPullContext pullContext;
         private bool animationFinished = false;
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
 
             if (movement != null)
@@ -512,7 +512,7 @@ namespace PlayerStates
 
     public class AfterPull : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private Rigidbody2D rb;
         private WeaponPullContext pullContext;
@@ -524,7 +524,7 @@ namespace PlayerStates
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
             rb = player.GetComponent<Rigidbody2D>();
 
@@ -588,13 +588,13 @@ namespace PlayerStates
     
     public class TeleportStart : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private bool animationFinished;
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
 
             if (movement != null)
@@ -640,7 +640,7 @@ namespace PlayerStates
 
     public class TeleportEnd : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private bool animationFinished = false;
         private bool shouldPullWeapon = false;
@@ -648,7 +648,7 @@ namespace PlayerStates
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
 
             if (movement != null)
@@ -748,13 +748,13 @@ namespace PlayerStates
     {
         private PlayerInteraction interaction;
         private MovementRigidbody2D movement;
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         
         public override void Enter(PlayerController player)
         {
             interaction = player.GetComponent<PlayerInteraction>();
             movement = player.GetComponent<MovementRigidbody2D>();
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             
             movement.MoveTo(0f);
 
@@ -777,7 +777,7 @@ namespace PlayerStates
 
     public class ManaDrain : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private PlayerHp playerHp;
         private ManaDrainContext context;
@@ -792,7 +792,7 @@ namespace PlayerStates
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
             playerHp = player.GetComponent<PlayerHp>();
             
@@ -878,7 +878,7 @@ namespace PlayerStates
 
     public class VendingMachineMove : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private VendingMachineHealContext context;
         private bool isMovementComplete = false;
@@ -890,7 +890,7 @@ namespace PlayerStates
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
             
             isMovementComplete = false;
@@ -984,7 +984,7 @@ namespace PlayerStates
     
     public class VendingMachineHeal : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private PlayerHp playerHp;
         private VendingMachineHealContext context;
@@ -1009,7 +1009,7 @@ namespace PlayerStates
 
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
             playerHp = player.GetComponent<PlayerHp>();
 
@@ -1141,7 +1141,7 @@ namespace PlayerStates
 
     public class SkillAcquisition : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private MovementRigidbody2D movement;
         private float acquisitionDuration;
         private float timer;
@@ -1150,7 +1150,7 @@ namespace PlayerStates
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             movement = player.GetComponent<MovementRigidbody2D>();
 
             timer = 0f;
@@ -1187,7 +1187,7 @@ namespace PlayerStates
     
     public class Hit : State<PlayerController>
     {
-        private PlayerAnimator animator;
+        private PlayerAnim animator;
         private PlayerHp playerHp;
         
         private float hitStunDuration;
@@ -1195,7 +1195,7 @@ namespace PlayerStates
         
         public override void Enter(PlayerController player)
         {
-            animator = player.GetComponentInChildren<PlayerAnimator>();
+            animator = player.GetComponentInChildren<PlayerAnim>();
             playerHp = player.GetComponent<PlayerHp>();
             
             hitStunDuration = playerHp.GetCurrentHitStunDuration();

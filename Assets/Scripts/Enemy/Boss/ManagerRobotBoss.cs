@@ -779,7 +779,7 @@ public class ManagerRobotBoss : BossBT
 
                 if (cineachinShake != null)
                 {
-                    //cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
+                    // cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
                 }
             }
         }
@@ -855,7 +855,7 @@ public class ManagerRobotBoss : BossBT
             
             if (cineachinShake != null)
             {
-                //cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
+                // cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
             }
         }
     }
@@ -907,7 +907,7 @@ public class ManagerRobotBoss : BossBT
         
         if (cineachinShake != null)
         {
-            //cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
+            // cineachinShake.ShakeScreen(0.3f, 0.2f, 0.1f);
         }
     }
     

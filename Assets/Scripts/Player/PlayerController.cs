@@ -4,20 +4,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("½ºÅ×ÀÌÁö")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private StageData stageData;
 
-    [Header("µð¹ö±× ¼³Á¤")] 
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")] 
     [SerializeField] private bool enableDeveloperDebug = false;
     
-    [Header("¿õÅ©¸®±â")] 
+    [Header("ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½")] 
     [SerializeField] private float crouchCheckDistance = 0.5f;
     [SerializeField] private LayerMask aboveLayer;
 
-    [Header("±¸¸£±â")] 
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] 
     [SerializeField] private float rollCooldown = 1f;
 
-    [Header("¸®½ºÆù µô·¹ÀÌ")] 
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")] 
     [SerializeField] private float respawnDelay = 2f;
     
     private MovementRigidbody2D movement;
@@ -25,17 +25,17 @@ public class PlayerController : MonoBehaviour
     private PlayerAttack playerAttack;
     private PlayerInteraction playerInteraction;
     private PlayerStateMachine<PlayerController> stateMachine;
-    private PlayerAnimator animator;
+    private PlayerAnim animator;
     private PlayerSound playerSound;
-    // ÀÌµ¿ ÀÔ·Â ÀúÀå¿ë º¯¼ö
+    // ï¿½Ìµï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private Vector2 moveInput;
 
     private PlayerInteraction.InteractionType currentInteractionType = PlayerInteraction.InteractionType.None;
     private bool canInteract = false;
     private bool canRoll = true;
     
-    public bool IsOnLadder { get; set; } //»ç´Ù¸® 
-    public bool WantToStand { get; set; } // ¾É¾ÒÀ» ¶§ ÀÏ¾î³¯ ¼ö ÀÖ´Â »óÅÂ
+    public bool IsOnLadder { get; set; } //ï¿½ï¿½Ù¸ï¿½ 
+    public bool WantToStand { get; set; } // ï¿½É¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï¾î³¯ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
     
     private void Awake()
     {
@@ -44,13 +44,13 @@ public class PlayerController : MonoBehaviour
         playerAttack = GetComponent<PlayerAttack>();
         playerHp = GetComponent<PlayerHp>();
         playerInteraction = GetComponent<PlayerInteraction>();
-        animator = GetComponentInChildren<PlayerAnimator>();
+        animator = GetComponentInChildren<PlayerAnim>();
         stateMachine = new PlayerStateMachine<PlayerController>();
     }
 
     private void Start()
     {
-        // »óÅÂ ¸Ó½Å ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½Ê±ï¿½È­
         stateMachine.Setup(this, new PlayerStates.Idle());
         stateMachine.SetGlobalState(new PlayerStates.StateGlobal());
         if (playerHp != null)
@@ -66,18 +66,18 @@ public class PlayerController : MonoBehaviour
         stateMachine.Execute();
     }
 
-    // Move ÀÌº¥Æ®
+    // Move ï¿½Ìºï¿½Æ®
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
     }
     
-    // Jump ÀÌº¥Æ®
+    // Jump ï¿½Ìºï¿½Æ®
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
         {
-            // ÇöÀç »óÅÂ¿¡ µû¶ó Á¡ÇÁ Ã³¸®
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
             if (GetCurrentState() is PlayerStates.Idle || GetCurrentState() is PlayerStates.Run)
             {
                 if (movement.IsGrounded)
@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
                     ChangeState(new PlayerStates.Jump());
                 }
             }
-            // »ç´Ù¸®¿¡¼­ Á¡ÇÁÇÏ´Â °æ¿ì
+            // ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
             else if (GetCurrentState() is PlayerStates.Climb)
             {
                 OnLadderJump();
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Crouch ÀÌº¥Æ®
+    // Crouch ï¿½Ìºï¿½Æ®
     public void OnCrouch(InputAction.CallbackContext context)
     {
         switch (context.phase)
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Roll ÀÌº¥Æ®
+    // Roll ï¿½Ìºï¿½Æ®
     public void OnRoll(InputAction.CallbackContext context) 
     {
         if (context.phase == InputActionPhase.Performed)
@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // Interact ÀÌº¥Æ®
+    // Interact ï¿½Ìºï¿½Æ®
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (playerInteraction != null)
@@ -142,7 +142,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // ±ÙÁ¢ °ø°Ý ÀÌº¥Æ®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ®
     public void OnMeleeAttack(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // ÅÚ·¹Æ÷Æ® ÀÌº¥Æ®
+    // ï¿½Ú·ï¿½ï¿½ï¿½Æ® ï¿½Ìºï¿½Æ®
     public void OnTeleport(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // ThrowWeapon ÀÌº¥Æ®
+    // ThrowWeapon ï¿½Ìºï¿½Æ®
     public void OnThrowWeapon(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -179,8 +179,8 @@ public class PlayerController : MonoBehaviour
     }
     
     
-    // ÀÌµ¿ ¾÷µ¥ÀÌÆ®
-    public void UpdateMove(float input) // ÀÌµ¿
+    // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    public void UpdateMove(float input) // ï¿½Ìµï¿½
     {
         if (GetCurrentState() is PlayerStates.Crawl)
         {
@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector2(xPos, transform.position.y);
     }
 
-    // ½ºÇÁ¶óÀÌÆ® ¹æÇâ ¼³Á¤
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public void SpriteFlipX(float direction)
     {
         if (direction != 0)
@@ -207,19 +207,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // ¼öÁ÷ ÀÔ·Â °ª ¹ÝÈ¯
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯
     public float VerticalInput()
     {
         return moveInput.y;
     }
 
-    // ¼öÆò ÀÔ·Â °ª ¹ÝÈ¯
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯
     public float HorizontalInput()
     {
         return moveInput.x;
     }
     
-    // ¿õÅ©¸®±â ½ÃÀÛ
+    // ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnCrouchDown()
     {
         if (GetCurrentState() is PlayerStates.Idle || GetCurrentState() is PlayerStates.Run)
@@ -229,7 +229,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    // ¿õÅ©¸®±â Á¾·á
+    // ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void OnCrouchUp()
     {
         if (GetCurrentState() is PlayerStates.Crawl)
@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
         currentInteractionType = type;
     }
     
-    // »ç´Ù¸®¿¡¼­ Á¡ÇÁ
+    // ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
    private void OnLadderJump()
     {
         if (GetCurrentState() is PlayerStates.Climb)
@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    // À§¿¡ °ø°£ÀÌ ÀÖ´ÂÁö È®ÀÎ (¿õÅ©¸®±â ÇØÁ¦ °¡´É ¿©ºÎ)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ (ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     public bool HasSpaceAbove() 
     {
         Vector3 rayOrigin = transform.position + new Vector3(0, 0.7f, 0);
@@ -298,7 +298,7 @@ public class PlayerController : MonoBehaviour
         return hit.collider == null;
     }
     
-    // Áö¸é Ãæµ¹
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹
     public void UpdateBelowCollision() 
     {
         if (movement.HitBelowObject != null)
@@ -340,13 +340,13 @@ public class PlayerController : MonoBehaviour
     
     private void DisablePlayerControl()
     {
-        // ¹°¸® ÀÌµ¿ Á¤Áö
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         if (movement != null)
         {
             movement.DisableRigidbody();
         }
         
-        // ´Ù¸¥ ÄÄÆ÷³ÍÆ® ºñÈ°¼ºÈ­
+        // ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­
         if (playerAttack != null)
         {
             playerAttack.enabled = false;
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour
 
     public void EnablePlayerControl()
     {
-        // ¹°¸® ¼Ó¼º ´Ù½Ã È°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¼ï¿½ ï¿½Ù½ï¿½ È°ï¿½ï¿½È­
         if (movement != null)
         {
             movement.EnableRigidbody();
@@ -379,21 +379,21 @@ public class PlayerController : MonoBehaviour
     
     private void ResetAllPlayerStates()
     {
-        // ÀÔ·Â º¯¼ö ÃÊ±âÈ­
+        // ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         moveInput = Vector2.zero;
         UpdateMove(0);
         
-        // »óÈ£ÀÛ¿ë °ü·Ã ÃÊ±âÈ­
+        // ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         canInteract = false;
         currentInteractionType = PlayerInteraction.InteractionType.None;
         
-        // °ø°Ý °ü·Ã ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         playerAttack.ResetOnRespawn();
         
-        // ¾×¼Ç °ü·Ã ÃÊ±âÈ­
+        // ï¿½×¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         canRoll = true;
         
-        // Æ¯¼ö »óÅÂ ÃÊ±âÈ­
+        // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         IsOnLadder = false;
         WantToStand = false;
     }
@@ -446,23 +446,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnGUI()
     {
-        // °³¹ßÀÚ µð¹ö±×°¡ È°¼ºÈ­µÇ¾î ÀÖÀ» ¶§¸¸ Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½×°ï¿½ È°ï¿½ï¿½È­ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
         if (!enableDeveloperDebug) return;
     
-        // GUI ½ºÅ¸ÀÏ ¼³Á¤
+        // GUI ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
         labelStyle.fontSize = 16;
         labelStyle.normal.textColor = Color.white;
         labelStyle.fontStyle = FontStyle.Bold;
     
-        // ¹è°æ ¹Ú½º ½ºÅ¸ÀÏ
+        // ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½
         GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
         boxStyle.normal.background = MakeTexture(2, 2, new Color(0, 0, 0, 0.7f));
         
-        // ÇöÀç »óÅÂ Á¤º¸ ¼öÁý
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         string currentStateName = GetCurrentStateName();
     
-        // È­¸é ¿ÞÂÊ »ó´Ü¿¡ »óÅÂ Á¤º¸ Ç¥½Ã
+        // È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ü¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
         GUILayout.BeginArea(new Rect(10, 10, 300, 200));
     
         GUILayout.BeginVertical(boxStyle);
@@ -475,13 +475,13 @@ public class PlayerController : MonoBehaviour
         GUILayout.EndArea();
     }
     
-    // ÇöÀç »óÅÂ ÀÌ¸§À» ¹®ÀÚ¿­·Î ¹ÝÈ¯
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
     public string GetCurrentStateName()
     {
         var currentState = GetCurrentState();
         if (currentState == null) return "None";
     
-        // »óÅÂ Å¸ÀÔ ÀÌ¸§¿¡¼­ ³×ÀÓ½ºÆäÀÌ½º Á¦°Å
+        // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½
         string fullName = currentState.GetType().Name;
         return fullName;
     }
