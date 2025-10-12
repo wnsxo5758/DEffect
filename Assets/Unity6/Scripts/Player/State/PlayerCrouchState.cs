@@ -8,14 +8,13 @@ public class PlayerCrouchState : PlayerGroundStateBase
 
     protected override void SetupTransitions()
     {
-        // 부모의 공통 전환 조건 먼저 설정 (점프, 낙하)
-        base.SetupTransitions();
+        // Crouch는 낙하해도 상태 유지 (base.SetupTransitions 호출하지 않음)
+        // 점프 입력은 상속받음
+        stateMachine.InputHandler.OnJumpPressed += HandleJumpInput;
 
         // Crouch 상태만의 고유 전환 조건
 
-        // 1. 웅크리기 입력 해제 시
-        //    - 머리 위에 장애물이 없으면 Idle 상태로
-        //    - 이동 입력이 있으면 Run 상태로
+        // 1. 웅크리기 입력 해제 + 일어설 수 있음 + 정지 → Idle
         AddTransition<PlayerIdleState>(
             () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
@@ -23,12 +22,43 @@ public class PlayerCrouchState : PlayerGroundStateBase
             priority: 10
         );
 
+        // 2. 웅크리기 입력 해제 + 일어설 수 있음 + 이동 → Run
         AddTransition<PlayerRunState>(
             () => !stateMachine.InputHandler.IsCrouchHeld
                   && stateMachine.Movement.CanStandUp()
                   && Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f,
             priority: 10
         );
+    }
+
+    private void HandleJumpInput()
+    {
+        // 천장이 있으면 점프 불가 (일어서기가 불가능하면 점프도 불가)
+        if (!stateMachine.Movement.CanStandUp())
+        {
+            // 천장이 있어서 점프 불가
+            #if UNITY_EDITOR
+            Debug.Log("[Crouch] Cannot jump - ceiling detected!");
+            #endif
+            return;
+        }
+
+        // 천장이 없으면 일어서면서 점프
+        // 또는 나중에 Roll State로 전환
+        if (stateMachine.Movement.IsGrounded())
+        {
+            // 일어서기
+            stateMachine.Movement.SetCrouchingCollider(false);
+
+            // 점프 수행
+            stateMachine.Movement.PerformJump();
+
+            // 점프 애니메이션 트리거
+            if (stateMachine.Animator != null)
+                stateMachine.Animator.TriggerJump();
+
+            stateMachine.ChangeState<PlayerJumpState>();
+        }
     }
 
     public override void Enter()
@@ -55,6 +85,9 @@ public class PlayerCrouchState : PlayerGroundStateBase
 
     public override void Exit()
     {
+        // 점프 이벤트 구독 해제
+        stateMachine.InputHandler.OnJumpPressed -= HandleJumpInput;
+
         // 일어서기 콜라이더로 복원
         stateMachine.Movement.SetCrouchingCollider(false);
     }

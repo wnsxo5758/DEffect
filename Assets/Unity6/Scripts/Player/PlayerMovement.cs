@@ -20,18 +20,16 @@ public class PlayerMovement : MonoBehaviour
     [Header("Collider Settings")]
     [SerializeField] private CapsuleCollider2D capsuleCollider;
     [SerializeField] private Vector2 standingColliderSize = new(0.5f, 1.0f);
-    [SerializeField] private Vector2 standingColliderOffset = new(0f, 0.5f);
     [SerializeField] private Vector2 crouchingColliderSize = new(0.5f, 0.6f);
-    [SerializeField] private Vector2 crouchingColliderOffset = new(0f, 0.3f);
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.5f, 0.1f);
+    [SerializeField] private Vector2 groundCheckSize = new(0.5f, 0.1f);
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Ceiling Check")]
     [SerializeField] private Transform ceilingCheck;
-    [SerializeField] private Vector2 ceilingCheckSize = new Vector2(0.5f, 0.1f);
+    [SerializeField] private Vector2 ceilingCheckSize = new(0.5f, 0.1f);
 
     private Rigidbody2D rb;
 
@@ -45,6 +43,16 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool canCutJump = false;
 
+    // 공중 시간 추적 (착지 애니메이션 판단용)
+    private float airTime = 0f;
+    private bool wasGrounded = true;
+
+    // 착지 애니메이션을 재생할 최소 공중 시간 (초)
+    public const float MinAirTimeForLanding = 0.3f;
+
+    // 공중 시간 읽기 전용 프로퍼티
+    public float AirTime => airTime;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -52,6 +60,37 @@ public class PlayerMovement : MonoBehaviour
         // CapsuleCollider가 할당되지 않았으면 자동 검색
         if (capsuleCollider == null)
             capsuleCollider = GetComponent<CapsuleCollider2D>();
+    }
+
+    private void Update()
+    {
+        // 공중 시간 추적
+        TrackAirTime();
+    }
+
+    /// <summary>
+    /// 공중 시간 추적 (착지 애니메이션 판단용)
+    /// </summary>
+    private void TrackAirTime()
+    {
+        bool isGroundedNow = IsGrounded();
+
+        if (!isGroundedNow)
+        {
+            // 공중에 있으면 시간 증가
+            airTime += Time.deltaTime;
+        }
+        else
+        {
+            // 착지 시 리셋
+            if (!wasGrounded)
+            {
+                // 방금 착지함
+                airTime = 0f;
+            }
+        }
+
+        wasGrounded = isGroundedNow;
     }
 
     /// <summary>
@@ -133,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// 웅크리기 콜라이더 설정
+    /// 웅크리기 콜라이더 설정 (바닥 기준으로 높이만 변경)
     /// </summary>
     public void SetCrouchingCollider(bool isCrouching)
     {
@@ -141,15 +180,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (isCrouching)
         {
-            // 웅크린 상태: 작은 콜라이더
+            // 웅크린 상태: 바닥 고정, 높이만 감소
+            // Offset = 바닥(0) + (높이 / 2)
             capsuleCollider.size = crouchingColliderSize;
-            capsuleCollider.offset = crouchingColliderOffset;
+            capsuleCollider.offset = new Vector2(0f, crouchingColliderSize.y / 2f);
         }
         else
         {
-            // 서있는 상태: 큰 콜라이더
+            // 서있는 상태: 바닥 고정, 원래 높이
             capsuleCollider.size = standingColliderSize;
-            capsuleCollider.offset = standingColliderOffset;
+            capsuleCollider.offset = new Vector2(0f, standingColliderSize.y / 2f);
         }
     }
 

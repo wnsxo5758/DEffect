@@ -48504,6 +48504,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1349173015633781171, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
+      propertyPath: crouchingColliderOffset.y
+      value: 0.625
+      objectReference: {fileID: 0}
     - target: {fileID: 6945944524284595317, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.2805147

@@ -20,6 +20,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int IsGrounded = Animator.StringToHash("IsGrounded");
     private static readonly int IsCrouching = Animator.StringToHash("IsCrouching");
     private static readonly int VelocityY = Animator.StringToHash("VelocityY");
+    private static readonly int AirTime = Animator.StringToHash("AirTime");
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Roll = Animator.StringToHash("Roll");
     private static readonly int Attack = Animator.StringToHash("Attack");
@@ -80,6 +81,10 @@ public class PlayerAnimator : MonoBehaviour
         // VelocityY: Y축 속도 (Jump/Fall 구분)
         float velocityY = movement.Velocity.y;
         animator.SetFloat(VelocityY, velocityY);
+
+        // AirTime: 공중에 있던 시간 (착지 애니메이션 판단용)
+        float airTime = movement.AirTime;
+        animator.SetFloat(AirTime, airTime);
 
         // IsCrouching: 웅크리기 상태
         bool isCrouching = stateMachine.IsCurrentState<PlayerCrouchState>();

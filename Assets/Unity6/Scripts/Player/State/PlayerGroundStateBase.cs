@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public abstract class PlayerGroundStateBase : PlayerStateBase
 {
     public PlayerGroundStateBase(StateMachine stateMachine) : base(stateMachine)
@@ -40,6 +38,11 @@ public abstract class PlayerGroundStateBase : PlayerStateBase
         if (stateMachine.Movement.IsGrounded())
         {
             stateMachine.Movement.PerformJump();
+
+            // 점프 애니메이션 트리거
+            if (stateMachine.Animator != null)
+                stateMachine.Animator.TriggerJump();
+
             stateMachine.ChangeState<PlayerJumpState>();
         }
     }

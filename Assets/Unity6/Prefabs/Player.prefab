@@ -333,7 +333,7 @@ MonoBehaviour:
   crouchingColliderSize: {x: 0.5, y: 0.6}
   crouchingColliderOffset: {x: 0, y: 0.5}
   groundCheck: {fileID: 7821198656505276285}
-  groundCheckSize: {x: 0.5, y: 0.1}
+  groundCheckSize: {x: 0.3, y: 0.1}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -388,8 +388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40173a567bf3e0449bddc6918703f0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
+  animator: {fileID: 9097778258408249861}
+  spriteRenderer: {fileID: 1091650674568988734}
 --- !u!114 &1227485704926347908
 MonoBehaviour:
   m_ObjectHideFlags: 0
