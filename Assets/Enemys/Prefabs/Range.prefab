@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5397833589488188075}
   - component: {fileID: 3630091768531738463}
   - component: {fileID: 4038590945116755094}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Range
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -89,17 +89,17 @@ MonoBehaviour:
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   patrolDirection: 1
   wallCheckDistance: 0.5
   wallCheckOffset: {x: 0.5, y: 0}
   groundCheckOffset: {x: 0.5, y: -0.5}
   wallLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 64
   groundLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 64
   hitClip: {fileID: 8300000, guid: 975d1302dad558f4c90fe12af521aae5, type: 3}
   attackClip: {fileID: 8300000, guid: 3d33d9acc31d3b747a4d310794ecdd23, type: 3}
   deadClip: {fileID: 8300000, guid: a39a028559c3b3d47b1ea2463b9e8705, type: 3}
@@ -390,9 +390,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1280798595
-  m_SortingLayer: 7
-  m_SortingOrder: 3
+  m_SortingLayerID: -247254099
+  m_SortingLayer: 6
+  m_SortingOrder: 2
   m_Sprite: {fileID: 1551873328, guid: 24c8c996bf9853e47bd22adf15cc9a83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

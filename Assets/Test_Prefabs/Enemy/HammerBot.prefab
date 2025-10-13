@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 101884625652215795}
   - component: {fileID: 4704805162367914870}
   - component: {fileID: 5857022358211321977}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: HammerBot
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 1438773455459590863}
   - component: {fileID: 704511318008389253}
   - component: {fileID: 436979134942224065}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,9 +424,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -247254099
+  m_SortingLayer: 6
+  m_SortingOrder: 3
   m_Sprite: {fileID: 1654885178, guid: 5971345dd4fee0b4fb34b35b0b5dbde9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

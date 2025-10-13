@@ -5,21 +5,33 @@ TagManager:
   serializedVersion: 3
   tags:
   - ImpactNormal
+  - Button
+  - Boss
+  - Objects
+  - Enemy
+  - EnemyProjectile
+  - Weapon
+  - DieInstantly
+  - Valve
+  - VendingMachine
+  - SkillToken
+  - Door
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Object
+  - ButtonPush
+  - ButtonHold
+  - Door
+  - Obstacle
+  - BackGround
   - 
   - 
   - 
@@ -41,6 +53,39 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BackGroundTile
+    uniqueID: 4134998915
+    locked: 0
+  - name: BackGround3
+    uniqueID: 1660004953
+    locked: 0
+  - name: BackGround2
+    uniqueID: 1628334711
+    locked: 0
+  - name: BackGround1
+    uniqueID: 2759481233
+    locked: 0
+  - name: Button
+    uniqueID: 3727928867
+    locked: 0
+  - name: Enemy
+    uniqueID: 4047713197
+    locked: 0
+  - name: Object
+    uniqueID: 255426099
+    locked: 0
+  - name: Player
+    uniqueID: 1615928001
+    locked: 0
+  - name: Water
+    uniqueID: 3498130845
+    locked: 0
+  - name: Tilemap
+    uniqueID: 3167137159
+    locked: 0
+  - name: ChatBox
+    uniqueID: 2839782817
     locked: 0
   m_RenderingLayers:
   - Default

@@ -94,7 +94,7 @@ MonoBehaviour:
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   patrolDirection: 1
   wallCheckDistance: 0.5
   wallCheckOffset: {x: 0.5, y: 0}
@@ -104,7 +104,7 @@ MonoBehaviour:
     m_Bits: 0
   groundLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 64
   hitClip: {fileID: 0}
   attackClip: {fileID: 0}
   deadClip: {fileID: 0}
@@ -136,7 +136,7 @@ MonoBehaviour:
   headbuttKnockBackForce: 7
   headbuttLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 64
   headbuttCollider: {fileID: 0}
   summonCooldown: 30
   moveToCenterDuration: 2
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheckLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 64
   belowCollisionLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -527,9 +527,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 255426099
+  m_SortingLayer: 7
+  m_SortingOrder: 5
   m_Sprite: {fileID: 1371527030, guid: fcd48619784fd064bb4b7c0fcfe39c10, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

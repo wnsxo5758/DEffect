@@ -74,9 +74,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1415958887
+  m_SortingLayerID: -567038429
   m_SortingLayer: 5
-  m_SortingOrder: 3
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2004794260, guid: 14e20a994958ee440a779ed8c66753d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -198,8 +198,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2625391081446304662}
   - component: {fileID: 8148285603214161975}
-  m_Layer: 0
-  m_Name: Elevator
+  m_Layer: 9
+  m_Name: btn_Elevator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -592,9 +592,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1415958887
+  m_SortingLayerID: -567038429
   m_SortingLayer: 5
-  m_SortingOrder: 4
+  m_SortingOrder: 2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

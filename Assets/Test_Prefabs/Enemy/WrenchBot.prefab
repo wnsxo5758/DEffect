@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 682549223898636283}
   - component: {fileID: 4792023059225488009}
   - component: {fileID: 440282540115453980}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,9 +236,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -247254099
+  m_SortingLayer: 6
+  m_SortingOrder: 4
   m_Sprite: {fileID: 356209508, guid: 2984ed59e5fd8754bb60d42127caa79d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 792792595822403050}
   - component: {fileID: 522185211971339721}
   - component: {fileID: 263875411847288293}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: WrenchBot
   m_TagString: Enemy
   m_Icon: {fileID: 0}

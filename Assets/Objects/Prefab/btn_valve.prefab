@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2253911629886400664, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_Name
-      value: obj_valve
+      value: btn_valve
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -2253911629886400664, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_TagString
@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_SortingLayerID
-      value: -1415958887
+      value: -567038429
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 08c378e54e1d6e6439e058b34d0310d4, type: 3}
       propertyPath: m_LocalScale.x
