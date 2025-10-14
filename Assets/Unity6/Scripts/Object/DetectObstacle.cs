@@ -3,11 +3,16 @@ using UnityEngine;
 public class DetectObstacle : MonoBehaviour
 {
     [Header("벽 감지 설정")]
-    [SerializeField] protected float wallCheckDistance = 0.5f;
-    [SerializeField] protected Vector2 wallCheckOffset = new Vector2(0.5f, 0);
-    [SerializeField] protected Vector2 groundCheckOffset = new Vector2(0.5f, -0.5f);
-    [SerializeField] protected LayerMask wallLayer; // 벽 레이어
-    [SerializeField] protected LayerMask groundLayer; // 지면 레이어
+    [SerializeField] 
+    protected float wallCheckDistance = 0.5f;
+    [SerializeField] 
+    protected Vector2 wallCheckOffset = new Vector2(0.5f, 0);
+    [SerializeField] 
+    protected Vector2 groundCheckOffset = new Vector2(0.5f, -0.5f);
+    [SerializeField] 
+    protected LayerMask wallLayer; // 벽 레이어
+    [SerializeField] 
+    protected LayerMask groundLayer; // 지면 레이어
 
     // 벽 체크 메서드
     public bool CheckWall(float direction)

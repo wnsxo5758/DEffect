@@ -26,7 +26,7 @@ public class EnemyBT6 : MonoBehaviour
 
     protected ObjectSound objSound;
     protected Rigidbody2D rb;
-    protected MovementRigidbody2D movement;
+    protected Movement2D movement;
     protected EnemyAnimator animator;
     protected Collider2D enemyCollider;
     protected SpriteRenderer spriteRenderer;
@@ -44,7 +44,7 @@ public class EnemyBT6 : MonoBehaviour
     {
         enemyHp = GetComponent<EnemyHp>(); 
         rb = GetComponent<Rigidbody2D>();
-        movement = GetComponent<MovementRigidbody2D>();
+        movement = GetComponent<Movement2D>();
         animator = GetComponentInChildren<EnemyAnimator>();
         enemyCollider = GetComponent<Collider2D>();
         obstacleDetect = GetComponent<DetectObstacle>();
@@ -353,7 +353,7 @@ public class EnemyBT6 : MonoBehaviour
             // 이동
             if (movement != null)
             {
-                movement.MoveToFast(directionToTarget);
+                //movement.MoveToFast(directionToTarget);
             }
         }
         
