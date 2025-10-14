@@ -5,8 +5,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerLandState : PlayerGroundStateBase
 {
-    [SerializeField] private float landingSpeedMultiplier = 0.5f; // 착지 시 이동 속도 감소 비율
-    private float landingDuration = 0.1f; // 착지 경직 시간
+    [SerializeField] private float landingSpeedMultiplier = 0.65f; // 착지 시 이동 속도 감소 비율
+    private float landingDuration = 0.2f; // 착지 경직 시간
     private float landingTimer = 0f;
 
     public PlayerLandState(StateMachine stateMachine) : base(stateMachine)

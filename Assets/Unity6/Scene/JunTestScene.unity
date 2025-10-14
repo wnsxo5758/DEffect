@@ -48190,6 +48190,63 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1001 &846968567
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1128355169603920563, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_Name
+      value: Pickup_Crowbar
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.9332042
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.923423
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609969972030077432, guid: c004d94cdd774b043ba7702068225d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c004d94cdd774b043ba7702068225d34, type: 3}
 --- !u!1 &1249545029
 GameObject:
   m_ObjectHideFlags: 0
@@ -48313,6 +48370,23 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1402180643 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7968491074491334157, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
+  m_PrefabInstance: {fileID: 5642819790402598242}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1402180647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1402180643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d96311a0caa22d4fbbca5296d44add0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1489881289
 GameObject:
   m_ObjectHideFlags: 0
@@ -48666,13 +48740,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1349173015633781171, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
-      propertyPath: maxJumpForce
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 1349173015633781171, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
-      propertyPath: minJumpForce
-      value: 10
+    - target: {fileID: 1634537410806276055, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
+      propertyPath: interactionOffset
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6945944524284595317, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -48719,9 +48789,13 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1358542447379508040, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7968491074491334157, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1402180647}
   m_SourcePrefab: {fileID: 100100000, guid: 70bb2f8abdd9b5c49816cc454cc7f19d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -48732,3 +48806,4 @@ SceneRoots:
   - {fileID: 5642819790402598242}
   - {fileID: 293596274}
   - {fileID: 1489881293}
+  - {fileID: 846968567}

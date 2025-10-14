@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     private bool wasGrounded = true;
 
     // 착지 애니메이션을 재생할 최소 공중 시간 (초)
-    public const float MinAirTimeForLanding = 0.3f;
+    public const float MinAirTimeForLanding = 0.5f;
 
     // 공중 시간 읽기 전용 프로퍼티
     public float AirTime => airTime;
