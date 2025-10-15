@@ -5,12 +5,16 @@ using UnityEngine;
 
 public class ThrownWeapon : MonoBehaviour
 {
-    [Header("Weapon Settings")] 
+    [Header("Weapon Settings")]
     [SerializeField] private float rotationSpeed = 720f;
     [SerializeField] private float stuckDuration = 0.5f;
     [SerializeField] private int extraDamageMultiplier = 2;
     [SerializeField] private LayerMask stickLayers;
     [SerializeField] private float hitStunDuration = 3f; // 던진 무기 피격 시간
+
+    [Header("Collision Settings")]
+    [SerializeField] private float colliderRadiusMultiplier = 0.4f; // 콜라이더 크기 배율
+    [SerializeField] private float maxAngleForCustomNormal = 100f; // 법선 벡터 커스텀 적용 최대 각도
     
     private WeaponBase weaponData;
     private Rigidbody2D rb;
@@ -66,7 +70,7 @@ public class ThrownWeapon : MonoBehaviour
             spriteRenderer.flipX = direction.x < 0;
             PlaySound(throwClip);
             // 콜라이더 크기 설정
-            float radius = Mathf.Max(spriteRenderer.bounds.size.x, spriteRenderer.bounds.size.y) * 0.4f;
+            float radius = Mathf.Max(spriteRenderer.bounds.size.x, spriteRenderer.bounds.size.y) * colliderRadiusMultiplier;
             circleCollider.radius = radius;
             circleCollider.offset = Vector2.zero;
         }
@@ -74,7 +78,7 @@ public class ThrownWeapon : MonoBehaviour
         // Rigidbody 설정
         if (rb != null)
         {
-            rb.isKinematic = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
             rb.angularDamping = 0.1f;
             rb.gravityScale = 1f;
             rb.linearVelocity = Vector2.zero;
@@ -94,32 +98,46 @@ public class ThrownWeapon : MonoBehaviour
 
         bool canStick = ((1 << collision.gameObject.layer) & stickLayers) != 0;
 
+        // 1. 박히기 처리
         if (canStick)
         {
             StickTo(collision);
         }
-        
-        // 적 감지 및 데미지 처리 (Unity6 버전 - IDamageable 사용)
-        if (canDealDamage && collision.transform.CompareTag("Enemy"))
+
+        // 2. 초기 충돌 데미지 처리
+        HandleInitialCollisionDamage(collision.gameObject);
+    }
+
+    /// <summary>
+    /// 초기 충돌 시 데미지 처리 (던진 무기가 적에게 처음 충돌)
+    /// </summary>
+    private void HandleInitialCollisionDamage(GameObject target)
+    {
+        if (!canDealDamage || !target.CompareTag("Enemy"))
+            return;
+
+        ApplyDamage(target, weaponData.Damage);
+        canDealDamage = false;
+    }
+
+    /// <summary>
+    /// 대상에게 데미지 적용 (일반 로직)
+    /// </summary>
+    private void ApplyDamage(GameObject target, int damage)
+    {
+        IDamageable damageable = target.GetComponent<IDamageable>();
+
+        if (damageable != null && weaponData != null)
         {
-            IDamageable damageable = collision.transform.GetComponent<IDamageable>();
+            // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
+            // ITimeAffected timeAffected = target.GetComponent<ITimeAffected>();
+            // if (TimeManager.Instance != null && TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
+            // {
+            //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, Vector2.zero);
+            // }
 
-            if (damageable != null && weaponData != null)
-            {
-                int damage = weaponData.Damage;
-
-                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
-                // ITimeAffected timeAffected = collision.transform.GetComponent<ITimeAffected>();
-                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                // {
-                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, impactDirection);
-                // }
-
-                // 일반 데미지 적용
-                damageable.DecreaseHp(damage);
-
-                canDealDamage = false;
-            }
+            // 일반 데미지 적용
+            damageable.DecreaseHp(damage);
         }
     }
 
@@ -140,7 +158,7 @@ public class ThrownWeapon : MonoBehaviour
 
             float angleWithPhysicsNormal = Vector2.Angle(impactNormal, inversedThrowDir);
 
-            if (angleWithPhysicsNormal < 100f)
+            if (angleWithPhysicsNormal < maxAngleForCustomNormal)
             {
                 contactNormal = GetClosestCardinalDirection(inversedThrowDir);
             }
@@ -151,7 +169,7 @@ public class ThrownWeapon : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
         rb.gravityScale = 0f;
-        rb.isKinematic = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
         
         circleCollider.isTrigger = true;
         
@@ -245,52 +263,28 @@ public class ThrownWeapon : MonoBehaviour
     {
         if (isPullDamageApplied) return;
 
-        if (isStuck && stuckTarget != null && stuckTarget.CompareTag("Enemy"))
-        {
-            IDamageable damageable = stuckTarget.GetComponent<IDamageable>();
-
-            if (damageable != null && weaponData != null)
-            {
-                int extraDamage = weaponData.Damage * extraDamageMultiplier;
-
-                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
-                // ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
-                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                // {
-                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
-                // }
-
-                // 일반 데미지 적용
-                damageable.DecreaseHp(extraDamage);
-
-                isPullDamageApplied = true;
-            }
-        }
+        ApplyDamageToStuckEnemy(extraDamageMultiplier);
+        isPullDamageApplied = true;
     }
-    
+
     public void PullOutFromEnemy()
     {
         if (isPullDamageApplied) return;
 
-        if (isStuck && stuckTarget != null && stuckTarget.CompareTag("Enemy"))
-        {
-            IDamageable damageable = stuckTarget.GetComponent<IDamageable>();
+        ApplyDamageToStuckEnemy(extraDamageMultiplier);
+        isPullDamageApplied = true;
+    }
 
-            if (damageable != null && weaponData != null)
-            {
-                int extraDamage = weaponData.Damage * extraDamageMultiplier;
+    /// <summary>
+    /// 박힌 적에게 데미지 적용 (무기 뽑을 때)
+    /// </summary>
+    private void ApplyDamageToStuckEnemy(int damageMultiplier)
+    {
+        if (!isStuck || stuckTarget == null || !stuckTarget.CompareTag("Enemy"))
+            return;
 
-                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
-                // ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
-                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                // {
-                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
-                // }
-
-                // 일반 데미지 적용
-                damageable.DecreaseHp(extraDamage);
-            }
-        }
+        int damage = weaponData.Damage * damageMultiplier;
+        ApplyDamage(stuckTarget.gameObject, damage);
     }
     
     // 뽑기 완료 처리
@@ -320,7 +314,7 @@ public class ThrownWeapon : MonoBehaviour
             circleCollider.isTrigger = false;
             circleCollider.enabled = true;
 
-            rb.isKinematic = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
             rb.gravityScale = 1f;
             rb.linearVelocity = Vector2.zero;
             rb.AddTorque(rotationSpeed);
@@ -338,7 +332,7 @@ public class ThrownWeapon : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
-            rb.isKinematic = true;
+            rb.bodyType = RigidbodyType2D.Kinematic;
         }
     }
 

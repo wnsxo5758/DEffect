@@ -26,6 +26,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int Attack = Animator.StringToHash("Attack");
     private static readonly int AirAttack = Animator.StringToHash("AirAttack");
     private static readonly int HasWeapon = Animator.StringToHash("HasWeapon");
+    private static readonly int Throw = Animator.StringToHash("Throw");
 
     private void Awake()
     {
@@ -88,6 +89,14 @@ public class PlayerAnimator : MonoBehaviour
         float airTime = movement.AirTime;
         animator.SetFloat(AirTime, airTime);
 
+        // 디버그: AirTime과 IsGrounded 상태 추적
+        #if UNITY_EDITOR
+        if (airTime > 0.5f && isGrounded)
+        {
+            Debug.Log($"[PlayerAnimator] AirTime={airTime:F2}, IsGrounded={isGrounded}, CurrentState={stateMachine.GetCurrentStateName()}");
+        }
+        #endif
+
         // IsCrouching: 웅크리기 상태
         bool isCrouching = stateMachine.IsCurrentState<PlayerCrouchState>();
         animator.SetBool(IsCrouching, isCrouching);
@@ -118,6 +127,12 @@ public class PlayerAnimator : MonoBehaviour
 
         // 공중 공격 중에는 스프라이트 방향 변경 금지
         if (stateMachine.IsCurrentState<PlayerAirMeleeAttackState>())
+        {
+            return;
+        }
+
+        // 던지기 중에는 스프라이트 방향 변경 금지
+        if (stateMachine.IsCurrentState<PlayerThrowWeaponState>())
         {
             return;
         }
@@ -169,6 +184,15 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     /// <summary>
+    /// 던지기 애니메이션 트리거
+    /// </summary>
+    public void TriggerThrow()
+    {
+        if (animator != null)
+            animator.SetTrigger(Throw);
+    }
+
+    /// <summary>
     /// 무기 장착 상태 업데이트 (즉시 반영)
     /// </summary>
     public void UpdateWeaponState(bool hasWeapon)
@@ -217,6 +241,30 @@ public class PlayerAnimator : MonoBehaviour
         if (combatSystem != null && combatSystem.MeleeAttack != null)
         {
             combatSystem.MeleeAttack.FinishAttack();
+        }
+    }
+
+    /// <summary>
+    /// 던지기 실행 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnThrowWeapon()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.ExecuteThrow();
+        }
+    }
+
+    /// <summary>
+    /// 던지기 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnThrowFinished()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.FinishThrow();
         }
     }
 }

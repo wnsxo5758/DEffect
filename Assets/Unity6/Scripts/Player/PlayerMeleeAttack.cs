@@ -20,13 +20,13 @@ public class PlayerMeleeAttack : MonoBehaviour
     };
 
     [Header("Air Attack Settings")]
-    [SerializeField] private Vector2 attackOffsetAir = new Vector2(0.3f, -0.2f);
+    [SerializeField] private Vector2 attackOffsetAir = new Vector2(0f, 0.6f);
     [SerializeField] private Vector2[] attackPolygonPointsAir = new Vector2[]
     {
-        new Vector2(-0.5f, 0.5f),   // 왼쪽 위
-        new Vector2(-0.5f, -1.5f),  // 왼쪽 아래 (더 넓게)
-        new Vector2(1.5f, -1.5f),   // 오른쪽 아래 (더 넓게)
-        new Vector2(1.5f, 0.5f)     // 오른쪽 위
+        new Vector2(-0.2f, 1f),   // 왼쪽 위
+        new Vector2(-0.2f, -0.8f),  // 왼쪽 아래 (더 넓게)
+        new Vector2(1.3f, -0.8f),   // 오른쪽 아래 (더 넓게)
+        new Vector2(1.3f, 1f)     // 오른쪽 위
     };
 
     [Header("Attack Dash Settings")]
@@ -200,6 +200,9 @@ public class PlayerMeleeAttack : MonoBehaviour
         // 지상 공격 범위로 설정
         UpdateAttackCollider(attackOffset, attackPolygonPoints);
 
+        // 공격 방향 업데이트
+        UpdateAttackDirection();
+
         OnAttackStarted?.Invoke();
 
         // 쿨다운 시작
@@ -219,6 +222,9 @@ public class PlayerMeleeAttack : MonoBehaviour
 
         // 공중 공격 범위로 설정
         UpdateAttackCollider(attackOffsetAir, attackPolygonPointsAir);
+
+        // 공격 방향 업데이트
+        UpdateAttackDirection();
 
         OnAttackStarted?.Invoke();
 
@@ -240,6 +246,21 @@ public class PlayerMeleeAttack : MonoBehaviour
         {
             attackCollider.SetPath(0, points);
         }
+    }
+
+    /// <summary>
+    /// 공격 방향 업데이트 (플레이어가 바라보는 방향에 맞춰 콜라이더 반전)
+    /// </summary>
+    private void UpdateAttackDirection()
+    {
+        if (attackColliderObject == null || playerMovement == null) return;
+
+        // 플레이어가 바라보는 방향 (1 = 오른쪽, -1 = 왼쪽)
+        float direction = playerMovement.FacingDirection;
+
+        // 콜라이더의 localScale.x를 방향에 맞춰 설정
+        // 오른쪽: 1, 왼쪽: -1
+        attackColliderObject.transform.localScale = new Vector3(direction, 1f, 1f);
     }
 
     /// <summary>

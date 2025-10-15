@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 5938293825472741200}
   - component: {fileID: -803724360229322164}
   - component: {fileID: 1604338784081723911}
-  m_Layer: 16
+  m_Layer: 14
   m_Name: Crowbar
   m_TagString: Weapon
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 2
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &-803724360229322164
 MonoBehaviour:

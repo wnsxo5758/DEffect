@@ -9,8 +9,8 @@ using UnityEngine;
 public class PlayerRangedAttack : MonoBehaviour
 {
     [Header("Throw Settings")]
-    [SerializeField] private float throwForce = 15f;
-    [SerializeField] private float throwUpwardForce = 5f;
+    [SerializeField] private float throwForce = 7f;      // 수평 던지기 힘 (낮춤)
+    [SerializeField] private float throwUpwardForce = 1.5f; // 상승 던지기 힘 (낮춤)
     [SerializeField] private Vector2 throwOffset = new Vector2(0, 0.6f);
 
     [Header("Cooldown")]
@@ -97,8 +97,9 @@ public class PlayerRangedAttack : MonoBehaviour
             return;
         }
 
-        // 던지는 방향 계산
-        Vector2 direction = new Vector2(transform.localScale.x, 0).normalized;
+        // 던지는 방향 계산 (PlayerMovement의 FacingDirection 사용)
+        float facingDir = movement != null ? movement.FacingDirection : 1f;
+        Vector2 direction = new Vector2(facingDir, 0).normalized;
         Vector2 spawnPosition = (Vector2)transform.position + throwOffset;
 
         // 던진 무기 생성

@@ -114,39 +114,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "1D Axis Arrow",
-                    "id": "a1b2c3d4-e5f6-7890-a123-b4c5d6e7f8a9",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "b2c3d4e5-f6a7-8901-b234-c5d6e7f8a9b0",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "c3d4e5f6-a7b8-9012-c345-d6e7f8a9b0c1",
-                    "path": "<Keyboard>/rightArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
                     "id": "79289430-dd4f-4171-8728-92a95c87ef81",
                     "path": "<Keyboard>/space",
