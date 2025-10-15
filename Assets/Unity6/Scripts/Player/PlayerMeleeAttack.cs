@@ -13,10 +13,10 @@ public class PlayerMeleeAttack : MonoBehaviour
     [SerializeField] private Vector2 attackOffset = new Vector2(0, 0.6f);
     [SerializeField] private Vector2[] attackPolygonPoints = new Vector2[]
     {
-        new Vector2(0, 0),
-        new Vector2(0, 1f),
-        new Vector2(1f, 0.5f),
-        new Vector2(1f, -0.5f)
+        new Vector2(-0.2f, -0.5f),  // 왼쪽 아래
+        new Vector2(-0.2f, 1.5f),   // 왼쪽 위
+        new Vector2(1.2f, 1.0f),    // 오른쪽 위
+        new Vector2(1.2f, -0.5f)       // 오른쪽 아래
     };
 
     [Header("Collision Detection")]
@@ -40,9 +40,74 @@ public class PlayerMeleeAttack : MonoBehaviour
     // 외부 참조용 프로퍼티
     public bool IsAttacking => isAttacking;
 
+    // 컴포넌트 참조
+    private PlayerMovement playerMovement;
+    private Rigidbody2D rb;
+
     private void Awake()
     {
+        // 컴포넌트 참조
+        playerMovement = GetComponent<PlayerMovement>();
+        rb = GetComponent<Rigidbody2D>();
+
+        // enemyLayer가 설정되지 않았으면 기본값 설정
+        if (enemyLayer == 0)
+        {
+            InitializeDefaultSettings();
+        }
+
         InitializeAttackCollider();
+    }
+
+    /// <summary>
+    /// 기본 설정 초기화 (동적 생성 시 호출)
+    /// </summary>
+    private void InitializeDefaultSettings()
+    {
+        // Enemy 레이어 자동 설정
+        int enemyLayerIndex = LayerMask.NameToLayer("Enemy");
+        if (enemyLayerIndex != -1)
+        {
+            enemyLayer = 1 << enemyLayerIndex;
+            Debug.Log($"[PlayerMeleeAttack] Enemy 레이어 자동 설정됨: {enemyLayerIndex}");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerMeleeAttack] Enemy 레이어를 찾을 수 없습니다!");
+        }
+
+        // 기본 공격 범위 설정 (비어있을 경우) - 더 넓게 조정
+        if (attackPolygonPoints == null || attackPolygonPoints.Length == 0)
+        {
+            attackPolygonPoints = new Vector2[]
+            {
+                new Vector2(-0.2f, -0.5f),  // 왼쪽 아래
+                new Vector2(-0.2f, 1.5f),   // 왼쪽 위
+                new Vector2(1.2f, 1.0f),    // 오른쪽 위
+                new Vector2(1.2f, -0.5f)       // 오른쪽 아래
+            };
+        }
+    }
+
+    /// <summary>
+    /// 외부에서 설정 초기화 (PlayerCombatSystem에서 호출)
+    /// </summary>
+    public void Initialize(LayerMask enemyMask, Vector2 offset, Vector2[] polygonPoints)
+    {
+        enemyLayer = enemyMask;
+        attackOffset = offset;
+        attackPolygonPoints = polygonPoints;
+
+        // 이미 생성된 콜라이더가 있으면 재설정
+        if (attackCollider != null)
+        {
+            attackCollider.SetPath(0, attackPolygonPoints);
+        }
+
+        if (attackColliderObject != null)
+        {
+            attackColliderObject.transform.localPosition = attackOffset;
+        }
     }
 
     /// <summary>
@@ -148,40 +213,31 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 적 피격 처리
+    /// 적 피격 처리 (Unity6 버전 - IDamageable 인터페이스 사용)
     /// </summary>
     private void ProcessEnemyHit(Collider2D enemyCollider)
     {
-        EnemyBT enemy = enemyCollider.GetComponent<EnemyBT>();
-        ITimeAffected timeAffected = enemyCollider.GetComponent<ITimeAffected>();
+        // Unity6의 IDamageable 인터페이스 사용
+        IDamageable damageable = enemyCollider.GetComponent<IDamageable>();
 
-        if (enemy != null)
+        if (damageable != null && currentWeapon != null)
         {
-            // 공격 방향 계산
-            Vector2 attackDirection = (enemyCollider.transform.position - transform.position).normalized;
             int damage = currentWeapon.Damage;
 
-            // 시간 정지 중인지 확인
-            if (TimeManager.Instance != null && TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-            {
-                // 시간 정지 중 데미지 누적
-                TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, attackDirection);
+            // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
+            // ITimeAffected timeAffected = enemyCollider.GetComponent<ITimeAffected>();
+            // if (TimeManager.Instance != null && TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
+            // {
+            //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, attackDirection);
+            // }
 
-                // 시각 효과만 표시
-                if (CameraController.Instance != null)
-                {
-                    CameraController.Instance.ShakeScreen(0.1f, 0.05f, 0.05f);
-                }
-            }
-            else
-            {
-                // 일반 데미지 적용
-                enemy.DecreaseHp(damage);
+            // 일반 데미지 적용
+            damageable.DecreaseHp(damage);
 
-                if (CameraController.Instance != null)
-                {
-                    CameraController.Instance.ShakeScreen();
-                }
+            // 카메라 쉐이크 (있으면 실행)
+            if (CameraController.Instance != null)
+            {
+                CameraController.Instance.ShakeScreen();
             }
         }
     }

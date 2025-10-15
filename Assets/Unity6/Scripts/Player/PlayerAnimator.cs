@@ -24,6 +24,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Roll = Animator.StringToHash("Roll");
     private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int HasWeapon = Animator.StringToHash("HasWeapon");
 
     private void Awake()
     {
@@ -89,6 +90,10 @@ public class PlayerAnimator : MonoBehaviour
         // IsCrouching: 웅크리기 상태
         bool isCrouching = stateMachine.IsCurrentState<PlayerCrouchState>();
         animator.SetBool(IsCrouching, isCrouching);
+
+        // HasWeapon: 무기를 들고 있는지
+        bool hasWeapon = stateMachine.Combat != null && stateMachine.Combat.HasWeapon;
+        animator.SetBool(HasWeapon, hasWeapon);
     }
 
     /// <summary>
@@ -100,6 +105,12 @@ public class PlayerAnimator : MonoBehaviour
 
         // 구르기 중에는 스프라이트 방향 변경 금지
         if (stateMachine.IsCurrentState<PlayerRollState>())
+        {
+            return;
+        }
+
+        // 공격 중에는 스프라이트 방향 변경 금지
+        if (stateMachine.IsCurrentState<PlayerMeleeAttackState>())
         {
             return;
         }
@@ -142,6 +153,15 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     /// <summary>
+    /// 무기 장착 상태 업데이트 (즉시 반영)
+    /// </summary>
+    public void UpdateWeaponState(bool hasWeapon)
+    {
+        if (animator != null)
+            animator.SetBool(HasWeapon, hasWeapon);
+    }
+
+    /// <summary>
     /// 특정 방향으로 스프라이트 강제 반전
     /// </summary>
     public void SetSpriteDirection(bool facingLeft)
@@ -156,5 +176,31 @@ public class PlayerAnimator : MonoBehaviour
     public bool IsFacingLeft()
     {
         return spriteRenderer != null && spriteRenderer.flipX;
+    }
+
+    // ========== 애니메이션 이벤트 메서드들 (Animator에서 호출) ==========
+
+    /// <summary>
+    /// 근접 공격 판정 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnAttackHit()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.MeleeAttack != null)
+        {
+            combatSystem.MeleeAttack.HandleAttackCollision();
+        }
+    }
+
+    /// <summary>
+    /// 근접 공격 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnAttackFinished()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.MeleeAttack != null)
+        {
+            combatSystem.MeleeAttack.FinishAttack();
+        }
     }
 }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &288532684144123691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4959177459502748755}
+  m_Layer: 3
+  m_Name: InteractionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4959177459502748755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288532684144123691}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3, y: 0.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6945944524284595317}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1358542447379508040
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,12 +246,14 @@ GameObject:
   - component: {fileID: 6252221687778498984}
   - component: {fileID: 9029171141294404072}
   - component: {fileID: 1349173015633781171}
+  - component: {fileID: 3179042732930697250}
+  - component: {fileID: 1634537410806276055}
   - component: {fileID: 6162965270490388931}
   - component: {fileID: 7316637675583629128}
   - component: {fileID: 904166029031790181}
   - component: {fileID: 2669953745117284890}
   - component: {fileID: 1227485704926347908}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -244,6 +277,7 @@ Transform:
   - {fileID: 3554120001284205219}
   - {fileID: 7821198656505276285}
   - {fileID: 5456296682507781993}
+  - {fileID: 4959177459502748755}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6252221687778498984
@@ -323,8 +357,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  minJumpForce: 8
-  maxJumpForce: 15
+  crouchSpeedMultiplier: 0.5
+  minJumpForce: 10
+  maxJumpForce: 18
   jumpHoldDuration: 0.3
   jumpCutMultiplier: 0.5
   capsuleCollider: {fileID: 9029171141294404072}
@@ -337,6 +372,39 @@ MonoBehaviour:
     m_Bits: 64
   ceilingCheck: {fileID: 3554120001284205219}
   ceilingCheckSize: {x: 0.5, y: 0.1}
+--- !u!114 &3179042732930697250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8119759120456411478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 786e4062296e914419c72f1cddf1d367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeAttack: {fileID: 0}
+  rangedAttack: {fileID: 0}
+  teleportAttack: {fileID: 0}
+  thrownWeaponPrefab: {fileID: 0}
+--- !u!114 &1634537410806276055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8119759120456411478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50d5d1787578186438871ac4d4d5f150, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionRadius: 0.5
+  interactionPoint: {fileID: 4959177459502748755}
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 18176
 --- !u!114 &6162965270490388931
 MonoBehaviour:
   m_ObjectHideFlags: 0

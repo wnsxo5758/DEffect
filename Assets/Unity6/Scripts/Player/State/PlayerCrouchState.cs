@@ -69,6 +69,12 @@ public class PlayerCrouchState : PlayerGroundStateBase
         stateMachine.InputHandler.OnJumpPressed += HandleJumpInput;
     }
 
+    // 웅크리기 중에는 구르기 불가
+    protected override void SubscribeToRollEvent()
+    {
+        // Roll 이벤트를 구독하지 않음 (구르기 불가)
+    }
+
     protected override void UpdateState()
     {
         // Crouch 상태의 고유 로직

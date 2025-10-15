@@ -35,17 +35,26 @@ public class PlayerCombatSystem : MonoBehaviour
     public WeaponBase CurrentWeapon => currentWeapon;
     public GameObject ThrownWeaponPrefab => thrownWeaponPrefab;
 
+    // 내부 참조
+    private PlayerAnimator playerAnimator;
+
+    // 컴포넌트 동적 관리 플래그
+    private bool isMeleeEnabled = false;
+    private bool isRangedEnabled = false;
+    private bool isTeleportEnabled = false;
+
     private void Awake()
     {
-        // 컴포넌트 자동 참조
-        if (meleeAttack == null)
-            meleeAttack = GetComponent<PlayerMeleeAttack>();
+        // 기존 컴포넌트 참조 (있으면 활성화 상태 기록)
+        meleeAttack = GetComponent<PlayerMeleeAttack>();
+        rangedAttack = GetComponent<PlayerRangedAttack>();
+        teleportAttack = GetComponent<PlayerTeleportAttack>();
+        playerAnimator = GetComponent<PlayerAnimator>();
 
-        if (rangedAttack == null)
-            rangedAttack = GetComponent<PlayerRangedAttack>();
-
-        if (teleportAttack == null)
-            teleportAttack = GetComponent<PlayerTeleportAttack>();
+        // 시작 시 컴포넌트가 있으면 활성화 상태로 설정
+        isMeleeEnabled = meleeAttack != null;
+        isRangedEnabled = rangedAttack != null;
+        isTeleportEnabled = teleportAttack != null;
     }
 
     /// <summary>
@@ -68,6 +77,10 @@ public class PlayerCombatSystem : MonoBehaviour
         if (rangedAttack != null)
             rangedAttack.OnWeaponEquipped();
 
+        // 애니메이터에 무기 장착 상태 즉시 반영
+        if (playerAnimator != null)
+            playerAnimator.UpdateWeaponState(true);
+
         OnWeaponEquipped?.Invoke(weaponData);
         OnCombatStateChanged?.Invoke();
     }
@@ -88,6 +101,10 @@ public class PlayerCombatSystem : MonoBehaviour
 
         if (rangedAttack != null)
             rangedAttack.OnWeaponUnequipped();
+
+        // 애니메이터에 무기 해제 상태 즉시 반영
+        if (playerAnimator != null)
+            playerAnimator.UpdateWeaponState(false);
 
         OnWeaponUnequipped?.Invoke();
         OnCombatStateChanged?.Invoke();
@@ -152,10 +169,110 @@ public class PlayerCombatSystem : MonoBehaviour
             WeaponBase weaponData = weaponPickup.GetWeaponData();
             if (weaponData != null)
             {
+                // 첫 무기 획득 시 기본 전투 컴포넌트 자동 활성화
+                if (!hasWeapon)
+                {
+                    EnableBasicCombat();
+                }
+
                 thrownWeaponPrefab = weaponPickup.GetWeaponPrefab();
                 EquipWeapon(weaponData);
                 Destroy(weaponPickup.gameObject);
             }
+        }
+    }
+
+    /// <summary>
+    /// 기본 전투 능력 활성화 (첫 무기 획득 시)
+    /// 근접 공격 + 원거리 던지기
+    /// </summary>
+    private void EnableBasicCombat()
+    {
+        Debug.Log("[PlayerCombatSystem] 기본 전투 능력 활성화!");
+
+        // 근접 공격 활성화
+        if (!isMeleeEnabled)
+        {
+            EnableMeleeAttack();
+        }
+
+        // 원거리 공격 활성화
+        if (!isRangedEnabled)
+        {
+            EnableRangedAttack();
+        }
+    }
+
+    /// <summary>
+    /// 근접 공격 컴포넌트 활성화
+    /// </summary>
+    public void EnableMeleeAttack()
+    {
+        if (isMeleeEnabled) return;
+
+        if (meleeAttack == null)
+        {
+            meleeAttack = gameObject.AddComponent<PlayerMeleeAttack>();
+            Debug.Log("[PlayerCombatSystem] PlayerMeleeAttack 컴포넌트 추가됨!");
+        }
+
+        isMeleeEnabled = true;
+    }
+
+    /// <summary>
+    /// 원거리 공격 컴포넌트 활성화
+    /// </summary>
+    public void EnableRangedAttack()
+    {
+        if (isRangedEnabled) return;
+
+        if (rangedAttack == null)
+        {
+            rangedAttack = gameObject.AddComponent<PlayerRangedAttack>();
+            Debug.Log("[PlayerCombatSystem] PlayerRangedAttack 컴포넌트 추가됨!");
+        }
+
+        isRangedEnabled = true;
+    }
+
+    /// <summary>
+    /// 텔레포트 공격 컴포넌트 활성화 (스킬 획득 시)
+    /// </summary>
+    public void EnableTeleportAttack()
+    {
+        if (isTeleportEnabled) return;
+
+        if (teleportAttack == null)
+        {
+            teleportAttack = gameObject.AddComponent<PlayerTeleportAttack>();
+            Debug.Log("[PlayerCombatSystem] PlayerTeleportAttack 컴포넌트 추가됨! 텔레포트 스킬 해금!");
+        }
+
+        isTeleportEnabled = true;
+    }
+
+    /// <summary>
+    /// 특정 전투 능력 비활성화 (필요시)
+    /// </summary>
+    public void DisableCombatAbility(System.Type componentType)
+    {
+        if (componentType == typeof(PlayerMeleeAttack) && meleeAttack != null)
+        {
+            Destroy(meleeAttack);
+            meleeAttack = null;
+            isMeleeEnabled = false;
+        }
+        else if (componentType == typeof(PlayerRangedAttack) && rangedAttack != null)
+        {
+            Destroy(rangedAttack);
+            rangedAttack = null;
+            isRangedEnabled = false;
+        }
+        else if (componentType == typeof(PlayerTeleportAttack) && teleportAttack != null)
+        {
+            Destroy(teleportAttack);
+            teleportAttack = null;
+            isTeleportEnabled = false;
         }
     }
 }
