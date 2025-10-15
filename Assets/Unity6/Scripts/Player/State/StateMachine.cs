@@ -17,6 +17,7 @@ public class StateMachine : MonoBehaviour
     public PlayerHealth Health { get; private set; }
     public PlayerAnimator Animator { get; private set; }
     public PlayerCombatSystem Combat { get; private set; }
+    public PlayerInteractionSystem Interaction { get; private set; }
 
     // 상태 인스턴스 캐싱 (메모리 최적화)
     private Dictionary<Type, IPlayerState> stateInstances;
@@ -29,6 +30,7 @@ public class StateMachine : MonoBehaviour
         Health = GetComponent<PlayerHealth>();
         Animator = GetComponent<PlayerAnimator>();
         Combat = GetComponent<PlayerCombatSystem>();
+        Interaction = GetComponent<PlayerInteractionSystem>();
 
         stateInstances = new Dictionary<Type, IPlayerState>();
 
@@ -73,6 +75,12 @@ public class StateMachine : MonoBehaviour
             InputHandler.OnTeleportPressed += OnTeleportInput;
             InputHandler.OnRollPressed += OnRollInput;
         }
+
+        // 상호작용 입력 이벤트 연결
+        if (Interaction != null)
+        {
+            InputHandler.OnInteractPressed += OnInteractInput;
+        }
     }
 
     private void OnDestroy()
@@ -88,6 +96,11 @@ public class StateMachine : MonoBehaviour
                 InputHandler.OnThrowWeaponPressed -= OnThrowWeaponInput;
                 InputHandler.OnTeleportPressed -= OnTeleportInput;
                 InputHandler.OnRollPressed -= OnRollInput;
+            }
+
+            if (Interaction != null)
+            {
+                InputHandler.OnInteractPressed -= OnInteractInput;
             }
         }
     }
@@ -211,10 +224,22 @@ public class StateMachine : MonoBehaviour
         // 지면에 있을 때만 구르기 가능
         if (!Movement.IsGrounded()) return;
 
-        // 구르기 가능한 상태에서만 구르기 상태로 전환
+        // 구르기 가능한 상태에서만 구르기 상태로 전환 (Crouch 상태 제외)
         if (CurrentState is PlayerIdleState or PlayerRunState)
         {
             ChangeState<PlayerRollState>();
+        }
+    }
+
+    /// <summary>
+    /// 상호작용 입력 처리
+    /// </summary>
+    private void OnInteractInput()
+    {
+        // 상호작용 가능한 대상이 있으면 실행
+        if (Interaction != null && Interaction.HasInteractable)
+        {
+            Interaction.PerformInteraction();
         }
     }
 }

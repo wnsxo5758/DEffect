@@ -22,11 +22,22 @@ public class PlayerRollState : PlayerGroundStateBase
 
     protected override void SetupTransitions()
     {
-        // 부모의 공통 전환 조건 (낙하)
-        base.SetupTransitions();
-
         // Roll 상태는 자동으로 끝나므로 전환 조건 없음
+        // 부모의 낙하 전환 조건(base.SetupTransitions)을 호출하지 않음
+        // 구르기 도중 낙하해도 Roll이 완료될 때까지 상태 유지
         // UpdateState()에서 타이머 기반으로 전환
+    }
+
+    // 구르기 중에는 점프 불가
+    protected override void SubscribeToJumpEvent()
+    {
+        // 점프 이벤트를 구독하지 않음 (점프 불가)
+    }
+
+    // 구르기 중에는 구르기 불가 (중복 방지)
+    protected override void SubscribeToRollEvent()
+    {
+        // Roll 이벤트를 구독하지 않음
     }
 
     public override void Enter()
@@ -69,13 +80,20 @@ public class PlayerRollState : PlayerGroundStateBase
         // 구르기 종료 체크
         if (rollTimer >= RollDuration)
         {
-            // 이동 입력에 따라 Idle/Run으로 전환
-            if (Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f)
+            // 구르기 종료 후 적절한 상태로 전환
+            if (!stateMachine.Movement.IsGrounded())
             {
+                // 공중에 있으면 Fall 상태로
+                stateMachine.ChangeState<PlayerFallState>();
+            }
+            else if (Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f)
+            {
+                // 지면에 있고 이동 입력이 있으면 Run 상태로
                 stateMachine.ChangeState<PlayerRunState>();
             }
             else
             {
+                // 지면에 있고 입력이 없으면 Idle 상태로
                 stateMachine.ChangeState<PlayerIdleState>();
             }
         }

@@ -99,28 +99,25 @@ public class ThrownWeapon : MonoBehaviour
             StickTo(collision);
         }
         
-        // 적 감지 및 데미지 처리
+        // 적 감지 및 데미지 처리 (Unity6 버전 - IDamageable 사용)
         if (canDealDamage && collision.transform.CompareTag("Enemy"))
         {
-            EnemyBT enemy = collision.transform.GetComponent<EnemyBT>();
-            ITimeAffected timeAffected = collision.transform.GetComponent<ITimeAffected>();
-            
-            if (enemy != null)
+            IDamageable damageable = collision.transform.GetComponent<IDamageable>();
+
+            if (damageable != null && weaponData != null)
             {
                 int damage = weaponData.Damage;
-                Vector2 impactDirection = (collision.transform.position - transform.position).normalized;
-                
-                // 시간 정지 상태인지 확인
-                if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                {
-                    // 시간 정지 중 데미지 적용
-                    TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, impactDirection);
-                }
-                else
-                {
-                    enemy.DecreaseHp(damage, true);
-                }
-                
+
+                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
+                // ITimeAffected timeAffected = collision.transform.GetComponent<ITimeAffected>();
+                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
+                // {
+                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, damage, impactDirection);
+                // }
+
+                // 일반 데미지 적용
+                damageable.DecreaseHp(damage);
+
                 canDealDamage = false;
             }
         }
@@ -250,22 +247,22 @@ public class ThrownWeapon : MonoBehaviour
 
         if (isStuck && stuckTarget != null && stuckTarget.CompareTag("Enemy"))
         {
-            EnemyBT enemy = stuckTarget.GetComponent<EnemyBT>();
-            ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
+            IDamageable damageable = stuckTarget.GetComponent<IDamageable>();
 
-            if (enemy != null)
+            if (damageable != null && weaponData != null)
             {
                 int extraDamage = weaponData.Damage * extraDamageMultiplier;
 
-                if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                {
-                    TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
-                }
-                else
-                {
-                    enemy.DecreaseHp(extraDamage);
-                }
-            
+                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
+                // ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
+                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
+                // {
+                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
+                // }
+
+                // 일반 데미지 적용
+                damageable.DecreaseHp(extraDamage);
+
                 isPullDamageApplied = true;
             }
         }
@@ -274,24 +271,24 @@ public class ThrownWeapon : MonoBehaviour
     public void PullOutFromEnemy()
     {
         if (isPullDamageApplied) return;
-        
+
         if (isStuck && stuckTarget != null && stuckTarget.CompareTag("Enemy"))
         {
-            EnemyBT enemy = stuckTarget.GetComponent<EnemyBT>();
-            ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
-            
-            if (enemy != null)
+            IDamageable damageable = stuckTarget.GetComponent<IDamageable>();
+
+            if (damageable != null && weaponData != null)
             {
                 int extraDamage = weaponData.Damage * extraDamageMultiplier;
 
-                if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
-                {
-                    TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
-                }
-                else
-                {
-                    enemy.DecreaseHp(extraDamage);
-                }
+                // TODO: 시간 정지 기능은 나중에 Unity6으로 이식 후 추가
+                // ITimeAffected timeAffected = stuckTarget.GetComponent<ITimeAffected>();
+                // if (TimeManager.Instance.IsTimeFrozen() && timeAffected != null)
+                // {
+                //     TimeManager.Instance.ApplyDamageInFrozenTime(timeAffected, extraDamage, Vector2.zero);
+                // }
+
+                // 일반 데미지 적용
+                damageable.DecreaseHp(extraDamage);
             }
         }
     }
