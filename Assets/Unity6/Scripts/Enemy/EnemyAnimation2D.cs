@@ -4,57 +4,72 @@ using UnityEngine;
 [RequireComponent (typeof(Animator))]
 public class EnemyAnimation2D : MonoBehaviour
 {
-    Animator enemyAnimator;
+    private readonly int moveSpeed = Animator.StringToHash("Speed");
+    private readonly int attack = Animator.StringToHash("Attack");
+    private readonly int hit = Animator.StringToHash("Hit");
+    private readonly int death = Animator.StringToHash("Death");
+    private readonly int isChasing = Animator.StringToHash("IsChasing");
+
+    private Animator animator;
+    private MovementRigidbody2D movement; // 움직임
 
     private void Awake()
     {
-        enemyAnimator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
+        movement = GetComponentInParent<MovementRigidbody2D>();
     }
 
+    // 새로운 animation 메소드
 
-    public void SetChase()
+    public void SetMovementAnim(float speed)
     {
-        enemyAnimator.SetTrigger("isChasing");
+        if (animator != null)
+        {
+            animator.SetFloat(moveSpeed, Mathf.Abs(speed));
+        }
     }
 
-    public void Attack()
+    public void SetChasingState(bool _isChasing)
     {
-        enemyAnimator.SetTrigger("isAttack");
+        if (animator != null)
+        {
+            animator.SetBool(isChasing, _isChasing);
+        }
     }
-    public void Death()
+
+    public void TriggerAttackAnim()
     {
-
+        if (animator != null)
+        {
+            animator.SetTrigger(attack);
+        }
     }
 
-    public void UpdateAnimation(float x)
+    public void TriggerHitAnim()
     {
-
+        if (animator != null)
+        {
+            animator.SetTrigger(hit);
+        }
     }
 
-    private void FlipX(float x) // 좌우 반전
+    public void TriggerDeathAnim()
     {
-
+        if (animator != null)
+        {
+            animator.SetTrigger(death);
+        }
     }
 
-    public void OnAttackAnimation()
+    private void OnAttackEvent()
     {
-
-    
+        EnemyBTBase enemy = transform.GetComponentInParent<EnemyBTBase>();
+        enemy.OnAttackAnimationEvent();
     }
 
-    public void OnHitAnimation()
+    private void OnAttackFinished()
     {
-
+        EnemyBTBase enemy = transform.GetComponentInParent<EnemyBTBase>();
+        enemy.OnAttackAnimationFinished();
     }
-
-    public void OnDeathAnimation()
-    {
-
-    }
-    public void OnSkillAnimation()
-    {
-
-    }
-
-
 }

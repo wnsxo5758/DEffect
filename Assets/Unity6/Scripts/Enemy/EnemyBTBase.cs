@@ -1,109 +1,109 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class EnemyBT6 : MonoBehaviour
+public class EnemyBTBase : MonoBehaviour
 {
     protected BehaviorTree behaviorTree;
     protected Blackboard blackboard;
 
-    [SerializeField] protected float normalStunDuration = 0.5f; // ì¼ë°˜ ê³µê²© ìŠ¤í„´ ì‹œê°„
-    [SerializeField] protected float throwStunDuration = 3f; // ë˜ì§€ê¸° ê³µê²© ìŠ¤í„´ ì‹œê°„
-    [SerializeField] protected float knockBackForce = 3f; // ë„‰ë°± í˜
+    [Header("Ã¼·Â ¼³Á¤")]
+    [SerializeField] protected int maxHp = 3;
+    [SerializeField] protected float normalStunDuration = 0.5f; // ÀÏ¹İ °ø°İ ½ºÅÏ ½Ã°£
+    [SerializeField] protected float throwStunDuration = 3f; // ´øÁö±â °ø°İ ½ºÅÏ ½Ã°£
+    [SerializeField] protected float knockBackForce = 3f; // ³Ë¹é Èû
     [SerializeField] protected float deathDelay = 2f;
-    
-    [Header("ê¸°ë³¸ AI ì„¤ì •")]
-    [SerializeField] protected float detectionRange; // í”Œë ˆì´ì–´ ì¸ì§€ ê±°ë¦¬
-    [SerializeField] protected float loseTargetRange; // ì¶”ì  ìµœëŒ€ ê±°ë¦¬
-    [SerializeField] protected Transform target; // í”Œë ˆì´ì–´ íƒ€ê¹ƒ
-    [SerializeField] protected LayerMask targetLayer; // í”Œë ˆì´ì–´ ë ˆì´ì–´
 
-    [Header("íŒ¨íŠ¸ë¡¤ ì„¤ì •")] 
-    [SerializeField] protected float patrolDirection = 1f; // ì´ˆê¸° íŒ¨íŠ¸ë¡¤ ë°©í–¥
+    [Header("±âº» AI ¼³Á¤")]
+    [SerializeField] protected float detectionRange; // ÇÃ·¹ÀÌ¾î ÀÎÁö °Å¸®
+    [SerializeField] protected float loseTargetRange; // ÃßÀû ÃÖ´ë °Å¸®
+    [SerializeField] protected Transform target; // ÇÃ·¹ÀÌ¾î Å¸±ê
+    [SerializeField] protected LayerMask targetLayer; // ÇÃ·¹ÀÌ¾î ·¹ÀÌ¾î
+
+    [Header("ÆĞÆ®·Ñ ¼³Á¤")]
+    [SerializeField] protected float patrolDirection = 1f; // ÃÊ±â ÆĞÆ®·Ñ ¹æÇâ
 
 
-    protected DetectObstacle obstacleDetect;
-
-    protected ObjectSound objSound;
     protected Rigidbody2D rb;
     protected Movement2D movement;
-    protected EnemyAnimator animator;
+    protected EnemyAnimation2D animator;
     protected Collider2D enemyCollider;
     protected SpriteRenderer spriteRenderer;
     protected Color originalColor;
     protected Coroutine flashCoroutine;
-    protected CheckDistance distanceCheck;
-    protected EnemyHp enemyHp;
 
-    // ìƒíƒœ ë³€ìˆ˜
+    //°³¼±µÈ °Íµé
+    protected ObjectSound objSound;
+    protected FlashController flash;
+    protected EnemyHp enemyHp;
+    protected DistanceCheck distance;
+    // »óÅÂ º¯¼ö
+    protected int currentHp;
+    protected bool isHit = false;
+    protected bool isDead = false;
     protected bool isDeathProcessed = false;
     protected float stunTimer = 0f;
-    protected bool isTimeFrozen = false; // ì‹œê°„ ì •ì§€ ê´€ë ¨ ë³€ìˆ˜
-    
+    protected bool isTimeFrozen = false; // ½Ã°£ Á¤Áö °ü·Ã º¯¼ö
+
+    public int MaxHp => maxHp;
+    public int CurrentHp => currentHp;
+
+
+    protected virtual void SetUpComponent()
+    {
+        objSound = GetComponentInChildren<ObjectSound>();
+        flash = GetComponentInChildren<FlashController>();
+        enemyHp = GetComponent <EnemyHp>();
+        movement = GetComponent<Movement2D>();
+        animator = GetComponentInChildren<EnemyAnimation2D>();
+        enemyCollider = GetComponent<Collider2D>();
+        distance = GetComponent<DistanceCheck>();
+    }
+
     protected virtual void Awake()
     {
-        enemyHp = GetComponent<EnemyHp>(); 
+        SetUpComponent();
         rb = GetComponent<Rigidbody2D>();
-        movement = GetComponent<Movement2D>();
-        animator = GetComponentInChildren<EnemyAnimator>();
-        enemyCollider = GetComponent<Collider2D>();
-        obstacleDetect = GetComponent<DetectObstacle>();
-
-
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        objSound = GetComponentInChildren<ObjectSound>();
-
-        if (spriteRenderer != null)
-        {
-            originalColor = spriteRenderer.color;
-        }
-        
         blackboard = new Blackboard();
-        
-        // ë¸”ë™ë³´ë“œì— ì´ˆê¸° ë°ì´í„° ì„¤ì •
+
+        // ºí·¢º¸µå¿¡ ÃÊ±â µ¥ÀÌÅÍ ¼³Á¤
         blackboard.SetValue("Target", target);
         blackboard.SetValue("PlayerDetected", false);
         blackboard.SetValue("PatrolDirection", patrolDirection);
-
+        blackboard.SetValue("IsHit", false);
+        blackboard.SetValue("IsDead", false);
         blackboard.SetValue("StunTimer", 0f);
+        blackboard.SetValue("CurrentHp", currentHp);
+        blackboard.SetValue("MaxHp", maxHp);
 
-        blackboard.SetValue("CurrentHp", enemyHp.CurrentHp);
-        blackboard.SetValue("MaxHp", enemyHp.MaxHp);
-        blackboard.SetValue("IsHit", enemyHp.IsHit);
-        blackboard.SetValue("IsDead", enemyHp.IsDeath);
-
-        // ì´ˆê¸° ë°©í–¥ ì„¤ì •
+        // ÃÊ±â ¹æÇâ ¼³Á¤
         SetDirection(patrolDirection);
     }
 
     protected virtual void Start()
     {
-        // ê¸°ë³¸ í–‰ë™ íŠ¸ë¦¬ ì„¤ì •
+        // ±âº» Çàµ¿ Æ®¸® ¼³Á¤
         SetupBaseBehaviorTree();
     }
 
     protected virtual void Update()
     {
-        // ì‹œê°„ ì •ì§€ ìƒíƒœë¼ë©´ ì•„ë¬´ í–‰ë™ë„ í•˜ì§€ ì•ŠìŒ
-        if (isTimeFrozen)
-            return;
-
-        if (isDeathProcessed) 
-            return;
+        // ½Ã°£ Á¤Áö »óÅÂ¶ó¸é ¾Æ¹« Çàµ¿µµ ÇÏÁö ¾ÊÀ½
+        if (isTimeFrozen || isDeathProcessed) return;
         Hit();
     }
-    
+
     protected virtual void Hit()
     {
-        // í”¼ê²© ìƒíƒœ ì²˜ë¦¬
-        if (enemyHp.IsHit)
+        // ÇÇ°İ »óÅÂ Ã³¸®
+        if (isHit)
         {
             stunTimer -= Time.deltaTime;
             blackboard.SetValue("StunTimer", stunTimer);
 
             if (stunTimer <= 0)
             {
-                //enemyHp.IsHit = false;
+                isHit = false;
                 blackboard.SetValue("IsHit", false);
 
                 if (flashCoroutine != null)
@@ -119,95 +119,88 @@ public class EnemyBT6 : MonoBehaviour
             }
         }
 
-        // íƒ€ê¹ƒ ê°ì§€
-
-        if (!enemyHp.IsHit && !enemyHp.IsDeath)
-        {
-            DetectTarget();
-        }
-
-        // Behavior Tree í‰ê°€
-        if (behaviorTree != null)
-        {
-            behaviorTree.Evaluate();
-        }
+        // Å¸±ê °¨Áö
+        if (!isHit && !isDead) DetectTarget();
+        // Behavior Tree Æò°¡
+        if (behaviorTree != null) behaviorTree.Evaluate();
     }
 
-    // ê¸°ë³¸ í–‰ë™ íŠ¸ë¦¬ ì„¤ì •
+    // ±âº» Çàµ¿ Æ®¸® ¼³Á¤
     protected virtual void SetupBaseBehaviorTree()
     {
-        // ë£¨íŠ¸ ë…¸ë“œ (ì…€ë ‰í„°)
+        // ·çÆ® ³ëµå (¼¿·ºÅÍ)
         Selector rootSelector = new Selector();
-        
-        // ì‚¬ë§ ì‹œí€€ìŠ¤ (ìµœìš°ì„ )
+
+        // »ç¸Á ½ÃÄö½º (ÃÖ¿ì¼±)
         Sequence deathSequence = new Sequence();
         ConditionNode isDeadCondition = new ConditionNode(() => blackboard.GetValue<bool>("IsDead"));
         ActionNode deadAction = new ActionNode(HandleDeath);
         deathSequence.AddChild(isDeadCondition);
         deathSequence.AddChild(deadAction);
-        
-        // í”¼ê²© ì‹œí€€ìŠ¤ (ë‹¤ìŒ ìš°ì„ ìˆœìœ„)
+
+        // ÇÇ°İ ½ÃÄö½º (´ÙÀ½ ¿ì¼±¼øÀ§)
         Sequence hitSequence = new Sequence();
         ConditionNode isHitCondition = new ConditionNode(() => blackboard.GetValue<bool>("IsHit"));
         ActionNode hitAction = new ActionNode(HandleHit);
         hitSequence.AddChild(isHitCondition);
         hitSequence.AddChild(hitAction);
-        
-        // ê³µê²© ì‹œí€€ìŠ¤ (í•˜ìœ„ í´ë˜ìŠ¤ì—ì„œ êµ¬í˜„)
+
+        // °ø°İ ½ÃÄö½º (ÇÏÀ§ Å¬·¡½º¿¡¼­ ±¸Çö)
         Node attackSequence = CreateAttackSequence();
-        
-        // ê³µê²© ì¤‘ ì‹œí€€ìŠ¤
+
+        // °ø°İ Áß ½ÃÄö½º
         Sequence attackingSequence = new Sequence();
         ConditionNode isAttackingCondition = new ConditionNode(() => blackboard.GetValue<bool>("IsAttacking"));
         ActionNode stayInAttackAction = new ActionNode(MaintainAttackState);
         attackingSequence.AddChild(isAttackingCondition);
         attackingSequence.AddChild(stayInAttackAction);
-        
-        // ì¶”ì  ì‹œí€€ìŠ¤
+
+        // ÃßÀû ½ÃÄö½º
         Sequence chaseSequence = new Sequence();
         ConditionNode isPlayerDetected = new ConditionNode(() => blackboard.GetValue<bool>("PlayerDetected"));
         ActionNode chaseAction = new ActionNode(ChaseTarget);
         chaseSequence.AddChild(isPlayerDetected);
         chaseSequence.AddChild(chaseAction);
-        
-        // íŒ¨íŠ¸ë¡¤ ì‹œí€€ìŠ¤
+
+        // ÆĞÆ®·Ñ ½ÃÄö½º
         Sequence patrolSequence = new Sequence();
         ActionNode patrolAction = new ActionNode(Patrol);
         patrolSequence.AddChild(patrolAction);
-        
-        // íŠ¸ë¦¬ êµ¬ì„± (ìš°ì„ ìˆœìœ„ ìˆœ)
-        rootSelector.AddChild(deathSequence);   // ì‚¬ë§ ìƒíƒœ (ìµœìš°ì„ )
-        rootSelector.AddChild(hitSequence);     // í”¼ê²© ìƒíƒœ (ë‹¤ìŒ ìš°ì„ ìˆœìœ„)
-        rootSelector.AddChild(attackingSequence); // ê³µê²© ì¤‘ ìƒíƒœ
-        rootSelector.AddChild(attackSequence);  // ê³µê²© ê°€ëŠ¥í•˜ë©´ ê³µê²©
-        rootSelector.AddChild(chaseSequence);   // ê³µê²© ë¶ˆê°€ëŠ¥í•˜ë©´ ì¶”ì 
-        rootSelector.AddChild(patrolSequence);  // ì¶”ì  ë¶ˆê°€ëŠ¥í•˜ë©´ íŒ¨íŠ¸ë¡¤
-        
-        // Behavior Tree ìƒì„±
+
+        // Æ®¸® ±¸¼º (¿ì¼±¼øÀ§ ¼ø)
+        rootSelector.AddChild(deathSequence);   // »ç¸Á »óÅÂ (ÃÖ¿ì¼±)
+        rootSelector.AddChild(hitSequence);     // ÇÇ°İ »óÅÂ (´ÙÀ½ ¿ì¼±¼øÀ§)
+        rootSelector.AddChild(attackingSequence); // °ø°İ Áß »óÅÂ
+        rootSelector.AddChild(attackSequence);  // °ø°İ °¡´ÉÇÏ¸é °ø°İ
+        rootSelector.AddChild(chaseSequence);   // °ø°İ ºÒ°¡´ÉÇÏ¸é ÃßÀû
+        rootSelector.AddChild(patrolSequence);  // ÃßÀû ºÒ°¡´ÉÇÏ¸é ÆĞÆ®·Ñ
+
+        // Behavior Tree »ı¼º
         behaviorTree = new BehaviorTree(rootSelector)
         {
             Blackboard = blackboard
         };
     }
-    
-    // í•˜ìœ„ í´ë˜ìŠ¤ì—ì„œ ì˜¤ë²„ë¼ì´ë“œí•  ê³µê²© ì‹œí€€ìŠ¤ ìƒì„± ë©”ì„œë“œ
+
+    // ÇÏÀ§ Å¬·¡½º¿¡¼­ ¿À¹ö¶óÀÌµåÇÒ °ø°İ ½ÃÄö½º »ı¼º ¸Ş¼­µå
     protected virtual Node CreateAttackSequence()
     {
         return new ConditionNode(() => false);
     }
-    // íƒ€ê²Ÿ ê°ì§€ ë©”ì„œë“œ
+
+    // Å¸°Ù °¨Áö ¸Ş¼­µå
     protected virtual void DetectTarget()
     {
-        // í”¼ê²© ì¤‘ì´ê±°ë‚˜ ì‚¬ë§ ìƒíƒœë©´ íƒ€ê²Ÿ ê°ì§€í•˜ì§€ ì•ŠìŒ
-        if (enemyHp.IsHit || enemyHp.IsDeath) return;
-        
+        // ÇÇ°İ ÁßÀÌ°Å³ª »ç¸Á »óÅÂ¸é Å¸°Ù °¨ÁöÇÏÁö ¾ÊÀ½
+        if (isHit || isDead) return;
+
         bool previouslyDetected = blackboard.GetValue<bool>("PlayerDetected");
         bool currentlyDetected = previouslyDetected;
-        
+
         if (target == null)
         {
-            // í”Œë ˆì´ì–´ ìë™ íƒìƒ‰
-            Collider2D playerCollider = Physics2D.OverlapCircle(transform.position, 
+            // ÇÃ·¹ÀÌ¾î ÀÚµ¿ Å½»ö
+            Collider2D playerCollider = Physics2D.OverlapCircle(transform.position,
                                                     detectionRange, targetLayer);
             if (playerCollider != null)
             {
@@ -218,12 +211,12 @@ public class EnemyBT6 : MonoBehaviour
         }
         else
         {
-            // íƒ€ê²Ÿ ê±°ë¦¬ í™•ì¸
+            // Å¸°Ù °Å¸® È®ÀÎ
             float distanceToTarget = Vector2.Distance(transform.position, target.position);
 
             if (previouslyDetected)
             {
-                // ì´ë¯¸ ì¶”ì  ì¤‘
+                // ÀÌ¹Ì ÃßÀû Áß
                 if (distanceToTarget > loseTargetRange)
                 {
                     currentlyDetected = false;
@@ -235,14 +228,14 @@ public class EnemyBT6 : MonoBehaviour
             }
             else
             {
-                // ì¶”ì  ì¤‘ì´ ì•„ë‹ˆë©´ ì‹œì•¼ ì²´í¬
+                // ÃßÀû ÁßÀÌ ¾Æ´Ï¸é ½Ã¾ß Ã¼Å©
                 if (distanceToTarget <= detectionRange)
                 {
                     Vector2 directionToTarget = (target.position - transform.position).normalized;
                     RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToTarget,
                         detectionRange, targetLayer);
                     Debug.DrawRay(transform.position, directionToTarget * detectionRange, Color.red);
-                
+
                     if (hit.collider != null && hit.collider.transform == target)
                     {
                         currentlyDetected = true;
@@ -250,38 +243,32 @@ public class EnemyBT6 : MonoBehaviour
                 }
             }
         }
-        
-        // ë¸”ë™ë³´ë“œ ì—…ë°ì´íŠ¸
+
+        // ºí·¢º¸µå ¾÷µ¥ÀÌÆ®
         blackboard.SetValue("PlayerDetected", currentlyDetected);
-        
-        // í”Œë ˆì´ì–´ ê°ì§€ ìƒíƒœê°€ ë³€ê²½ë˜ì—ˆìœ¼ë©´ ì• ë‹ˆë©”ì´ì…˜ ì—…ë°ì´íŠ¸ ë° íŒ¨íŠ¸ë¡¤ ë°©í–¥ ì„¤ì •
+
+        // ÇÃ·¹ÀÌ¾î °¨Áö »óÅÂ°¡ º¯°æµÇ¾úÀ¸¸é ¾Ö´Ï¸ŞÀÌ¼Ç ¾÷µ¥ÀÌÆ® ¹× ÆĞÆ®·Ñ ¹æÇâ ¼³Á¤
         if (previouslyDetected != currentlyDetected)
         {
-            if (animator != null)
-            {
-                animator.SetChasingState(currentlyDetected);
-            }
-                
-            // ì¶”ì ì„ í¬ê¸°í•  ë•Œ í˜„ì¬ ë°©í–¥ì— ë§ê²Œ íŒ¨íŠ¸ë¡¤ ë°©í–¥ ì´ˆê¸°í™”
+            if (animator != null) animator.SetChasingState(currentlyDetected);
+            // ÃßÀûÀ» Æ÷±âÇÒ ¶§ ÇöÀç ¹æÇâ¿¡ ¸Â°Ô ÆĞÆ®·Ñ ¹æÇâ ÃÊ±âÈ­
             if (!currentlyDetected && previouslyDetected)
             {
-                // ì¶”ì  ëª¨ë“œì—ì„œ íŒ¨íŠ¸ë¡¤ ëª¨ë“œë¡œ ì „í™˜ë  ë•Œ ë°©í–¥ ì„¤ì •
+                // ÃßÀû ¸ğµå¿¡¼­ ÆĞÆ®·Ñ ¸ğµå·Î ÀüÈ¯µÉ ¶§ ¹æÇâ ¼³Á¤
                 HandleLostTarget();
             }
         }
     }
 
-    // ì¶”ì  í¬ê¸° ì‹œ ë°©í–¥ ì„¤ì • ì²˜ë¦¬
+    // ÃßÀû Æ÷±â ½Ã ¹æÇâ ¼³Á¤ Ã³¸®
     protected virtual void HandleLostTarget()
     {
-        // í˜„ì¬ ë°©í–¥ ê°€ì ¸ì˜¤ê¸°
+        // ÇöÀç ¹æÇâ °¡Á®¿À±â
         float currentDirection = GetDirection();
-        
-        // í˜„ì¬ ë°©í–¥ìœ¼ë¡œ íŒ¨íŠ¸ë¡¤ ë°©í–¥ ì„¤ì •
+        // ÇöÀç ¹æÇâÀ¸·Î ÆĞÆ®·Ñ ¹æÇâ ¼³Á¤
         blackboard.SetValue("PatrolDirection", currentDirection);
-
-        // ë²½ ì²´í¬ - ë§Œì•½ í˜„ì¬ ë°©í–¥ì— ë²½ ìˆë‹¤ë©´ ë°©í–¥ ë°˜ì „
-        if (obstacleDetect.CheckWall(currentDirection))
+        // º® Ã¼Å© - ¸¸¾à ÇöÀç ¹æÇâ¿¡ º® ÀÖ´Ù¸é ¹æÇâ ¹İÀü
+        if (movement.CheckWall(currentDirection))
         {
             currentDirection *= -1;
             blackboard.SetValue("PatrolDirection", currentDirection);
@@ -291,20 +278,16 @@ public class EnemyBT6 : MonoBehaviour
 
     protected virtual NodeState MaintainAttackState()
     {
-        if (movement != null)
-        {
-            movement.MoveTo(0);
-        }
-
+        movement.MoveTo(0);
         return NodeState.Running;
     }
-    
-    // íƒ€ê²Ÿ ì¶”ì  ë©”ì„œë“œ
+
+    // Å¸°Ù ÃßÀû ¸Ş¼­µå
     protected virtual NodeState ChaseTarget()
     {
-        // í”¼ê²© ì¤‘ì´ê±°ë‚˜ ì‚¬ë§ ìƒíƒœë©´ ì¶”ì í•˜ì§€ ì•ŠìŒ
-        if (enemyHp.IsHit || enemyHp.IsDeath) return NodeState.Failure;
-        
+        // ÇÇ°İ ÁßÀÌ°Å³ª »ç¸Á »óÅÂ¸é ÃßÀûÇÏÁö ¾ÊÀ½
+        if (isHit || isDead) return NodeState.Failure;
+
         Transform currentTarget = blackboard.GetValue<Transform>("Target");
 
         if (currentTarget == null)
@@ -316,90 +299,65 @@ public class EnemyBT6 : MonoBehaviour
             return NodeState.Failure;
         }
 
-        // ì¶”ì  ì• ë‹ˆë©”ì´ì…˜ í™œì„±í™”
-        if (animator != null)
-        {
-            animator.SetChasingState(true);
-        }
-        
-        // íƒ€ê²Ÿ ë°©í–¥ìœ¼ë¡œ ì´ë™
+        // ÃßÀû ¾Ö´Ï¸ŞÀÌ¼Ç È°¼ºÈ­
+        if (animator != null) animator.SetChasingState(true);
+
+        // Å¸°Ù ¹æÇâÀ¸·Î ÀÌµ¿
         Vector2 direction = (currentTarget.position - transform.position).normalized;
         float directionToTarget = Mathf.Sign(direction.x);
-        
-        // ë°©í–¥ ì„¤ì •
+
+        // ¹æÇâ ¼³Á¤
         if (directionToTarget != 0)
         {
             SetDirection(directionToTarget);
         }
-
-        // ê³µê²© ë²”ìœ„ ë‚´ì— ìˆëŠ”ì§€ í™•ì¸
+        // °ø°İ ¹üÀ§ ³»¿¡ ÀÖ´ÂÁö È®ÀÎ
         bool inAttackRange = IsTargetInAttackRange();
-
-        // ê³µê²© ë²”ìœ„ ë‚´ì— ìˆìœ¼ë©´ ì´ë™í•˜ì§€ ì•Šê³  ë°©í–¥ë§Œ ì„¤ì •
+        // °ø°İ ¹üÀ§ ³»¿¡ ÀÖÀ¸¸é ÀÌµ¿ÇÏÁö ¾Ê°í ¹æÇâ¸¸ ¼³Á¤
         if (inAttackRange)
         {
-            if (movement != null)
-            {
-                movement.MoveTo(0);
-            }
-            else
-            {
-                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-            }
+            movement.MoveTo(0);
         }
-        // ê³µê²© ë²”ìœ„ ë°–ì— ìˆìœ¼ë©´ ì¶”ì 
+        // °ø°İ ¹üÀ§ ¹Û¿¡ ÀÖÀ¸¸é ÃßÀû
         else
         {
-            // ì´ë™
-            if (movement != null)
-            {
-                //movement.MoveToFast(directionToTarget);
-            }
+            // ÀÌµ¿
+            movement.RunTo(directionToTarget);
         }
-        
+
         return NodeState.Running;
     }
 
-    // íŒ¨íŠ¸ë¡¤ ë©”ì„œë“œ
+    // ÆĞÆ®·Ñ ¸Ş¼­µå
     protected virtual NodeState Patrol()
     {
-        // í”¼ê²© ì¤‘ì´ê±°ë‚˜ ì‚¬ë§ ìƒíƒœë©´ íŒ¨íŠ¸ë¡¤í•˜ì§€ ì•ŠìŒ
-        if (enemyHp.IsHit || enemyHp.IsDeath) return NodeState.Failure;
+        // ÇÇ°İ ÁßÀÌ°Å³ª »ç¸Á »óÅÂ¸é ÆĞÆ®·ÑÇÏÁö ¾ÊÀ½
+        if (isHit || isDead) return NodeState.Failure;
 
-        if (animator != null)
-        {
-            animator.SetChasingState(false);
-        }
-        
+        if (animator != null) animator.SetChasingState(false);
+
         float direction = blackboard.GetValue<float>("PatrolDirection");
 
-        // ë°©í–¥ ê°’ ê²€ì¦
+        // ¹æÇâ °ª °ËÁõ
         if (float.IsNaN(direction) || direction == 0)
         {
             direction = 1f;
             blackboard.SetValue("PatrolDirection", direction);
         }
-        
-        // ë²½ ì²´í¬
-        bool isWallAhead = obstacleDetect.CheckWall(direction);
 
-        // ë²½ì´ ìˆìœ¼ë©´ ë°©í–¥ ì „í™˜
+        // º® Ã¼Å©
+        bool isWallAhead = movement.CheckWall(direction);
+
+        // º®ÀÌ ÀÖÀ¸¸é ¹æÇâ ÀüÈ¯
         if (isWallAhead)
         {
             direction *= -1;
             blackboard.SetValue("PatrolDirection", direction);
-            SetDirection(direction);
         }
-        else
-        {
-            SetDirection(direction);
-        }
-        
-        // ì´ë™
-        if (movement != null)
-        {
-            movement.MoveTo(direction);
-        }
+        SetDirection(direction);
+
+        // ÀÌµ¿
+        if (movement != null) movement.MoveTo(direction);
 
         if (animator != null)
         {
@@ -408,28 +366,21 @@ public class EnemyBT6 : MonoBehaviour
 
         return NodeState.Running;
     }
-    
-    // í”¼ê²© ì²˜ë¦¬ ë©”ì„œë“œ
+
+    // ÇÇ°İ Ã³¸® ¸Ş¼­µå
     protected virtual NodeState HandleHit()
     {
-        // ê³µê²© ì¤‘ì´ë©´ ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ
+        // °ø°İ ÁßÀÌ¸é °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á
         bool wasAttacking = blackboard.GetValue<bool>("IsAttacking");
         if (wasAttacking)
         {
             OnAttackAnimationFinished();
         }
-        
-        // ì›€ì§ì„ ë©ˆì¶¤
-        if (movement != null)
-        {
-            movement.MoveTo(0);
-        }
-        else if (rb != null)
-        {
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-        }
-        
-        // í”¼ê²© ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
+
+        // ¿òÁ÷ÀÓ ¸ØÃã
+        if (movement != null) movement.MoveTo(0);
+
+        // ÇÇ°İ ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
         if (animator != null)
         {
             animator.SetMovementAnim(0);
@@ -439,18 +390,18 @@ public class EnemyBT6 : MonoBehaviour
 
         return NodeState.Running;
     }
-    
-    //ì‚¬ë§ ì²˜ë¦¬ ë©”ì„œë“œ
+
+    //»ç¸Á Ã³¸® ¸Ş¼­µå
     protected virtual NodeState HandleDeath()
     {
         if (isDeathProcessed)
         {
             return NodeState.Success;
         }
-        
+
         isDeathProcessed = true;
-        
-        // ì›€ì§ì„ ë©ˆì¶¤
+
+        // ¿òÁ÷ÀÓ ¸ØÃã
         if (movement != null)
         {
             movement.MoveTo(0);
@@ -466,9 +417,9 @@ public class EnemyBT6 : MonoBehaviour
         }
 
         enemyCollider.enabled = false;
-        
-        Debug.Log("ì  ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘");
-        // ì‚¬ë§ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
+
+        Debug.Log("Àû »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ");
+        // »ç¸Á ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
         if (animator != null)
         {
             animator.SetMovementAnim(0);
@@ -477,13 +428,13 @@ public class EnemyBT6 : MonoBehaviour
         }
         objSound.DeadSound();
 
-        // ì˜¤ë¸Œì íŠ¸ ì œê±° (ë”œë ˆì´ ì ìš©)
+        // ¿ÀºêÁ§Æ® Á¦°Å (µô·¹ÀÌ Àû¿ë)
         StartCoroutine(DestroyAfterDelay(deathDelay));
-        
+
         return NodeState.Success;
     }
 
-    // ë”œë ˆì´ í›„ ì˜¤ë¸Œì íŠ¸ ì œê±°
+    // µô·¹ÀÌ ÈÄ ¿ÀºêÁ§Æ® Á¦°Å
     protected IEnumerator DestroyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -493,29 +444,55 @@ public class EnemyBT6 : MonoBehaviour
         {
             attachedWeapon.DetachFromEnemy(transform.position);
         }
-        // ì˜¤ë¸Œì íŠ¸ í’€ë§ ë¹„í™œì„±í™”
+        // ¿ÀºêÁ§Æ® Ç®¸µ ºñÈ°¼ºÈ­
         gameObject.SetActive(false);
     }
-    
-    // ë°ë¯¸ì§€ ì ìš© ë©”ì„œë“œ
+
+    // µ¥¹ÌÁö Àû¿ë ¸Ş¼­µå
     public virtual void DecreaseHp(int damage, bool isThrownWeapon = false)
     {
+        if (isDead) return;
 
-        blackboard.SetValue("CurrentHp", enemyHp.CurrentHp);
+        currentHp -= damage;
+        blackboard.SetValue("CurrentHp", currentHp);
 
-        // ì‚¬ë§ ì²´í¬
-        blackboard.SetValue("IsDead", enemyHp.IsDeath);
-        if (enemyHp.IsDeath == true) return;
+        // »ç¸Á Ã¼Å©
+        if (currentHp <= 0)
+        {
+            currentHp = 0;
+            isDead = true;
+            blackboard.SetValue("IsDead", true);
 
-        // í”¼ê²© ìƒíƒœ ì„¤ì •
-        blackboard.SetValue("IsHit", enemyHp.IsHit);
-        
-        // ìŠ¤í„´ íƒ€ì´ë¨¸ ì„¤ì • (ë˜ì§„ ë¬´ê¸°ì¸ ê²½ìš° ë” ê¸´ ìŠ¤í„´)
+            // EnemySentence ½ºÅ©¸³Æ®¿¡¼­ »ç¸Á ´ë»ç È£Ãâ
+            EnemySentence enemySentence = GetComponent<EnemySentence>();
+            if (enemySentence != null)
+            {
+                enemySentence.ShowDeathDialogue();
+            }
+
+            if (flashCoroutine != null)
+            {
+                StopCoroutine(flashCoroutine);
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.color = originalColor;
+                }
+            }
+            return;
+        }
+
+        // ÇÇ°İ »óÅÂ ¼³Á¤
+        isHit = true;
+        blackboard.SetValue("IsHit", true);
+
+        // ½ºÅÏ Å¸ÀÌ¸Ó ¼³Á¤ (´øÁø ¹«±âÀÎ °æ¿ì ´õ ±ä ½ºÅÏ)
         stunTimer = isThrownWeapon ? throwStunDuration : normalStunDuration;
         blackboard.SetValue("StunTimer", stunTimer);
-        
-        // í”¼ê²© ì´í™íŠ¸
-        // ë„‰ë°± ì ìš© (í”¼ê²© ë°©í–¥ì˜ ë°˜ëŒ€ë¡œ)
+
+        // ÇÇ°İ ÀÌÆåÆ®
+        flash.StartFlash();
+
+        // ³Ë¹é Àû¿ë (ÇÇ°İ ¹æÇâÀÇ ¹İ´ë·Î)
         if (target != null && rb != null && !isThrownWeapon)
         {
             Vector2 knockBackDirection = ((Vector2)transform.position - (Vector2)target.position).normalized;
@@ -524,9 +501,7 @@ public class EnemyBT6 : MonoBehaviour
         }
     }
 
-
-    
-    // ë°©í–¥ ì„¤ì • ë©”ì„œë“œ
+    // ¹æÇâ ¼³Á¤ ¸Ş¼­µå
     protected virtual void SetDirection(float direction)
     {
         if (direction != 0)
@@ -534,7 +509,7 @@ public class EnemyBT6 : MonoBehaviour
             Vector3 scale = transform.localScale;
             float previousX = scale.x;
             scale.x = Mathf.Abs(scale.x) * Mathf.Sign(direction);
-            
+
             transform.localScale = scale;
         }
     }
@@ -546,80 +521,50 @@ public class EnemyBT6 : MonoBehaviour
 
     protected virtual bool IsTargetInAttackRange()
     {
-        // í•˜ìœ„ í´ë˜ìŠ¤ì—ì„œ ê³µê²© ë²”ìœ„ë¥¼ ì„¤ì •
+        // ÇÏÀ§ Å¬·¡½º¿¡¼­ °ø°İ ¹üÀ§¸¦ ¼³Á¤
         return false;
     }
 
     protected virtual float GetAttackRange()
     {
-        // í•˜ìœ„ í´ë˜ìŠ¤ì—ì„œ ì˜¤ë²„ë¼ì´`ë“œ
+        // ÇÏÀ§ Å¬·¡½º¿¡¼­ ¿À¹ö¶óÀÌµå
         return 0f;
     }
-    
-    // ê±°ë¦¬ ê³„ì‚° ë©”ì„œë“œ
+
+    // °Å¸® °è»ê ¸Ş¼­µå
     protected float DistanceToTarget()
     {
         Transform currentTarget = blackboard.GetValue<Transform>("Target");
 
-        return distanceCheck.DistanceToTarget(currentTarget);
+        if (currentTarget == null) return float.MaxValue;
+
+        return Vector2.Distance(transform.position, currentTarget.position);
     }
-    
+
     public virtual void FreezeTime()
     {
         isTimeFrozen = true;
-        
-        // ë¬¼ë¦¬ ê°ì²´ ì •ì§€ 
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-            rb.Sleep();
-        }
-        
-        // ì´ë™ ê´€ë ¨ ë™ì‘ ì¤‘ì§€
-        if (movement != null)
-        {
-            movement.MoveTo(0f);
-        }
+        // ¹°¸® °´Ã¼ Á¤Áö 
+        movement.FreezeMovement();
+        if (behaviorTree != null) behaviorTree.Pause();
 
-        if (behaviorTree != null)
-        {
-            behaviorTree.Pause();
-        }
     }
 
     public virtual void UnfreezeTime()
     {
         isTimeFrozen = false;
-        
-        // ë¬¼ë¦¬ ê°ì²´ ê¹¨ìš°ê¸°
-        if (rb != null)
-        {
-            rb.WakeUp();
-        }
+        // ¹°¸® °´Ã¼ ±ú¿ì±â
+        movement.UnfreezeTime();
+        if (behaviorTree != null) behaviorTree.Resume();
 
-        if (behaviorTree != null)
-        {
-            behaviorTree.Resume();
-        }
-    }
-    
-    public virtual void OnAttackAnimationEvent()
-    {
-        
     }
 
-    public virtual void OnAttackAnimationFinished()
-    { 
-    
-    }
+    public virtual void OnAttackAnimationEvent() { }
+
+    public virtual void OnAttackAnimationFinished() { }
 
     protected virtual void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, loseTargetRange);
+        distance.GizmoDistance();
     }
 }

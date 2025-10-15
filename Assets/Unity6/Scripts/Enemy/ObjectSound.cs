@@ -1,3 +1,4 @@
+using Unity.AppUI.UI;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -10,41 +11,31 @@ public class ObjectSound : MonoBehaviour
     protected AudioClip attackClip;
     [SerializeField]
     protected AudioClip deadClip;
-
-
-
     AudioSource audioSource;
-
-
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-
     protected void PlaySound(AudioClip _clip)
     {
-        audioSource.Stop();
-        audioSource.clip = _clip;
+        if (audioSource == null || _clip == null) return;
+        if (audioSource.clip != _clip || !audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            audioSource.clip = _clip;
+        }
         audioSource.Play();
     }
 
-    public void HitSound()
-    {
-        PlaySound(hitClip);
-    }
+    public void AttackSound() => PlaySound(attackClip);
+    public void HitSound() => PlaySound(hitClip);
 
-    public void DeadSound()
-    {
-        PlaySound(deadClip);
-    }
+    public void DeadSound() => PlaySound(deadClip);
 
     public void StopSound()
     {
-        if (audioSource.isPlaying)
-        {
-            audioSource.Stop();
-        }
+        if (audioSource != null || audioSource.isPlaying) audioSource.Stop();
     }
 }

@@ -32,8 +32,6 @@ public class FlyRangeEnemy : EnemyBT
     [SerializeField] 
     protected float moveSpeed = 3f;
 
-
-
     [Header("총기 오브젝트")]
     [SerializeField] private Transform gunPivot; // 총기 회전 중심이 될 부모 객체
     [SerializeField] 
@@ -297,7 +295,11 @@ public class FlyRangeEnemy : EnemyBT
         if (isDead || isHit || isAttacking) return NodeState.Failure;
 
         Transform target = blackboard.GetValue<Transform>("Target");
-        if (target == null) return NodeState.Failure;
+        if (target == null)
+        {
+            Debug.Log($"{target}을 감지 못함");
+            return NodeState.Failure;
+        } 
 
         Vector2 retreatDir = ((Vector2)transform.position - (Vector2)target.position).normalized;
         float retreatSpeed = moveSpeed * retreatSpeedMultiplier;

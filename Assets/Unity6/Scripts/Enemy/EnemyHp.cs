@@ -11,6 +11,10 @@ public class EnemyHp : MonoBehaviour, IDamageable
     private bool isHit;
 
     FadeObject2D fadeObj;
+    FadeController fadeController;
+
+    public event System.Action Died;
+
 
 
     public int CurrentHp => currentHp;
@@ -21,6 +25,8 @@ public class EnemyHp : MonoBehaviour, IDamageable
     {
         currentHp = maxHp;
         fadeObj = GetComponentInChildren<FadeObject2D>();
+        fadeController = GetComponentInChildren<FadeController>();
+
     }
     public void RestoreHp(int amount) // 체력 증가
     {
