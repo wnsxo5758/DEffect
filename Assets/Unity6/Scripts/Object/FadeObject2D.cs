@@ -52,6 +52,23 @@ public class FadeObject2D : MonoBehaviour
         }
     }
 
+    //protected virtual IEnumerator FlashEffect()
+    //{
+    //    float flashInterval = 0.2f;
+    //    Color flashColor = new Color(1f, 0.3f, 0.3f, 1f);
+
+    //    while (isHit)
+    //    {
+    //        renderer2D.color = flashColor;
+    //        yield return new WaitForSeconds(flashInterval);
+
+    //        renderer2D.color = originalColor;
+    //        yield return new WaitForSeconds(flashInterval);
+    //    }
+
+    //    renderer2D.color = originalColor;
+    //}
+
     private IEnumerator FadeRoutine() // 페이드 코루틴
     {
         float duration = Mathf.Max(0.01f, fadeDuration); // 런타임 값 에러 방지
