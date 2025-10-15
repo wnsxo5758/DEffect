@@ -175,10 +175,15 @@ public class StateMachine : MonoBehaviour
         // 공격 가능한 상태인지 확인
         if (Combat == null || !Combat.CanPerformMeleeAttack()) return;
 
-        // 공격 가능한 상태에서만 공격 상태로 전환
-        if (CurrentState is PlayerIdleState or PlayerRunState or PlayerJumpState or PlayerFallState)
+        // 지상에서 공격
+        if (CurrentState is PlayerIdleState or PlayerRunState)
         {
             ChangeState<PlayerMeleeAttackState>();
+        }
+        // 공중에서 공격 (점프 또는 낙하 중)
+        else if (CurrentState is PlayerJumpState or PlayerFallState)
+        {
+            ChangeState<PlayerAirMeleeAttackState>();
         }
     }
 

@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerMeleeAttack : MonoBehaviour
 {
-    [Header("Attack Settings")]
+    [Header("Ground Attack Settings")]
     [SerializeField] private Vector2 attackOffset = new Vector2(0, 0.6f);
     [SerializeField] private Vector2[] attackPolygonPoints = new Vector2[]
     {
@@ -18,6 +18,22 @@ public class PlayerMeleeAttack : MonoBehaviour
         new Vector2(1.2f, 1.0f),    // 오른쪽 위
         new Vector2(1.2f, -0.5f)       // 오른쪽 아래
     };
+
+    [Header("Air Attack Settings")]
+    [SerializeField] private Vector2 attackOffsetAir = new Vector2(0.3f, -0.2f);
+    [SerializeField] private Vector2[] attackPolygonPointsAir = new Vector2[]
+    {
+        new Vector2(-0.5f, 0.5f),   // 왼쪽 위
+        new Vector2(-0.5f, -1.5f),  // 왼쪽 아래 (더 넓게)
+        new Vector2(1.5f, -1.5f),   // 오른쪽 아래 (더 넓게)
+        new Vector2(1.5f, 0.5f)     // 오른쪽 위
+    };
+
+    [Header("Attack Dash Settings")]
+    [SerializeField] private float attackDashDistance = 0.1f;      // 지상 공격 시 이동 거리
+    [SerializeField] private float attackDashDuration = 0.1f;      // 이동 지속 시간
+    [SerializeField] private float airAttackDashDistance = 0.15f;  // 공중 공격 시 이동 거리 (더 짧게)
+    [SerializeField] private float airAttackDashDuration = 0.08f;  // 공중 공격 이동 지속 시간
 
     [Header("Collision Detection")]
     [SerializeField] private LayerMask enemyLayer;
@@ -32,13 +48,16 @@ public class PlayerMeleeAttack : MonoBehaviour
     // 공격 상태
     private bool canAttack = true;
     private bool isAttacking = false;
+    private bool isAirAttack = false;  // 공중 공격 플래그
 
     // 이벤트
     public event Action OnAttackStarted;
     public event Action OnAttackFinished;
+    public event Action OnAttackHit;  // 공격 판정 시 이벤트
 
     // 외부 참조용 프로퍼티
     public bool IsAttacking => isAttacking;
+    public bool IsAirAttack => isAirAttack;
 
     // 컴포넌트 참조
     private PlayerMovement playerMovement;
@@ -168,7 +187,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 근접 공격 시작 (State에서 호출)
+    /// 근접 공격 시작 (지상 공격 - State에서 호출)
     /// </summary>
     public void StartAttack()
     {
@@ -176,6 +195,10 @@ public class PlayerMeleeAttack : MonoBehaviour
 
         canAttack = false;
         isAttacking = true;
+        isAirAttack = false;
+
+        // 지상 공격 범위로 설정
+        UpdateAttackCollider(attackOffset, attackPolygonPoints);
 
         OnAttackStarted?.Invoke();
 
@@ -184,11 +207,48 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
 
     /// <summary>
+    /// 공중 근접 공격 시작 (공중 공격 - State에서 호출)
+    /// </summary>
+    public void StartAirAttack()
+    {
+        if (!CanAttack()) return;
+
+        canAttack = false;
+        isAttacking = true;
+        isAirAttack = true;
+
+        // 공중 공격 범위로 설정
+        UpdateAttackCollider(attackOffsetAir, attackPolygonPointsAir);
+
+        OnAttackStarted?.Invoke();
+
+        // 쿨다운 시작
+        StartCoroutine(AttackCooldownTimer());
+    }
+
+    /// <summary>
+    /// 공격 콜라이더 범위 업데이트
+    /// </summary>
+    private void UpdateAttackCollider(Vector2 offset, Vector2[] points)
+    {
+        if (attackColliderObject != null)
+        {
+            attackColliderObject.transform.localPosition = offset;
+        }
+
+        if (attackCollider != null)
+        {
+            attackCollider.SetPath(0, points);
+        }
+    }
+
+    /// <summary>
     /// 공격 종료 (애니메이션 이벤트에서 호출)
     /// </summary>
     public void FinishAttack()
     {
         isAttacking = false;
+        isAirAttack = false;
         OnAttackFinished?.Invoke();
     }
 
@@ -198,6 +258,15 @@ public class PlayerMeleeAttack : MonoBehaviour
     public void HandleAttackCollision()
     {
         if (currentWeapon == null) return;
+
+        // 공격 판정 이벤트 발생
+        OnAttackHit?.Invoke();
+
+        // 지상 공격일 때만 대시 (공중 공격은 대시하지 않음)
+        if (!isAirAttack)
+        {
+            StartCoroutine(PerformAttackDash());
+        }
 
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(enemyLayer);
@@ -210,6 +279,32 @@ public class PlayerMeleeAttack : MonoBehaviour
         {
             ProcessEnemyHit(enemyCollider);
         }
+    }
+
+    /// <summary>
+    /// 공격 시 플레이어를 살짝 앞으로 이동시키는 코루틴 (지상 공격 전용)
+    /// </summary>
+    private IEnumerator PerformAttackDash()
+    {
+        if (rb == null || playerMovement == null) yield break;
+
+        // 플레이어가 바라보는 방향 (1: 오른쪽, -1: 왼쪽)
+        float direction = playerMovement.FacingDirection;
+
+        // 이동 속도 계산
+        float dashSpeed = attackDashDistance / attackDashDuration;
+        float elapsedTime = 0f;
+
+        // 짧은 시간 동안 이동
+        while (elapsedTime < attackDashDuration)
+        {
+            rb.linearVelocity = new Vector2(direction * dashSpeed, rb.linearVelocity.y);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 이동 후 수평 속도를 원래대로
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
     }
 
     /// <summary>

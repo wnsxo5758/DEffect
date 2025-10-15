@@ -24,6 +24,7 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Roll = Animator.StringToHash("Roll");
     private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int AirAttack = Animator.StringToHash("AirAttack");
     private static readonly int HasWeapon = Animator.StringToHash("HasWeapon");
 
     private void Awake()
@@ -115,6 +116,12 @@ public class PlayerAnimator : MonoBehaviour
             return;
         }
 
+        // 공중 공격 중에는 스프라이트 방향 변경 금지
+        if (stateMachine.IsCurrentState<PlayerAirMeleeAttackState>())
+        {
+            return;
+        }
+
         float moveInput = movement.CurrentMoveInput;
 
         // 입력이 있을 때만 방향 전환
@@ -144,12 +151,21 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// 공격 애니메이션 트리거
+    /// 공격 애니메이션 트리거 (지상 공격)
     /// </summary>
     public void TriggerAttack()
     {
         if (animator != null)
             animator.SetTrigger(Attack);
+    }
+
+    /// <summary>
+    /// 공중 공격 애니메이션 트리거
+    /// </summary>
+    public void TriggerAirAttack()
+    {
+        if (animator != null)
+            animator.SetTrigger(AirAttack);
     }
 
     /// <summary>
