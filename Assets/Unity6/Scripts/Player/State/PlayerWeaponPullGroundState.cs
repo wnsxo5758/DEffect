@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerWeaponPullGroundState : PlayerGroundStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerRangedAttack rangedAttack;
     private WeaponPullContext pullContext;
 
@@ -19,6 +21,18 @@ public class PlayerWeaponPullGroundState : PlayerGroundStateBase
     {
         // 낙하 전환은 비활성화 (무기 뽑기 중에는 상태 유지)
         // 애니메이션 이벤트로만 전환
+    }
+
+    // 점프 이벤트 구독 비활성화 (무기 뽑기 중에는 점프 불가)
+    protected override void SubscribeToJumpEvent()
+    {
+        // 아무것도 하지 않음 (점프 차단)
+    }
+
+    // 구르기 이벤트 구독 비활성화 (무기 뽑기 중에는 구르기 불가)
+    protected override void SubscribeToRollEvent()
+    {
+        // 아무것도 하지 않음 (구르기 차단)
     }
 
     public override void Enter()
@@ -46,10 +60,9 @@ public class PlayerWeaponPullGroundState : PlayerGroundStateBase
         stateMachine.Movement.StopMovement();
 
         // 무기 뽑기 애니메이션
-        // TODO: PlayerAnimator에 TriggerWeaponPullGround() 메서드 추가 필요
         if (stateMachine.Animator != null)
         {
-            // stateMachine.Animator.TriggerWeaponPullGround(pullContext);
+            stateMachine.Animator.TriggerWeaponPullGround();
         }
     }
 
@@ -76,13 +89,13 @@ public class PlayerWeaponPullGroundState : PlayerGroundStateBase
     /// </summary>
     public void OnAnimationFinished()
     {
-        // 무기 뽑기 완료
+        // 무기 뽑기 완료 (무기 장착 처리)
         if (rangedAttack != null)
         {
             rangedAttack.CompleteWeaponPull();
         }
 
-        // Idle 상태로 전환
+        // Idle/Run 상태로 전환
         if (Mathf.Abs(stateMachine.InputHandler.MoveInput) > 0.1f)
         {
             stateMachine.ChangeState<PlayerRunState>();

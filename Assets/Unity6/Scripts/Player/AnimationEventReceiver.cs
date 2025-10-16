@@ -66,5 +66,27 @@ public class AnimationEventReceiver : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 무기 뽑기 데미지 적용 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullDamage()
+    {
+        if (playerAnimator != null)
+        {
+            playerAnimator.OnWeaponPullDamage();
+        }
+    }
+
+    /// <summary>
+    /// 무기 뽑기 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullFinished()
+    {
+        if (playerAnimator != null)
+        {
+            playerAnimator.OnWeaponPullFinished();
+        }
+    }
+
     // 향후 추가될 애니메이션 이벤트들도 여기에 중계 메서드로 추가
 }

@@ -27,6 +27,9 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int AirAttack = Animator.StringToHash("AirAttack");
     private static readonly int HasWeapon = Animator.StringToHash("HasWeapon");
     private static readonly int Throw = Animator.StringToHash("Throw");
+    private static readonly int WeaponPullGround = Animator.StringToHash("WeaponPullGround");
+    private static readonly int WeaponPullAir = Animator.StringToHash("WeaponPullAir");
+    private static readonly int AfterPull = Animator.StringToHash("AfterPull");
 
     private void Awake()
     {
@@ -89,14 +92,6 @@ public class PlayerAnimator : MonoBehaviour
         float airTime = movement.AirTime;
         animator.SetFloat(AirTime, airTime);
 
-        // 디버그: AirTime과 IsGrounded 상태 추적
-        #if UNITY_EDITOR
-        if (airTime > 0.5f && isGrounded)
-        {
-            Debug.Log($"[PlayerAnimator] AirTime={airTime:F2}, IsGrounded={isGrounded}, CurrentState={stateMachine.GetCurrentStateName()}");
-        }
-        #endif
-
         // IsCrouching: 웅크리기 상태
         bool isCrouching = stateMachine.IsCurrentState<PlayerCrouchState>();
         animator.SetBool(IsCrouching, isCrouching);
@@ -113,26 +108,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (spriteRenderer == null) return;
 
-        // 구르기 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerRollState>())
-        {
-            return;
-        }
-
-        // 공격 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerMeleeAttackState>())
-        {
-            return;
-        }
-
-        // 공중 공격 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerAirMeleeAttackState>())
-        {
-            return;
-        }
-
-        // 던지기 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerThrowWeaponState>())
+        // 방향 고정이 필요한 상태에서는 스프라이트 방향 변경 금지
+        if (stateMachine.CurrentState is PlayerStateBase stateBase && stateBase.ShouldLockDirection)
         {
             return;
         }
@@ -265,6 +242,63 @@ public class PlayerAnimator : MonoBehaviour
         if (combatSystem != null && combatSystem.RangedAttack != null)
         {
             combatSystem.RangedAttack.FinishThrow();
+        }
+    }
+
+    /// <summary>
+    /// 지상 무기 뽑기 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullGround()
+    {
+        if (animator != null)
+            animator.SetTrigger(WeaponPullGround);
+    }
+
+    /// <summary>
+    /// 공중 무기 뽑기 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullAir()
+    {
+        if (animator != null)
+            animator.SetTrigger(WeaponPullAir);
+    }
+
+    /// <summary>
+    /// 공중 무기 뽑기 후 회전 낙하 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullAfterAir()
+    {
+        if (animator != null)
+            animator.SetTrigger(AfterPull);
+    }
+
+    /// <summary>
+    /// 무기 뽑기 데미지 적용 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullDamage()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.ApplyWeaponPullDamage();
+        }
+    }
+
+    /// <summary>
+    /// 무기 뽑기 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullFinished()
+    {
+        // 상태별로 다른 종료 처리
+        if (stateMachine.IsCurrentState<PlayerWeaponPullGroundState>())
+        {
+            var state = stateMachine.CurrentState as PlayerWeaponPullGroundState;
+            state?.OnAnimationFinished();
+        }
+        else if (stateMachine.IsCurrentState<PlayerWeaponPullAirState>())
+        {
+            var state = stateMachine.CurrentState as PlayerWeaponPullAirState;
+            state?.OnAnimationFinished();
         }
     }
 }

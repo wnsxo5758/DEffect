@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerRollState : PlayerGroundStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     // Roll 설정값
     private const float RollDuration = 0.4f; // 구르기 지속 시간
     private const float RollSpeedMultiplier = 1.5f; // 구르기 속도 배수 (일반 이동 속도 대비)

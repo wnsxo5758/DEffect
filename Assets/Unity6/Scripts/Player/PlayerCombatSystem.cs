@@ -230,6 +230,13 @@ public class PlayerCombatSystem : MonoBehaviour
         {
             rangedAttack = gameObject.AddComponent<PlayerRangedAttack>();
             Debug.Log("[PlayerCombatSystem] PlayerRangedAttack 컴포넌트 추가됨!");
+
+            // StateMachine에 이벤트 구독 요청
+            StateMachine stateMachine = GetComponent<StateMachine>();
+            if (stateMachine != null)
+            {
+                stateMachine.SubscribeToRangedAttackEvents();
+            }
         }
 
         isRangedEnabled = true;

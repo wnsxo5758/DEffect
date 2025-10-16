@@ -26,6 +26,7 @@ public class PlayerInteractionSystem : MonoBehaviour
     // 컴포넌트 참조
     private PlayerCombatSystem combatSystem;
     private PlayerMovement playerMovement;
+    private StateMachine stateMachine;
 
     // 외부 참조용 프로퍼티
     public bool HasInteractable => currentInteractable != null || currentWeaponPickup != null || currentThrownWeapon != null;
@@ -34,6 +35,7 @@ public class PlayerInteractionSystem : MonoBehaviour
     {
         combatSystem = GetComponent<PlayerCombatSystem>();
         playerMovement = GetComponent<PlayerMovement>();
+        stateMachine = GetComponent<StateMachine>();
 
         // 상호작용 포인트가 없으면 자신의 위치로 설정
         if (interactionPoint == null)
@@ -52,6 +54,15 @@ public class PlayerInteractionSystem : MonoBehaviour
     private void UpdateInteractionPointPosition()
     {
         if (interactionPoint == null || playerMovement == null) return;
+
+        // 방향 고정이 필요한 상태에서는 InteractionPoint 방향도 고정
+        if (stateMachine != null && stateMachine.CurrentState is PlayerStateBase stateBase)
+        {
+            if (stateBase.ShouldLockDirection)
+            {
+                return; // 방향 업데이트 차단
+            }
+        }
 
         // 플레이어가 바라보는 방향으로 offset만큼 이동
         float direction = playerMovement.FacingDirection;

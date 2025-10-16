@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerThrowWeaponState : PlayerStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerCombatSystem combatSystem;
     private PlayerRangedAttack rangedAttack;
     private PlayerTeleportAttack teleportAttack;

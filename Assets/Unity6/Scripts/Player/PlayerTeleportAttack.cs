@@ -143,62 +143,28 @@ public class PlayerTeleportAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 텔레포트 위치 계산
+    /// 텔레포트 위치 계산 - 무기 위치로 직접 이동
     /// </summary>
     private Vector3 CalculateTeleportPosition(ThrownWeapon weapon)
     {
-        // 무기가 박혀있지 않으면 무기 위치로 이동
-        if (!weapon.IsStuck())
-        {
-            return weapon.transform.position;
-        }
-
-        // 박힌 무기의 법선 벡터 기반 위치 계산
-        Vector2 contactNormal = weapon.GetContactNormal();
-        Vector2 weaponPos = weapon.transform.position;
-
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        Vector2 playerSize = playerCollider.bounds.size;
-
-        float absNormalX = Mathf.Abs(contactNormal.x);
-        float absNormalY = Mathf.Abs(contactNormal.y);
-
-        Vector2 teleportDirection;
-        float teleportDistance;
-
-        // 수평 벽
-        if (absNormalX > absNormalY)
-        {
-            float diagonalX = Mathf.Sign(contactNormal.x);
-            teleportDirection = new Vector2(diagonalX, 1f).normalized;
-            teleportDistance = playerSize.x * 2f;
-        }
-        // 수직 벽
-        else
-        {
-            teleportDirection = contactNormal.y < 0 ? Vector2.down : Vector2.up;
-            teleportDistance = playerSize.y;
-        }
-
-        return weaponPos + teleportDirection * teleportDistance;
+        // 박힌 무기든 아니든 무기 위치로 직접 이동
+        return weapon.transform.position;
     }
 
     /// <summary>
-    /// 텔레포트 중 무기 처리
+    /// 텔레포트 중 무기 처리 - 무기 위치 도착 후 처리
     /// </summary>
     private void HandleWeaponDuringTeleport(ThrownWeapon weapon, bool wasAttachedToEnemy)
     {
-        // 무기 데이터 백업 (필요 시)
-        WeaponBase weaponData = weapon.GetWeaponData();
-
-        // 적에게 붙어있지 않은 경우에만 즉시 무기 제거
-        if (!wasAttachedToEnemy)
+        // 적에게 붙어있던 무기는 뽑기 애니메이션을 위해 보이지 않게 처리
+        if (wasAttachedToEnemy)
         {
-            Destroy(weapon.gameObject);
+            weapon.SetVisible(false);
         }
         else
         {
-            // 적에게 붙어있던 무기는 보이지 않게 처리
+            // 적에게 붙어있지 않은 경우 (바닥에 떨어진 무기)
+            // 무기는 CompleteTeleport에서 장착되고 제거됨
             weapon.SetVisible(false);
         }
     }
@@ -245,84 +211,28 @@ public class PlayerTeleportAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 텔레포트 가능 위치인지 검증
+    /// 텔레포트 가능 위치인지 검증 - 플레이어와 무기 사이 직선 경로 체크
     /// </summary>
     private bool IsTeleportPossible(ThrownWeapon weapon)
     {
         if (weapon == null) return false;
 
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider == null) return false;
-
-        Vector2 playerSize = playerCollider.bounds.size;
-
-        // 무기가 박혀있지 않으면 무기 위치로 이동 가능
-        if (!weapon.IsStuck())
-        {
-            return true;
-        }
-
-        Vector2 contactNormal = weapon.GetContactNormal();
-        float absNormalX = Mathf.Abs(contactNormal.x);
-        float absNormalY = Mathf.Abs(contactNormal.y);
-
-        Vector2 teleportDirection;
-        float teleportDistance;
-
-        // 법선 벡터가 수평 방향인 경우
-        if (absNormalX > absNormalY)
-        {
-            float diagonalX = Mathf.Sign(contactNormal.x);
-            teleportDirection = new Vector2(diagonalX, 1f).normalized;
-            teleportDistance = playerSize.x * 2f;
-        }
-        // 법선 벡터가 수직 방향인 경우
-        else
-        {
-            teleportDirection = contactNormal.y < 0 ? Vector2.down : Vector2.up;
-            teleportDistance = playerSize.y;
-        }
-
-        // 텔레포트 위치 계산
+        Vector2 playerPosition = transform.position;
         Vector2 weaponPosition = weapon.transform.position;
-        Vector2 basePosition = weaponPosition + teleportDirection * teleportDistance;
 
-        // 안전한 위치인지 확인
-        return IsSafeLocation(basePosition, weapon);
-    }
+        // Object와 Ground 레이어 마스크 (충돌 체크할 레이어)
+        int objectLayer = LayerMask.NameToLayer("Object");
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        LayerMask obstacleLayers = (1 << objectLayer) | (1 << groundLayer);
 
-    /// <summary>
-    /// 안전한 텔레포트 위치인지 확인
-    /// </summary>
-    private bool IsSafeLocation(Vector2 position, ThrownWeapon weapon)
-    {
-        Vector2 weaponPosition = weapon.transform.position;
-        Vector2 contactNormal = weapon.GetContactNormal();
+        // 플레이어와 무기 사이의 직선 경로에 장애물이 있는지 체크
+        RaycastHit2D[] hits = Physics2D.LinecastAll(playerPosition, weaponPosition, obstacleLayers);
 
-        float offsetDistance = 0.2f;
-        Vector2 adjustedStartPosition;
-
-        if (weapon.IsStuck() && contactNormal != Vector2.zero)
-        {
-            adjustedStartPosition = weaponPosition - contactNormal * offsetDistance;
-        }
-        else
-        {
-            adjustedStartPosition = weaponPosition + Vector2.up;
-        }
-
-        // 경로 상의 장애물 체크
-        RaycastHit2D[] pathHits = Physics2D.LinecastAll(
-            adjustedStartPosition,
-            position,
-            weapon.StickLayers
-        );
-
-        foreach (RaycastHit2D hit in pathHits)
+        foreach (RaycastHit2D hit in hits)
         {
             if (hit.collider != null && !IsWeaponOrItsParent(hit.collider.gameObject, weapon.gameObject))
             {
-                Debug.Log($"물체 감지: {hit.collider.gameObject}");
+                Debug.Log($"텔레포트 경로 상 장애물 감지: {hit.collider.gameObject.name}");
                 return false;
             }
         }
@@ -363,52 +273,28 @@ public class PlayerTeleportAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 디버그용 기즈모 (무기 위치와 텔레포트 위치 표시)
+    /// 디버그용 기즈모 (플레이어와 무기 사이 직선 경로 표시)
     /// </summary>
     private void OnDrawGizmosSelected()
     {
         if (rangedAttack == null || rangedAttack.LastThrownWeapon == null) return;
 
         ThrownWeapon weapon = rangedAttack.LastThrownWeapon;
-        if (!weapon.IsStuck()) return;
-
-        Vector2 normal = weapon.GetContactNormal();
+        Vector3 playerPos = transform.position;
         Vector3 weaponPos = weapon.transform.position;
 
-        if (normal == Vector2.zero) return;
+        // 텔레포트 가능 여부에 따라 색상 변경
+        bool canTeleportToWeapon = IsTeleportPossible(weapon);
+        Gizmos.color = canTeleportToWeapon ? Color.green : Color.red;
 
-        // 법선 벡터 표시
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(weaponPos, normal);
+        // 플레이어 → 무기 직선 경로 표시
+        Gizmos.DrawLine(playerPos, weaponPos);
 
-        // 텔레포트 위치 계산 및 표시
-        Collider2D playerCollider = GetComponent<Collider2D>();
-        if (playerCollider == null) return;
+        // 무기 위치 표시
+        Gizmos.DrawWireSphere(weaponPos, 0.3f);
 
-        Vector2 playerSize = playerCollider.bounds.size;
-        float absNormalX = Mathf.Abs(normal.x);
-        float absNormalY = Mathf.Abs(normal.y);
-
-        Vector2 teleportDirection;
-        float teleportDistance;
-
-        if (absNormalX > absNormalY)
-        {
-            float diagonalX = Mathf.Sign(normal.x);
-            teleportDirection = new Vector2(diagonalX, 1f).normalized;
-            teleportDistance = playerSize.x * 2f;
-        }
-        else
-        {
-            teleportDirection = normal.y < 0 ? Vector2.down : Vector2.up;
-            teleportDistance = playerSize.y;
-        }
-
-        Vector2 teleportPos = (Vector2)weaponPos + teleportDirection * teleportDistance;
-
-        // 안전한 위치면 녹색, 아니면 빨간색
-        Gizmos.color = IsTeleportPossible(weapon) ? Color.green : Color.red;
-        Gizmos.DrawLine(weaponPos, teleportPos);
-        Gizmos.DrawWireSphere(teleportPos, 0.4f);
+        // 플레이어 위치 표시
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(playerPos, 0.2f);
     }
 }

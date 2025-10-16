@@ -49,6 +49,7 @@ public class PlayerMeleeAttack : MonoBehaviour
     private bool canAttack = true;
     private bool isAttacking = false;
     private bool isAirAttack = false;  // 공중 공격 플래그
+    private float attackDirection = 1f; // 공격 시작 시 캡처된 방향 (1: 오른쪽, -1: 왼쪽)
 
     // 이벤트
     public event Action OnAttackStarted;
@@ -197,10 +198,13 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = true;
         isAirAttack = false;
 
+        // 공격 시작 시 방향 캡처 (애니메이션 중 입력 변경에 영향 받지 않도록)
+        attackDirection = playerMovement != null ? playerMovement.FacingDirection : 1f;
+
         // 지상 공격 범위로 설정
         UpdateAttackCollider(attackOffset, attackPolygonPoints);
 
-        // 공격 방향 업데이트
+        // 공격 방향 업데이트 (캡처된 방향 사용)
         UpdateAttackDirection();
 
         OnAttackStarted?.Invoke();
@@ -220,10 +224,13 @@ public class PlayerMeleeAttack : MonoBehaviour
         isAttacking = true;
         isAirAttack = true;
 
+        // 공격 시작 시 방향 캡처 (애니메이션 중 입력 변경에 영향 받지 않도록)
+        attackDirection = playerMovement != null ? playerMovement.FacingDirection : 1f;
+
         // 공중 공격 범위로 설정
         UpdateAttackCollider(attackOffsetAir, attackPolygonPointsAir);
 
-        // 공격 방향 업데이트
+        // 공격 방향 업데이트 (캡처된 방향 사용)
         UpdateAttackDirection();
 
         OnAttackStarted?.Invoke();
@@ -249,18 +256,16 @@ public class PlayerMeleeAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 공격 방향 업데이트 (플레이어가 바라보는 방향에 맞춰 콜라이더 반전)
+    /// 공격 방향 업데이트 (캡처된 방향에 맞춰 콜라이더 반전)
     /// </summary>
     private void UpdateAttackDirection()
     {
-        if (attackColliderObject == null || playerMovement == null) return;
+        if (attackColliderObject == null) return;
 
-        // 플레이어가 바라보는 방향 (1 = 오른쪽, -1 = 왼쪽)
-        float direction = playerMovement.FacingDirection;
-
+        // 공격 시작 시 캡처된 방향 사용 (애니메이션 중 입력 변경에 영향 받지 않음)
         // 콜라이더의 localScale.x를 방향에 맞춰 설정
         // 오른쪽: 1, 왼쪽: -1
-        attackColliderObject.transform.localScale = new Vector3(direction, 1f, 1f);
+        attackColliderObject.transform.localScale = new Vector3(attackDirection, 1f, 1f);
     }
 
     /// <summary>
@@ -307,10 +312,10 @@ public class PlayerMeleeAttack : MonoBehaviour
     /// </summary>
     private IEnumerator PerformAttackDash()
     {
-        if (rb == null || playerMovement == null) yield break;
+        if (rb == null) yield break;
 
-        // 플레이어가 바라보는 방향 (1: 오른쪽, -1: 왼쪽)
-        float direction = playerMovement.FacingDirection;
+        // 공격 시작 시 캡처된 방향 사용 (애니메이션 중 입력 변경에 영향 받지 않음)
+        float direction = attackDirection;
 
         // 이동 속도 계산
         float dashSpeed = attackDashDistance / attackDashDuration;

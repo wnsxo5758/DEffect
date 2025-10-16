@@ -350,7 +350,7 @@ MonoBehaviour:
   groundCheckSize: {x: 0.3, y: 0.1}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   ceilingCheck: {fileID: 3554120001284205219}
   ceilingCheckSize: {x: 0.5, y: 0.1}
 --- !u!114 &3179042732930697250

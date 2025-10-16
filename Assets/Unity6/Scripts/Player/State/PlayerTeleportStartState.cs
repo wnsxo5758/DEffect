@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerTeleportStartState : PlayerStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerTeleportAttack teleportAttack;
     private bool teleportExecuted = false;
 

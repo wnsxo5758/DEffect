@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerMeleeAttackState : PlayerStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerCombatSystem combatSystem;
     private PlayerMeleeAttack meleeAttack;
 

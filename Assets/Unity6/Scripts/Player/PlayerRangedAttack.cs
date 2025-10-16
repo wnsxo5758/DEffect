@@ -22,6 +22,7 @@ public class PlayerRangedAttack : MonoBehaviour
     // 던지기 상태
     private bool canThrow = false;
     private bool isThrowingWeapon = false;
+    private float throwDirection = 1f; // 던지기 시작 시 캡처된 방향 (1: 오른쪽, -1: 왼쪽)
 
     // 무기 뽑기 상태
     private WeaponPullContext pendingPullContext;
@@ -83,6 +84,9 @@ public class PlayerRangedAttack : MonoBehaviour
         isThrowingWeapon = true;
         canThrow = false;
 
+        // 던지기 시작 시 방향 캡처 (애니메이션 중 입력 변경에 영향 받지 않도록)
+        throwDirection = movement != null ? movement.FacingDirection : 1f;
+
         OnThrowStarted?.Invoke();
     }
 
@@ -97,9 +101,8 @@ public class PlayerRangedAttack : MonoBehaviour
             return;
         }
 
-        // 던지는 방향 계산 (PlayerMovement의 FacingDirection 사용)
-        float facingDir = movement != null ? movement.FacingDirection : 1f;
-        Vector2 direction = new Vector2(facingDir, 0).normalized;
+        // 던지기 시작 시 캡처된 방향 사용 (애니메이션 중 입력 변경에 영향 받지 않음)
+        Vector2 direction = new Vector2(throwDirection, 0).normalized;
         Vector2 spawnPosition = (Vector2)transform.position + throwOffset;
 
         // 던진 무기 생성
@@ -148,7 +151,10 @@ public class PlayerRangedAttack : MonoBehaviour
     /// </summary>
     public void ProcessThrownWeaponPickup(ThrownWeapon thrownWeapon)
     {
-        if (!CanThrow()) return;
+        // 무기를 이미 가지고 있거나, 이미 뽑기 진행 중이면 중단
+        if (combatSystem.HasWeapon) return;
+        if (hasPendingWeaponPull) return;
+        if (thrownWeapon == null) return;
 
         bool playerGrounded = movement != null && movement.IsGrounded();
 

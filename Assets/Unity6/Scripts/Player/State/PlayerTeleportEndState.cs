@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerTeleportEndState : PlayerStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerRangedAttack rangedAttack;
 
     public PlayerTeleportEndState(StateMachine stateMachine) : base(stateMachine)
