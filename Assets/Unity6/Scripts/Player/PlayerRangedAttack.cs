@@ -9,8 +9,8 @@ using UnityEngine;
 public class PlayerRangedAttack : MonoBehaviour
 {
     [Header("Throw Settings")]
-    [SerializeField] private float throwForce = 15f;
-    [SerializeField] private float throwUpwardForce = 5f;
+    [SerializeField] private float throwForce = 7f;      // 수평 던지기 힘 (낮춤)
+    [SerializeField] private float throwUpwardForce = 1.5f; // 상승 던지기 힘 (낮춤)
     [SerializeField] private Vector2 throwOffset = new Vector2(0, 0.6f);
 
     [Header("Cooldown")]
@@ -22,6 +22,7 @@ public class PlayerRangedAttack : MonoBehaviour
     // 던지기 상태
     private bool canThrow = false;
     private bool isThrowingWeapon = false;
+    private float throwDirection = 1f; // 던지기 시작 시 캡처된 방향 (1: 오른쪽, -1: 왼쪽)
 
     // 무기 뽑기 상태
     private WeaponPullContext pendingPullContext;
@@ -83,6 +84,9 @@ public class PlayerRangedAttack : MonoBehaviour
         isThrowingWeapon = true;
         canThrow = false;
 
+        // 던지기 시작 시 방향 캡처 (애니메이션 중 입력 변경에 영향 받지 않도록)
+        throwDirection = movement != null ? movement.FacingDirection : 1f;
+
         OnThrowStarted?.Invoke();
     }
 
@@ -97,8 +101,8 @@ public class PlayerRangedAttack : MonoBehaviour
             return;
         }
 
-        // 던지는 방향 계산
-        Vector2 direction = new Vector2(transform.localScale.x, 0).normalized;
+        // 던지기 시작 시 캡처된 방향 사용 (애니메이션 중 입력 변경에 영향 받지 않음)
+        Vector2 direction = new Vector2(throwDirection, 0).normalized;
         Vector2 spawnPosition = (Vector2)transform.position + throwOffset;
 
         // 던진 무기 생성
@@ -129,6 +133,12 @@ public class PlayerRangedAttack : MonoBehaviour
         // 무기 해제
         combatSystem.UnequipWeapon();
 
+        // 텔레포트 활성화 (무기 던진 후)
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.EnableTeleport();
+        }
+
         // 쿨다운 시작
         StartCoroutine(ThrowCooldownTimer());
     }
@@ -147,7 +157,10 @@ public class PlayerRangedAttack : MonoBehaviour
     /// </summary>
     public void ProcessThrownWeaponPickup(ThrownWeapon thrownWeapon)
     {
-        if (!CanThrow()) return;
+        // 무기를 이미 가지고 있거나, 이미 뽑기 진행 중이면 중단
+        if (combatSystem.HasWeapon) return;
+        if (hasPendingWeaponPull) return;
+        if (thrownWeapon == null) return;
 
         bool playerGrounded = movement != null && movement.IsGrounded();
 
@@ -195,6 +208,12 @@ public class PlayerRangedAttack : MonoBehaviour
             lastThrownWeapon = null;
         }
 
+        // 무기 회수 시 텔레포트 비활성화
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.DisableTeleport();
+        }
+
         ClearPendingPull();
     }
 
@@ -216,6 +235,15 @@ public class PlayerRangedAttack : MonoBehaviour
     {
         pendingPullContext = null;
         hasPendingWeaponPull = false;
+    }
+
+    /// <summary>
+    /// 무기 뽑기 컨텍스트 설정 (텔레포트에서 호출)
+    /// </summary>
+    public void SetPendingPullContext(WeaponPullContext context)
+    {
+        pendingPullContext = context;
+        hasPendingWeaponPull = context != null;
     }
 
     /// <summary>
@@ -242,6 +270,12 @@ public class PlayerRangedAttack : MonoBehaviour
         if (lastThrownWeapon == weapon)
         {
             lastThrownWeapon = null;
+        }
+
+        // 텔레포트 비활성화
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.DisableTeleport();
         }
 
         Destroy(weapon.gameObject);

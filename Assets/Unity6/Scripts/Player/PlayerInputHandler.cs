@@ -20,6 +20,7 @@ public class PlayerInputHandler : MonoBehaviour
     public event Action OnInteractPressed;
     public event Action OnInteractReleased;
     public event Action OnRollPressed;
+    public event Action OnWeaponPullPressed; // 무기 뽑기 (상호작용 키와 동일)
 
     private PlayerInputActions inputActions;
 
@@ -163,6 +164,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (context.performed)
         {
             OnInteractPressed?.Invoke();
+            OnWeaponPullPressed?.Invoke(); // 상호작용 키는 무기 뽑기에도 사용됨
         }
         else if (context.canceled)
         {

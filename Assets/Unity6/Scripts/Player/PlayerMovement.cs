@@ -106,10 +106,19 @@ public class PlayerMovement : MonoBehaviour
         CurrentMoveInput = input;
 
         // 입력이 있으면 바라보는 방향 업데이트
+        // 방향 고정은 PlayerAnimator에서 처리 (스프라이트 업데이트 차단)
         if (Mathf.Abs(input) > 0.01f)
         {
             facingDirection = Mathf.Sign(input);
         }
+    }
+
+    /// <summary>
+    /// 방향을 즉시 업데이트 (StateMachine에서 보류된 입력 적용 시 사용)
+    /// </summary>
+    public void UpdateFacingDirection(float direction)
+    {
+        facingDirection = direction;
     }
 
     /// <summary>
@@ -234,6 +243,14 @@ public class PlayerMovement : MonoBehaviour
     public void StopMovement()
     {
         rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+    }
+
+    /// <summary>
+    /// 기본 중력 스케일 반환
+    /// </summary>
+    public float GetDefaultGravityScale()
+    {
+        return rb != null ? 3f : 3f; // Unity 기본 중력 스케일
     }
 
     private void OnDrawGizmosSelected()

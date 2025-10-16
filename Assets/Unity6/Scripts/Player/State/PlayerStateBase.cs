@@ -9,6 +9,12 @@ public abstract class PlayerStateBase : IPlayerState
 
     private bool transitionsInitialized = false;
 
+    /// <summary>
+    /// 이 상태에서 방향 전환을 차단할지 여부
+    /// true면 스프라이트 방향과 InteractionPoint가 고정됨
+    /// </summary>
+    public virtual bool ShouldLockDirection => false;
+
     public PlayerStateBase(StateMachine stateMachine)
     {
         this.stateMachine = stateMachine;

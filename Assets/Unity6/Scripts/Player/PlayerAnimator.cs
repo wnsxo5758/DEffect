@@ -24,7 +24,14 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Roll = Animator.StringToHash("Roll");
     private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int AirAttack = Animator.StringToHash("AirAttack");
     private static readonly int HasWeapon = Animator.StringToHash("HasWeapon");
+    private static readonly int Throw = Animator.StringToHash("Throw");
+    private static readonly int WeaponPullGround = Animator.StringToHash("WeaponPullGround");
+    private static readonly int WeaponPullAir = Animator.StringToHash("WeaponPullAir");
+    private static readonly int AfterPull = Animator.StringToHash("AfterPull");
+    private static readonly int TeleportStart = Animator.StringToHash("TeleportStart");
+    private static readonly int TeleportEnd = Animator.StringToHash("TeleportEnd");
 
     private void Awake()
     {
@@ -98,31 +105,22 @@ public class PlayerAnimator : MonoBehaviour
 
     /// <summary>
     /// 스프라이트 방향 업데이트 (좌우 반전)
+    /// PlayerMovement.facingDirection을 기준으로 스프라이트 반전
     /// </summary>
     private void UpdateSpriteDirection()
     {
         if (spriteRenderer == null) return;
 
-        // 구르기 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerRollState>())
+        // 방향 고정이 필요한 상태에서는 스프라이트 방향 변경 금지
+        if (stateMachine.CurrentState is PlayerStateBase stateBase && stateBase.ShouldLockDirection)
         {
             return;
         }
 
-        // 공격 중에는 스프라이트 방향 변경 금지
-        if (stateMachine.IsCurrentState<PlayerMeleeAttackState>())
-        {
-            return;
-        }
-
-        float moveInput = movement.CurrentMoveInput;
-
-        // 입력이 있을 때만 방향 전환
-        if (Mathf.Abs(moveInput) > 0.01f)
-        {
-            // 왼쪽: flipX = true, 오른쪽: flipX = false
-            spriteRenderer.flipX = moveInput < 0;
-        }
+        // PlayerMovement.facingDirection을 스프라이트에 동기화
+        // facingDirection: 1 = 오른쪽, -1 = 왼쪽
+        // flipX: true = 왼쪽, false = 오른쪽
+        spriteRenderer.flipX = movement.FacingDirection < 0;
     }
 
     /// <summary>
@@ -144,12 +142,30 @@ public class PlayerAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// 공격 애니메이션 트리거
+    /// 공격 애니메이션 트리거 (지상 공격)
     /// </summary>
     public void TriggerAttack()
     {
         if (animator != null)
             animator.SetTrigger(Attack);
+    }
+
+    /// <summary>
+    /// 공중 공격 애니메이션 트리거
+    /// </summary>
+    public void TriggerAirAttack()
+    {
+        if (animator != null)
+            animator.SetTrigger(AirAttack);
+    }
+
+    /// <summary>
+    /// 던지기 애니메이션 트리거
+    /// </summary>
+    public void TriggerThrow()
+    {
+        if (animator != null)
+            animator.SetTrigger(Throw);
     }
 
     /// <summary>
@@ -201,6 +217,109 @@ public class PlayerAnimator : MonoBehaviour
         if (combatSystem != null && combatSystem.MeleeAttack != null)
         {
             combatSystem.MeleeAttack.FinishAttack();
+        }
+    }
+
+    /// <summary>
+    /// 던지기 실행 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnThrowWeapon()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.ExecuteThrow();
+        }
+    }
+
+    /// <summary>
+    /// 던지기 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnThrowFinished()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.FinishThrow();
+        }
+    }
+
+    /// <summary>
+    /// 지상 무기 뽑기 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullGround()
+    {
+        if (animator != null)
+            animator.SetTrigger(WeaponPullGround);
+    }
+
+    /// <summary>
+    /// 공중 무기 뽑기 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullAir()
+    {
+        if (animator != null)
+            animator.SetTrigger(WeaponPullAir);
+    }
+
+    /// <summary>
+    /// 공중 무기 뽑기 후 회전 낙하 애니메이션 트리거
+    /// </summary>
+    public void TriggerWeaponPullAfterAir()
+    {
+        if (animator != null)
+            animator.SetTrigger(AfterPull);
+    }
+
+    /// <summary>
+    /// 텔레포트 시작 애니메이션 트리거
+    /// </summary>
+    public void TriggerTeleportStart()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(TeleportStart);
+        }
+    }
+
+    /// <summary>
+    /// 텔레포트 종료 애니메이션 트리거
+    /// </summary>
+    public void TriggerTeleportEnd()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(TeleportEnd);
+        }
+    }
+
+    /// <summary>
+    /// 무기 뽑기 데미지 적용 타이밍 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullDamage()
+    {
+        var combatSystem = stateMachine.Combat;
+        if (combatSystem != null && combatSystem.RangedAttack != null)
+        {
+            combatSystem.RangedAttack.ApplyWeaponPullDamage();
+        }
+    }
+
+    /// <summary>
+    /// 무기 뽑기 애니메이션 종료 (애니메이션 이벤트)
+    /// </summary>
+    public void OnWeaponPullFinished()
+    {
+        // 상태별로 다른 종료 처리
+        if (stateMachine.IsCurrentState<PlayerWeaponPullGroundState>())
+        {
+            var state = stateMachine.CurrentState as PlayerWeaponPullGroundState;
+            state?.OnAnimationFinished();
+        }
+        else if (stateMachine.IsCurrentState<PlayerWeaponPullAirState>())
+        {
+            var state = stateMachine.CurrentState as PlayerWeaponPullAirState;
+            state?.OnAnimationFinished();
         }
     }
 }

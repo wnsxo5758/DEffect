@@ -6,19 +6,27 @@ using UnityEngine;
 /// </summary>
 public class PlayerWeaponPullAirState : PlayerAirborneStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerRangedAttack rangedAttack;
     private WeaponPullContext pullContext;
+
+    // 위치 고정
+    private Vector3 frozenPosition;
+    private Rigidbody2D rb;
 
     public PlayerWeaponPullAirState(StateMachine stateMachine) : base(stateMachine)
     {
         PlayerCombatSystem combatSystem = stateMachine.GetComponent<PlayerCombatSystem>();
         rangedAttack = combatSystem?.RangedAttack;
+        rb = stateMachine.GetComponent<Rigidbody2D>();
     }
 
     protected override void SetupTransitions()
     {
-        // 착지 전환은 비활성화 (무기 뽑기 중에는 상태 유지)
+        // 착지 전환 비활성화 (무기 뽑기 중에는 상태 유지)
         // 애니메이션 이벤트로만 전환
+        // base.SetupTransitions()를 호출하지 않음으로써 자동 전환 차단
     }
 
     public override void Enter()
@@ -42,14 +50,34 @@ public class PlayerWeaponPullAirState : PlayerAirborneStateBase
             return;
         }
 
+        // 현재 위치 고정
+        frozenPosition = stateMachine.transform.position;
+
+        // 속도를 0으로 만들어 정지
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.gravityScale = 0f; // 중력 비활성화
+        }
+
         // 수평 이동 정지
         stateMachine.Movement.SetMoveInput(0);
 
+        // 무기 방향으로 스프라이트 고정
+        if (pullContext.targetWeapon != null && stateMachine.Animator != null)
+        {
+            Vector2 weaponPosition = pullContext.weaponPosition;
+            Vector2 playerPosition = stateMachine.transform.position;
+
+            // 무기가 플레이어의 왼쪽에 있으면 왼쪽을 보도록
+            bool shouldFaceLeft = weaponPosition.x < playerPosition.x;
+            stateMachine.Animator.SetSpriteDirection(shouldFaceLeft);
+        }
+
         // 무기 뽑기 애니메이션
-        // TODO: PlayerAnimator에 TriggerWeaponPullAir() 메서드 추가 필요
         if (stateMachine.Animator != null)
         {
-            // stateMachine.Animator.TriggerWeaponPullAir(pullContext);
+            stateMachine.Animator.TriggerWeaponPullAir();
         }
     }
 
@@ -60,14 +88,23 @@ public class PlayerWeaponPullAirState : PlayerAirborneStateBase
 
     public override void FixedUpdate()
     {
-        base.FixedUpdate();
-        // 무기 뽑기 중에는 수평 이동 불가 (중력은 영향받음)
+        // 위치 고정 유지
+        if (rb != null)
+        {
+            stateMachine.transform.position = frozenPosition;
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
-        // 정리 작업 없음
+
+        // 중력 복원
+        if (rb != null)
+        {
+            rb.gravityScale = stateMachine.Movement.GetDefaultGravityScale();
+        }
     }
 
     /// <summary>
@@ -75,20 +112,13 @@ public class PlayerWeaponPullAirState : PlayerAirborneStateBase
     /// </summary>
     public void OnAnimationFinished()
     {
-        // 무기 뽑기 완료
+        // 무기 뽑기 완료 (무기 장착 처리)
         if (rangedAttack != null)
         {
             rangedAttack.CompleteWeaponPull();
         }
 
-        // Fall 상태로 전환 (착지는 공통 전환 조건에서 처리)
-        if (stateMachine.Movement.IsGrounded())
-        {
-            stateMachine.ChangeState<PlayerIdleState>();
-        }
-        else
-        {
-            stateMachine.ChangeState<PlayerFallState>();
-        }
+        // AfterPull 상태로 전환 (회전 낙하)
+        stateMachine.ChangeState<PlayerWeaponPullAfterAirState>();
     }
 }

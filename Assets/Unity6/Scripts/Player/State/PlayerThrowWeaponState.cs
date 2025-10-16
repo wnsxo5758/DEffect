@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerThrowWeaponState : PlayerStateBase
 {
+    public override bool ShouldLockDirection => true;
+
     private PlayerCombatSystem combatSystem;
     private PlayerRangedAttack rangedAttack;
     private PlayerTeleportAttack teleportAttack;
@@ -43,10 +45,9 @@ public class PlayerThrowWeaponState : PlayerStateBase
         rangedAttack.OnThrowFinished += OnThrowFinished;
 
         // 애니메이션 트리거
-        // TODO: PlayerAnimator에 TriggerThrow() 메서드 추가 필요
         if (stateMachine.Animator != null)
         {
-            // stateMachine.Animator.TriggerThrow();
+            stateMachine.Animator.TriggerThrow();
         }
     }
 

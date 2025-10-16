@@ -2,16 +2,15 @@ using UnityEngine;
 
 /// <summary>
 /// 텔레포트 종료 상태
-/// SRP: 텔레포트 종료 애니메이션과 후속 처리만 담당
+/// SRP: 바닥 무기로 텔레포트 시 착지 애니메이션만 담당
+/// (적에 박힌 무기는 TeleportStartState에서 직접 WeaponPull 상태로 전환)
 /// </summary>
 public class PlayerTeleportEndState : PlayerStateBase
 {
-    private PlayerRangedAttack rangedAttack;
+    public override bool ShouldLockDirection => true;
 
     public PlayerTeleportEndState(StateMachine stateMachine) : base(stateMachine)
     {
-        PlayerCombatSystem combatSystem = stateMachine.GetComponent<PlayerCombatSystem>();
-        rangedAttack = combatSystem?.RangedAttack;
     }
 
     protected override void SetupTransitions()
@@ -26,18 +25,10 @@ public class PlayerTeleportEndState : PlayerStateBase
         // 이동 입력 무시
         stateMachine.Movement.StopMovement();
 
-        // 텔레포트 종료 애니메이션
-        // TODO: PlayerAnimator에 TriggerTeleportEnd() 메서드 추가 필요
+        // 텔레포트 종료 애니메이션 (착지)
         if (stateMachine.Animator != null)
         {
-            // stateMachine.Animator.TriggerTeleportEnd();
-        }
-
-        // 무기 뽑기가 필요한지 확인
-        if (rangedAttack != null && rangedAttack.HasPendingWeaponPull)
-        {
-            // 무기 뽑기 상태로 전환 예정
-            // 애니메이션 종료 후 WeaponPull 상태로 이동
+            stateMachine.Animator.TriggerTeleportEnd();
         }
     }
 
@@ -61,27 +52,7 @@ public class PlayerTeleportEndState : PlayerStateBase
     /// </summary>
     public void OnTeleportEndAnimationFinished()
     {
-        // 무기 뽑기가 필요한 경우 WeaponPull 상태로 전환
-        if (rangedAttack != null && rangedAttack.HasPendingWeaponPull)
-        {
-            WeaponPullContext pullContext = rangedAttack.PendingPullContext;
-
-            if (pullContext != null)
-            {
-                // 지면/공중에 따라 다른 무기 뽑기 상태로 전환
-                if (pullContext.isGrounded)
-                {
-                    stateMachine.ChangeState<PlayerWeaponPullGroundState>();
-                }
-                else
-                {
-                    stateMachine.ChangeState<PlayerWeaponPullAirState>();
-                }
-                return;
-            }
-        }
-
-        // 무기 뽑기가 필요 없으면 일반 상태로 복귀
+        // 바닥 무기로 텔레포트했으므로 일반 상태로 복귀
         TransitionToIdleOrFall();
     }
 

@@ -3,18 +3,19 @@ using UnityEngine;
 [System.Serializable]
 public class WeaponPullContext
 {
-    [Header("상황 정보")] 
-    public bool isGrounded;             
-    
+    [Header("상황 정보")]
+    public bool isGrounded;
+
     [Header("무기 정보")]
     public ThrownWeapon targetWeapon;   // 대상 무기
     public Vector3 weaponPosition;      // 무기 위치
     public Vector3 contactNormal;
 
-    [Header("넉백 설정")] 
+    [Header("넉백 설정")]
     public Vector2 knockBackForce;    // 넉백 힘
+    public float initialFacingDirection; // 텔레포트 시작 시 플레이어 방향 (1: 오른쪽, -1: 왼쪽)
 
-    [Header("애니메이션 제어")] 
+    [Header("애니메이션 제어")]
     public bool isTeleportPull = false;         // 텔레포트 후 뽑기인지 여부
 
     public WeaponPullContext(ThrownWeapon weapon, Vector3 playerPos, bool playerGrounded)
@@ -22,11 +23,11 @@ public class WeaponPullContext
         targetWeapon = weapon;
         weaponPosition = weapon.transform.position;
         contactNormal = weapon.GetContactNormal();
-        
-        
+
         isGrounded = playerGrounded;
         isTeleportPull = false;
-        
+        initialFacingDirection = 0f; // 일반 뽑기는 방향 사용 안 함
+
         // 기본 넉백 힘 설정
         knockBackForce = new Vector2(30f, 60f);
 
@@ -39,18 +40,20 @@ public class WeaponPullContext
     public WeaponPullContext()
     {
         knockBackForce = new Vector2(30f, 60f);
+        initialFacingDirection = 0f;
     }
     
-    public static WeaponPullContext CreateTeleportPull(ThrownWeapon weapon, Vector3 playerPos, bool playerGrounded)
+    public static WeaponPullContext CreateTeleportPull(ThrownWeapon weapon, Vector3 playerPos, bool playerGrounded, float facingDirection)
     {
         var context = new WeaponPullContext();
         context.targetWeapon = weapon;
         context.weaponPosition = weapon.transform.position;
         context.contactNormal = weapon.GetContactNormal();
-        
+
         context.isGrounded = playerGrounded;
         context.isTeleportPull = true;
-        
+        context.initialFacingDirection = facingDirection; // 텔레포트 시작 시 방향 저장
+
         if (!playerGrounded)
         {
             context.CalculateKnockBackDirection(playerPos);

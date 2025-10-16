@@ -184,7 +184,7 @@ public class PlayerCombatSystem : MonoBehaviour
 
     /// <summary>
     /// 기본 전투 능력 활성화 (첫 무기 획득 시)
-    /// 근접 공격 + 원거리 던지기
+    /// 근접 공격 + 원거리 던지기 + 텔레포트
     /// </summary>
     private void EnableBasicCombat()
     {
@@ -200,6 +200,13 @@ public class PlayerCombatSystem : MonoBehaviour
         if (!isRangedEnabled)
         {
             EnableRangedAttack();
+        }
+
+        // 텔레포트 활성화 (임시 - 테스트용)
+        // TODO: 나중에 스킬 획득 시스템으로 변경
+        if (!isTeleportEnabled)
+        {
+            EnableTeleportAttack();
         }
     }
 
@@ -230,6 +237,13 @@ public class PlayerCombatSystem : MonoBehaviour
         {
             rangedAttack = gameObject.AddComponent<PlayerRangedAttack>();
             Debug.Log("[PlayerCombatSystem] PlayerRangedAttack 컴포넌트 추가됨!");
+
+            // StateMachine에 이벤트 구독 요청
+            StateMachine stateMachine = GetComponent<StateMachine>();
+            if (stateMachine != null)
+            {
+                stateMachine.SubscribeToRangedAttackEvents();
+            }
         }
 
         isRangedEnabled = true;
