@@ -133,6 +133,12 @@ public class PlayerRangedAttack : MonoBehaviour
         // 무기 해제
         combatSystem.UnequipWeapon();
 
+        // 텔레포트 활성화 (무기 던진 후)
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.EnableTeleport();
+        }
+
         // 쿨다운 시작
         StartCoroutine(ThrowCooldownTimer());
     }
@@ -202,6 +208,12 @@ public class PlayerRangedAttack : MonoBehaviour
             lastThrownWeapon = null;
         }
 
+        // 무기 회수 시 텔레포트 비활성화
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.DisableTeleport();
+        }
+
         ClearPendingPull();
     }
 
@@ -223,6 +235,15 @@ public class PlayerRangedAttack : MonoBehaviour
     {
         pendingPullContext = null;
         hasPendingWeaponPull = false;
+    }
+
+    /// <summary>
+    /// 무기 뽑기 컨텍스트 설정 (텔레포트에서 호출)
+    /// </summary>
+    public void SetPendingPullContext(WeaponPullContext context)
+    {
+        pendingPullContext = context;
+        hasPendingWeaponPull = context != null;
     }
 
     /// <summary>
@@ -249,6 +270,12 @@ public class PlayerRangedAttack : MonoBehaviour
         if (lastThrownWeapon == weapon)
         {
             lastThrownWeapon = null;
+        }
+
+        // 텔레포트 비활성화
+        if (combatSystem.TeleportAttack != null)
+        {
+            combatSystem.TeleportAttack.DisableTeleport();
         }
 
         Destroy(weapon.gameObject);

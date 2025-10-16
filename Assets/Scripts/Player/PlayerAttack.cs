@@ -512,14 +512,18 @@ public class PlayerAttack : MonoBehaviour
 
         if (wasAttachedToEnemy && pendingTeleportWeapon != null)
         {
+            // 레거시 코드: Unity6로 대체됨 (현재 사용하지 않음)
+            // TODO: 필요시 Unity6 방식으로 리팩토링
+            /*
             WeaponPullContext pullContext = WeaponPullContext.CreateTeleportPull(
                 pendingTeleportWeapon,
                 transform.position,
                 controller.IsGrounded());
-            
+
             pendingPullContext = pullContext;
             hasPendingWeaponPull = true;
-            
+            */
+
             controller.ChangeState(new PlayerStates.TeleportEnd());
             isTeleporting = false;
         }

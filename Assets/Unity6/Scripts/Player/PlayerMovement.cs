@@ -33,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 ceilingCheckSize = new(0.5f, 0.1f);
 
     private Rigidbody2D rb;
-    private StateMachine stateMachine; // 방향 고정 상태 확인용
 
     // 현재 속도 (읽기 전용)
     public Vector2 Velocity => rb.linearVelocity;
@@ -62,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        stateMachine = GetComponent<StateMachine>();
 
         // CapsuleCollider가 할당되지 않았으면 자동 검색
         if (capsuleCollider == null)
@@ -107,15 +105,8 @@ public class PlayerMovement : MonoBehaviour
     {
         CurrentMoveInput = input;
 
-        // 방향 고정 상태에서는 방향 변경하지 않음 (이중 안전장치)
-        if (stateMachine != null &&
-            stateMachine.CurrentState is PlayerStateBase stateBase &&
-            stateBase.ShouldLockDirection)
-        {
-            return;
-        }
-
         // 입력이 있으면 바라보는 방향 업데이트
+        // 방향 고정은 PlayerAnimator에서 처리 (스프라이트 업데이트 차단)
         if (Mathf.Abs(input) > 0.01f)
         {
             facingDirection = Mathf.Sign(input);

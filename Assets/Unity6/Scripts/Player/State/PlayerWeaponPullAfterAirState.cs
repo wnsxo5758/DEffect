@@ -62,7 +62,7 @@ public class PlayerWeaponPullAfterAirState : PlayerAirborneStateBase
     {
         if (rb == null) return;
 
-        // 무기 뽑기 컨텍스트에서 무기 위치 가져오기
+        // 무기 뽑기 컨텍스트에서 정보 가져오기
         WeaponPullContext pullContext = rangedAttack?.PendingPullContext;
         if (pullContext == null)
         {
@@ -73,7 +73,18 @@ public class PlayerWeaponPullAfterAirState : PlayerAirborneStateBase
             return;
         }
 
-        // 무기 위치 가져오기 (weaponPosition이 저장되어 있음)
+        // 텔레포트 후 뽑기인 경우 초기 방향 기준으로 반동
+        if (pullContext.isTeleportPull)
+        {
+            // 텔레포트 시작 시 저장된 방향의 반대로 반동
+            float initialDirection = pullContext.initialFacingDirection;
+            Vector2 teleportKnockback = new Vector2(-initialDirection * knockbackForceX, knockbackForceY);
+            rb.linearVelocity = teleportKnockback;
+            Debug.Log($"[AfterPull] Teleport knockback applied: {teleportKnockback}, initial direction: {initialDirection}");
+            return;
+        }
+
+        // 일반 뽑기: 무기 위치 기준으로 반동
         Vector2 weaponPosition = pullContext.weaponPosition;
         Vector2 playerPosition = stateMachine.transform.position;
 

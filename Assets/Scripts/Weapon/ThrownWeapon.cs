@@ -242,6 +242,27 @@ public class ThrownWeapon : MonoBehaviour
         return isStuck;
     }
 
+    /// <summary>
+    /// 무기가 서 있을 수 있는 지면에 박혔는지 확인
+    /// (법선 벡터가 위쪽을 향하고 있으면 지면)
+    /// </summary>
+    public bool IsStuckOnGround()
+    {
+        if (!isStuck) return false;
+
+        // 법선 벡터가 위쪽을 향하고 있으면 지면으로 판정
+        // contactNormal.y > 0.5f 정도면 충분히 위쪽
+        return contactNormal.y > 0.5f;
+    }
+
+    /// <summary>
+    /// 무기가 적에게 박혔는지 확인
+    /// </summary>
+    public bool IsStuckToEnemy()
+    {
+        return isStuck && stuckTarget != null && stuckTarget.CompareTag("Enemy");
+    }
+
     public WeaponBase GetWeaponData()
     {
         return weaponData;

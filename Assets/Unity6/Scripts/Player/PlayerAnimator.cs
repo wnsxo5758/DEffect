@@ -30,6 +30,8 @@ public class PlayerAnimator : MonoBehaviour
     private static readonly int WeaponPullGround = Animator.StringToHash("WeaponPullGround");
     private static readonly int WeaponPullAir = Animator.StringToHash("WeaponPullAir");
     private static readonly int AfterPull = Animator.StringToHash("AfterPull");
+    private static readonly int TeleportStart = Animator.StringToHash("TeleportStart");
+    private static readonly int TeleportEnd = Animator.StringToHash("TeleportEnd");
 
     private void Awake()
     {
@@ -103,6 +105,7 @@ public class PlayerAnimator : MonoBehaviour
 
     /// <summary>
     /// 스프라이트 방향 업데이트 (좌우 반전)
+    /// PlayerMovement.facingDirection을 기준으로 스프라이트 반전
     /// </summary>
     private void UpdateSpriteDirection()
     {
@@ -114,14 +117,10 @@ public class PlayerAnimator : MonoBehaviour
             return;
         }
 
-        float moveInput = movement.CurrentMoveInput;
-
-        // 입력이 있을 때만 방향 전환
-        if (Mathf.Abs(moveInput) > 0.01f)
-        {
-            // 왼쪽: flipX = true, 오른쪽: flipX = false
-            spriteRenderer.flipX = moveInput < 0;
-        }
+        // PlayerMovement.facingDirection을 스프라이트에 동기화
+        // facingDirection: 1 = 오른쪽, -1 = 왼쪽
+        // flipX: true = 왼쪽, false = 오른쪽
+        spriteRenderer.flipX = movement.FacingDirection < 0;
     }
 
     /// <summary>
@@ -270,6 +269,28 @@ public class PlayerAnimator : MonoBehaviour
     {
         if (animator != null)
             animator.SetTrigger(AfterPull);
+    }
+
+    /// <summary>
+    /// 텔레포트 시작 애니메이션 트리거
+    /// </summary>
+    public void TriggerTeleportStart()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(TeleportStart);
+        }
+    }
+
+    /// <summary>
+    /// 텔레포트 종료 애니메이션 트리거
+    /// </summary>
+    public void TriggerTeleportEnd()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger(TeleportEnd);
+        }
     }
 
     /// <summary>
